@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IService<T> {
     public Page<T> findAll();
-    public Optional<T> findById(Long id);
+    public T findById(Long id);
     public void deleteById(Long id);
     public void save (T t);
 }
