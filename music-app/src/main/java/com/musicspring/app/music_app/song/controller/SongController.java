@@ -47,11 +47,14 @@ public class SongController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/songs")
-    public ResponseEntity<SongResponse> createSong(@RequestBody SongEntity songEntity) {
-        SongEntity savedSong = songService.save(songEntity);
-        return new ResponseEntity<>(songMapper.toResponse(savedSong), HttpStatus.CREATED);
-    }
+//    @PostMapping("/songs")
+//    public ResponseEntity<SongResponse> createSong(@RequestBody SongEntity songEntity) {
+//        SongEntity savedSong = songService.save(songEntity);
+//        return new ResponseEntity<>(songMapper.toResponse(savedSong), HttpStatus.CREATED);
+//    }
+
+    //Este metodo utiliza el save de JPARepository, que devuelve la entidad guardada.
+    //Problema: con la interfaz IService, el save() de la clase JPARepository choca con el retorno del metodo save() declarado en IService.
 
     @GetMapping("/songs/search")
     public ResponseEntity<List<SongResponse>> searchSongs(@RequestParam String query) {
