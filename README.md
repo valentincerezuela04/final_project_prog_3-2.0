@@ -8,3 +8,5 @@ Puedes ver el [diagrama del proyecto final en Lucidchart](https://lucid.app/luci
 Accede al [tablero del proyecto en Jira](https://valentincerezuela04.atlassian.net/jira/software/projects/SCRUM/boards/1) para ver tareas, avances y gestión de sprints.
 
 ##  Link repo viejo
+
+https://github.com/valentincerezuela04/final_project_prog_3
