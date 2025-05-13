@@ -48,6 +48,6 @@ public class SongEntity {
     private Date releaseDate;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 
 }
