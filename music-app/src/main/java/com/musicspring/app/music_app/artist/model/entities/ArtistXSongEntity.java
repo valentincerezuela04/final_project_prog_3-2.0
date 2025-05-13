@@ -50,15 +50,18 @@ Observaciones o anotaciones extras sobre esa colaboración.
 */
 
 public class ArtistXSongEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    @EmbeddedId
+    private ArtitsXSongId artitsXSongId;
+
 
     @ManyToOne
+    @MapsId("artistId")
     @JoinColumn(name = "artist_id")
     private ArtistEntity artist;
 
-/*    @ManyToOne
+/*   @ManyToOne
+    @Maps("songId")
     @JoinColumn(name = "song_id")
     //private Song song;*/
 
