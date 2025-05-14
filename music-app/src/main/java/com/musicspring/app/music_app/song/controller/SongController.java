@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class SongController {
 
     @Autowired
@@ -32,29 +32,21 @@ public class SongController {
 
     @GetMapping("/songs/{id}")
     public ResponseEntity<SongResponse> getSongById(@PathVariable Long id) {
-        try {
             SongEntity songEntity = songService.findById(id);
             return ResponseEntity.ok(songMapper.toResponse(songEntity));
-        } catch (RuntimeException ex) {
-            return ResponseEntity.notFound().build(); ///Reemplazar por una excepcion personalizada y luego que lo maneje el ControllerAdvice
-        }
     }
 
     @GetMapping("/songs/spotify/{spotifyId}")
     public ResponseEntity<SongResponse> getSongBySpotifyId(@PathVariable String spotifyId) {
-        Optional<SongEntity> song = songService.findBySpotifyId(spotifyId);
-        return song.map(value -> ResponseEntity.ok(songMapper.toResponse(value)))
-                .orElse(ResponseEntity.notFound().build());
+        SongEntity song = songService.findBySpotifyId(spotifyId);
+        return ResponseEntity.ok(songMapper.toResponse(song));
     }
 
-//    @PostMapping("/songs")
-//    public ResponseEntity<SongResponse> createSong(@RequestBody SongEntity songEntity) {
-//        SongEntity savedSong = songService.save(songEntity);
-//        return new ResponseEntity<>(songMapper.toResponse(savedSong), HttpStatus.CREATED);
-//    }
-
-    //Este metodo utiliza el save de JPARepository, que devuelve la entidad guardada.
-    //Problema: con la interfaz IService, el save() de la clase JPARepository choca con el retorno del metodo save() declarado en IService.
+    @PostMapping("/songs")
+    public ResponseEntity<SongResponse> createSong(@RequestBody SongEntity songEntity) {
+        SongEntity savedSong = songService.save(songEntity);
+        return new ResponseEntity<>(songMapper.toResponse(savedSong), HttpStatus.CREATED);
+    }
 
     @GetMapping("/songs/search")
     public ResponseEntity<List<SongResponse>> searchSongs(@RequestParam String query) {

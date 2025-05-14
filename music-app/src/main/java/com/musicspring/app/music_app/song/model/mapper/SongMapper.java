@@ -13,7 +13,7 @@ public class SongMapper {
         }
 
         return SongResponse.builder()
-                .id(song.getId())
+                .id(song.getSongId())
                 .spotifyId(song.getSpotifyId())
                 .name(song.getName())
                 .artistName(song.getArtistName())

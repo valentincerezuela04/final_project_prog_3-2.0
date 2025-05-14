@@ -16,12 +16,12 @@ public class ErrorDetails {
     private String details;
 
 
-    public ErrorDetails(String message, String details) {
-
-        this.date = new Timestamp(System.currentTimeMillis());
-        this.date.setNanos(0);
-        this.message = message;
-        this.details = details;
+    public static ErrorDetails from(String message, String details) {
+        return ErrorDetails.builder()
+                .date(new Timestamp(System.currentTimeMillis()))
+                .message(message)
+                .details(details)
+                .build();
     }
 
 
