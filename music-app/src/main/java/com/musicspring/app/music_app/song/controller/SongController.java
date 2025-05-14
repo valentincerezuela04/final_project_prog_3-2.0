@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/songs")
 public class SongController {
 
     @Autowired
@@ -24,31 +24,31 @@ public class SongController {
     @Autowired
     private SongMapper songMapper;
 
-    @GetMapping("/songs")
+    @GetMapping
     public ResponseEntity<List<SongResponse>> getAllSongs(Pageable pageable) {
         Page<SongEntity> songPage = songService.findAll(pageable);
         return ResponseEntity.ok(songMapper.toResponseList(songPage.getContent()));
     }
 
-    @GetMapping("/songs/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<SongResponse> getSongById(@PathVariable Long id) {
             SongEntity songEntity = songService.findById(id);
             return ResponseEntity.ok(songMapper.toResponse(songEntity));
     }
 
-    @GetMapping("/songs/spotify/{spotifyId}")
+    @GetMapping("/spotify/{spotifyId}")
     public ResponseEntity<SongResponse> getSongBySpotifyId(@PathVariable String spotifyId) {
         SongEntity song = songService.findBySpotifyId(spotifyId);
         return ResponseEntity.ok(songMapper.toResponse(song));
     }
 
-    @PostMapping("/songs")
+    @PostMapping
     public ResponseEntity<SongResponse> createSong(@RequestBody SongEntity songEntity) {
         SongEntity savedSong = songService.save(songEntity);
         return new ResponseEntity<>(songMapper.toResponse(savedSong), HttpStatus.CREATED);
     }
 
-    @GetMapping("/songs/search")
+    @GetMapping("/search")
     public ResponseEntity<List<SongResponse>> searchSongs(@RequestParam String query) {
         List<SongEntity> songs = songService.search(query);
         return ResponseEntity.ok(songMapper.toResponseList(songs));
