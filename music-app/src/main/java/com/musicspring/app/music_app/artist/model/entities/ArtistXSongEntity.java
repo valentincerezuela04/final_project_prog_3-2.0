@@ -1,6 +1,7 @@
 package com.musicspring.app.music_app.artist.model.entities;
 
 
+import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -60,10 +61,10 @@ public class ArtistXSongEntity {
     @JoinColumn(name = "artist_id")
     private ArtistEntity artist;
 
-/*   @ManyToOne
-    @Maps("songId")
-    @JoinColumn(name = "song_id")
-    //private Song song;*/
+   @ManyToOne
+   @MapsId("songId")
+   @JoinColumn(name = "song_id")
+   private SongEntity song;
 
 
 }
