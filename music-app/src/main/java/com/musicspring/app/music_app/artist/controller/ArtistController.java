@@ -1,6 +1,7 @@
 package com.musicspring.app.music_app.artist.controller;
 
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsDto;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import com.musicspring.app.music_app.artist.service.ArtistService;
 import jakarta.persistence.EntityNotFoundException;
@@ -62,5 +63,11 @@ public class ArtistController {
         }
         artistService.deleteById(id);
     }
+
+    @GetMapping("/{id}/songs")
+    public ArtistWithSongsDto getArtistWithSongs(@PathVariable Long id) {
+        return artistService.getArtistWithSongs(id);
+    }
+
 
 }

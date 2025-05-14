@@ -1,8 +1,11 @@
 package com.musicspring.app.music_app.artist.service;
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsDto;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
+import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
 import com.musicspring.app.music_app.artist.model.mapping.ArtistMapping;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
+import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
 import com.musicspring.app.music_app.shared.IService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +18,26 @@ import java.util.Optional;
 public class ArtistService implements IService<ArtistEntity> {
     private final ArtistRepository artistRepository;
     private final ArtistMapping artistMapping;
-    private final ArtistEntity artistEntity;
+    private final ArtistXSongRepository artistXSongRepository;
+
     @Autowired
-    public ArtistService(ArtistRepository artistRepository,ArtistMapping artistMapping,ArtistEntity artistEntity) {
+    public ArtistService(ArtistRepository artistRepository,ArtistMapping artistMapping,ArtistXSongRepository artistXSongRepository) {
         this.artistRepository = artistRepository;
         this.artistMapping = artistMapping;
-        this.artistEntity = artistEntity;
+        this.artistXSongRepository = artistXSongRepository;
 
     }
 
-
+    public ArtistWithSongsDto getArtistWithSongs(Long artistId) {
+        ArtistEntity artist = findById(artistId);
+        List<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId);
+        return artistMapping.toDTO(artist, relations);
+    }
 
     @Override
     public void deleteById(Long id) {
         ArtistEntity artist = findById(id);
-        artistEntity.setActive(false);
+        artist.setActive(false);
         artistRepository.save(artist);
     }
 
