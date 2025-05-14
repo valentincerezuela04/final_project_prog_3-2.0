@@ -28,7 +28,10 @@ public class ArtistEntity {
     private int age;
 
     @Column(name = "biography")
-    private String bigraphy;
+    private String biography;
+
+    @Column(nullable = false)
+    private boolean active;
 
     @OneToMany(mappedBy = "song",cascade = CascadeType.ALL)
     private Set<ArtistXSongEntity> artistSongs = new HashSet<>();

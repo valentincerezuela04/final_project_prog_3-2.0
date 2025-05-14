@@ -57,7 +57,7 @@ public class ArtistController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteArtist(@PathVariable Long id) {
-        if (!artistService.existsById(id)) {
+        if (artistService.findById(id) == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found");
         }
         artistService.deleteById(id);

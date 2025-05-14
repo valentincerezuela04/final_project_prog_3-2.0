@@ -26,7 +26,7 @@ public class ArtistMapping {
                 .name(entity.getName())
                 .country(entity.getCountry())
                 .age(entity.getAge())
-                .biography(entity.getBigraphy())
+                .biography(entity.getBiography())
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class ArtistMapping {
                 .name(dto.getName())
                 .country(dto.getCountry())
                 .age(dto.getAge())
-                .bigraphy(dto.getBiography())
+                .biography(dto.getBiography())
                 .build();
     }
 
@@ -52,7 +52,7 @@ public class ArtistMapping {
                 .name(artist.getName())
                 .country(artist.getCountry())
                 .age(artist.getAge())
-                .biography(artist.getBigraphy())
+                .biography(artist.getBiography())
                 .songs(songs)
                 .build();
     }
