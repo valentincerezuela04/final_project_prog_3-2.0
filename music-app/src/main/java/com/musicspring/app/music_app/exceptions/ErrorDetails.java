@@ -17,8 +17,12 @@ public class ErrorDetails {
 
 
     public static ErrorDetails from(String message, String details) {
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        timestamp.setNanos(0);
+
         return ErrorDetails.builder()
-                .date(new Timestamp(System.currentTimeMillis()))
+                .date(timestamp)
                 .message(message)
                 .details(details)
                 .build();
