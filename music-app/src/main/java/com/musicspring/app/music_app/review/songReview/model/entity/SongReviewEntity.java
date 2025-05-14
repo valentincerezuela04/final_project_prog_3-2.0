@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.review.songReview.model.entity;
 
+import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -50,6 +51,6 @@ public class SongReviewEntity {
 
     @ManyToOne
     @JoinColumn(name = "song_id", nullable = false)
-    private Song song;
+    private SongEntity song;
 
 }

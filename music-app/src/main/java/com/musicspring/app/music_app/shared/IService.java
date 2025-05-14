@@ -9,5 +9,5 @@ public interface IService<T> {
     Page<T> findAll(Pageable pageable);
     T findById(Long id);
     void deleteById(Long id);
-    void save (T t);
+    T save (T t);
 }
