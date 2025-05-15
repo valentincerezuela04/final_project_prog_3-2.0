@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SongReviewRepository extends JpaRepository<SongReviewEntity,Long> {
     Page<SongReviewEntity> findBySong_Id(Long songId, Pageable pageable);
-
+    Page<SongReviewEntity> findByUser_UserId(Long userId,Pageable pageable);
 }

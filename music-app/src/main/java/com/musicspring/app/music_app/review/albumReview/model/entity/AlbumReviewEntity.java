@@ -1,5 +1,7 @@
 package com.musicspring.app.music_app.review.albumReview.model.entity;
 
+import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
+import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -44,11 +46,11 @@ public class AlbumReviewEntity {
 
     @ManyToOne
     @JoinColumn(name = "album_id", nullable = false)
-    private Album album;
+    private AlbumEntity album;
 
     /// Usuario que realiza la reseña
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
 }

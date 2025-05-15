@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.review.songReview.model.dto;
+package com.musicspring.app.music_app.review.albumReview.model.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -9,12 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class SongReviewRequest {
-
+public class AlbumReviewRequest {
     @NotNull
     private Long userId;
     @NotNull
-    private Long songId;
+    private Long albumId;
     @NotBlank
     @DecimalMin(value = "0.5")
     @DecimalMax(value = "5.0")
