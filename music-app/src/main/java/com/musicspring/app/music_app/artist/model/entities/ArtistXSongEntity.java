@@ -53,7 +53,7 @@ Observaciones o anotaciones extras sobre esa colaboración.
 public class ArtistXSongEntity {
 
     @EmbeddedId
-    private ArtistXSongId artitsXSongId;
+    private ArtistXSongId artistXSongId;
 
 
     @ManyToOne

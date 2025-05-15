@@ -33,7 +33,7 @@ public class ArtistEntity {
     @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(mappedBy = "song",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "artist",cascade = CascadeType.ALL)
     private Set<ArtistXSongEntity> artistSongs = new HashSet<>();
 
 
