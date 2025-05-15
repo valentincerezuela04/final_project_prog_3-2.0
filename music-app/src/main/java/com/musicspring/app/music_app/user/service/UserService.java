@@ -7,6 +7,7 @@ import com.musicspring.app.music_app.user.model.entity.ERole;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import com.musicspring.app.music_app.user.model.mapper.UserMapper;
 import com.musicspring.app.music_app.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,12 @@ public class UserService {
                 .map(userMapper::toResponse);
     }
 
+    /// Agregado por manu. Es posible que cambie
+    public UserEntity findById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("User with ID: " + id + " was not found."));
+    }
+
     public Optional<UserResponse> getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(userMapper::toResponse);
@@ -60,5 +67,9 @@ public class UserService {
 
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsById (Long id){
+        return userRepository.existsById(id);
     }
 }
