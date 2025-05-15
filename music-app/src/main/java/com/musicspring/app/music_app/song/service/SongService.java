@@ -30,11 +30,6 @@ public class SongService implements IService<SongEntity> {
                 .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."));
     }
 
-    public SongEntity findBySpotifyId(String spotifyId) {
-        return songRepository.findBySpotifyId(spotifyId)
-                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found."));
-    }
-
     @Override
     public void deleteById(Long id) {
         SongEntity songEntity = findById(id);
@@ -46,6 +41,15 @@ public class SongService implements IService<SongEntity> {
     public SongEntity save(SongEntity songEntity) {
         songEntity.setActive(true);
         return songRepository.save(songEntity);
+    }
+
+    public SongEntity findBySpotifyId(String spotifyId) {
+        return songRepository.findBySpotifyId(spotifyId)
+                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found."));
+    }
+
+    public boolean existsById (Long id){
+        return songRepository.existsById(id);
     }
 
     public List<SongEntity> search(String query) {
