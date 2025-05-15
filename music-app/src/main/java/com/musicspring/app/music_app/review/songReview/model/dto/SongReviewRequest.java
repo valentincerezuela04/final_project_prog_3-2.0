@@ -11,9 +11,9 @@ import lombok.*;
 
 public class SongReviewRequest {
 
-    @NotBlank
+    @NotNull
     private Long userId;
-    @NotBlank
+    @NotNull
     private Long songId;
     @NotBlank
     @DecimalMin(value = "0.5")

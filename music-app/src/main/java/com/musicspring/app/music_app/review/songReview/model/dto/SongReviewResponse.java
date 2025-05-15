@@ -10,10 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 
 public class SongReviewResponse {
-    ///private Long songReviewId;
     private String username;
     private Long userId;
-    ///private Long songId;
     private String description;
     private Double rating;
 
