@@ -10,9 +10,8 @@ import lombok.*;
 @Builder
 
 public class AlbumReviewResponse {
-    private Long AlbumReviewId;
-    private Long UserId;
-    private Long AlbumId;
+    private String username;
+    private Long userId;
     private String description;
     private Double rating;
 

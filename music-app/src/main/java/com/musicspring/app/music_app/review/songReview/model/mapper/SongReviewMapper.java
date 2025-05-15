@@ -25,6 +25,7 @@ public class SongReviewMapper {
             return null;
         }
         return SongReviewResponse.builder()
+                .userId(songReview.getUser().getUserId())
                 .username(songReview.getUser().getUsername())
                 .rating(songReview.getRating())
                 .description(songReview.getDescription())
