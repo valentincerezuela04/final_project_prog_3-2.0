@@ -1,37 +1,37 @@
 package com.musicspring.app.music_app.artist.service;
 
-import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsDto;
+import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
-import com.musicspring.app.music_app.artist.model.mapping.ArtistMapping;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
+import com.musicspring.app.music_app.artist.model.mapper.ArtistMapper;
 import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
 import com.musicspring.app.music_app.shared.IService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class ArtistService implements IService<ArtistEntity> {
     private final ArtistRepository artistRepository;
-    private final ArtistMapping artistMapping;
+    private final ArtistMapper artistMapper;
     private final ArtistXSongRepository artistXSongRepository;
 
     @Autowired
-    public ArtistService(ArtistRepository artistRepository,ArtistMapping artistMapping,ArtistXSongRepository artistXSongRepository) {
+    public ArtistService(ArtistRepository artistRepository, ArtistMapper artistMapper, ArtistXSongRepository artistXSongRepository) {
         this.artistRepository = artistRepository;
-        this.artistMapping = artistMapping;
+        this.artistMapper = artistMapper;
         this.artistXSongRepository = artistXSongRepository;
-
     }
 
-    public ArtistWithSongsDto getArtistWithSongs(Long artistId) {
+    public ArtistWithSongsResponse getArtistWithSongs(Long artistId) {
         ArtistEntity artist = findById(artistId);
         List<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId);
-        return artistMapping.toDTO(artist, relations);
+        return artistMapper.toArtistWithSongsResponse(artist, relations);
     }
 
     @Override
@@ -43,22 +43,34 @@ public class ArtistService implements IService<ArtistEntity> {
 
     @Override
     public Page<ArtistEntity> findAll(Pageable pageable) {
-        return artistRepository.findAll(pageable);
+        return artistRepository.findByActiveTrue(pageable);
     }
 
     @Override
     public ArtistEntity findById(Long id) {
-        return artistRepository.findById(id)
+        return artistRepository.findByArtistIdAndActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
     }
 
     @Override
     public ArtistEntity save(ArtistEntity artistEntity) {
-
         if(artistEntity == null) {
             throw new IllegalArgumentException("ArtistEntity cannot be null");
         }
         artistEntity.setActive(true);
         return artistRepository.save(artistEntity);
+    }
+
+    public List<ArtistEntity> findByName(String name) {
+        return artistRepository.findByNameContainingIgnoreCaseAndActiveTrue(name);
+    }
+
+    public ArtistEntity update(Long id, ArtistEntity artistDetails) {
+        ArtistEntity existingArtist = findById(id);
+        existingArtist.setName(artistDetails.getName());
+        if (artistDetails.getFollowers() != null) {
+            existingArtist.setFollowers(artistDetails.getFollowers());
+        }
+        return artistRepository.save(existingArtist);
     }
 }

@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.album.model.entity;
 
+import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,11 +31,6 @@ public class AlbumEntity {
     @Column(name = "title")
     @NotBlank(message = "Title can not be empty.")
     private String title;
-
-    @Column(name = "total_tracks")
-    @NotBlank(message = "Total tracks can not be empty.")
-    @Positive
-    private Integer totalTracks;
 
     @Column(name = "release_date")
     @NotNull(message = "Release date can not be empty.")

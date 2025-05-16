@@ -18,7 +18,6 @@ public class AlbumMapper {
                     .spotifyId(album.getSpotifyId())
                     .title(album.getTitle())
                     .artistId(album.getArtist().getArtistId())
-                    .totalTracks(album.getTotalTracks())
                     .releaseDate(album.getReleaseDate())
                     .build();
         }

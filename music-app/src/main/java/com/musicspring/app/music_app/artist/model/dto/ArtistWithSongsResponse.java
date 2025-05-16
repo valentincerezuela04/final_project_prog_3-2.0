@@ -1,24 +1,18 @@
 package com.musicspring.app.music_app.artist.model.dto;
 
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
-@Data
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ArtistWithSongsDto {
+public class ArtistWithSongsResponse {
     private Long artistId;
     private String name;
-    private String country;
-    private int age;
-    private String biography;
-
+    private Integer followers;
     private List<SongResponse> songs;
-
 
 }
