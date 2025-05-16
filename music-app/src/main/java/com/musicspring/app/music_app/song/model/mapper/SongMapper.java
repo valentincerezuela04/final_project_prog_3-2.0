@@ -2,10 +2,12 @@ package com.musicspring.app.music_app.song.model.mapper;
 
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class SongMapper {
     public SongResponse toResponse(SongEntity song) {
         if (song == null) {

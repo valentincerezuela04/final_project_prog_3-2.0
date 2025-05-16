@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.review.albumReview.service;
 
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
-import com.musicspring.app.music_app.album.sercive.AlbumService;
+import com.musicspring.app.music_app.album.service.AlbumService;
 import com.musicspring.app.music_app.review.albumReview.model.dto.AlbumReviewRequest;
 import com.musicspring.app.music_app.review.albumReview.model.entity.AlbumReviewEntity;
 import com.musicspring.app.music_app.review.albumReview.model.mapper.AlbumReviewMapper;

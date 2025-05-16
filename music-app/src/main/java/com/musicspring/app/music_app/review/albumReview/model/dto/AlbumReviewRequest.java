@@ -14,7 +14,7 @@ public class AlbumReviewRequest {
     private Long userId;
     @NotNull
     private Long albumId;
-    @NotBlank
+    @NotNull
     @DecimalMin(value = "0.5")
     @DecimalMax(value = "5.0")
     @Digits(integer = 1,fraction = 2)

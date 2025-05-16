@@ -4,10 +4,15 @@ import com.musicspring.app.music_app.review.songReview.model.entity.SongReviewEn
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SongReviewRepository extends JpaRepository<SongReviewEntity,Long> {
-    Page<SongReviewEntity> findBySong_Id(Long songId, Pageable pageable);
-    Page<SongReviewEntity> findByUser_UserId(Long userId,Pageable pageable);
+    @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.song.id = :songId")
+    Page<SongReviewEntity> findBySong_Id(@Param("songId") Long songId, Pageable pageable);
+
+    @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.user.userId = :userId")
+    Page<SongReviewEntity> findByUser_UserId(@Param("userId") Long userId, Pageable pageable);
 }

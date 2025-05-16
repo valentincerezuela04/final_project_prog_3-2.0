@@ -1,9 +1,8 @@
-package com.musicspring.app.music_app.album.sercive;
+package com.musicspring.app.music_app.album.service;
 
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.album.repository.AlbumRepository;
 import com.musicspring.app.music_app.shared.IService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
