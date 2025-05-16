@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
@@ -23,4 +25,17 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorDetails.from(ex.getMessage(), request.getDescription(false)));
     }
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<ErrorDetails> handleHttpClientError(HttpClientErrorException ex, WebRequest request) {
+        return ResponseEntity
+                .status(ex.getStatusCode())
+                .body(ErrorDetails.from("Spotify API error: " + ex.getMessage(), request.getDescription(false)));
+    }
+    @ExceptionHandler(ResourceAccessException.class)
+    public ResponseEntity<ErrorDetails> handleResourceAccessException(ResourceAccessException ex, WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ErrorDetails.from("Could not connect to Spotify service", request.getDescription(false)));
+    }
+
 }

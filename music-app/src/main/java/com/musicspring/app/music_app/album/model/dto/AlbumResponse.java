@@ -25,11 +25,7 @@ public class AlbumResponse {
     private String title;
 
     @NotNull(message = "Artist ID can not be empty")
-    private Integer artistId;
-
-    @NotBlank(message = "Total tracks can not be empty.")
-    @Positive
-    private Integer totalTracks;
+    private Long artistId;
 
     @NotNull(message = "Release date can not be null.")
     private LocalDate releaseDate;

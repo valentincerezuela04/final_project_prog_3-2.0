@@ -21,14 +21,8 @@ public class ArtistEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "country")
-    private String country;
-
-    @Column(name =  "age")
-    private int age;
-
-    @Column(name = "biography")
-    private String biography;
+    @Column(name = "followers")
+    private Integer followers;
 
     @Column(nullable = false)
     private boolean active;

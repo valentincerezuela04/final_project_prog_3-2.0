@@ -3,7 +3,7 @@ package com.musicspring.app.music_app.album.controller;
 import com.musicspring.app.music_app.album.model.dto.AlbumResponse;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.album.model.mapper.AlbumMapper;
-import com.musicspring.app.music_app.album.sercive.AlbumService;
+import com.musicspring.app.music_app.album.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

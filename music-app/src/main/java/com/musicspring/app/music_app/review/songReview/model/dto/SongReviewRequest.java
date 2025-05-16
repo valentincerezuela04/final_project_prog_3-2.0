@@ -15,7 +15,7 @@ public class SongReviewRequest {
     private Long userId;
     @NotNull
     private Long songId;
-    @NotBlank
+    @NotNull
     @DecimalMin(value = "0.5")
     @DecimalMax(value = "5.0")
     @Digits(integer = 1,fraction = 2)

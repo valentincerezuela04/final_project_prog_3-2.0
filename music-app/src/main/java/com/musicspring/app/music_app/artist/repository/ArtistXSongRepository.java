@@ -1,12 +1,16 @@
 package com.musicspring.app.music_app.artist.repository;
 
 import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
+import com.musicspring.app.music_app.artist.model.entities.ArtistXSongId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ArtistXSongRepository extends JpaRepository<ArtistXSongEntity,Long> {
-    //basicamente devuelve todos filas de la tabla intermedia donde el artista tengo cierto IDx
+@Repository
+public interface ArtistXSongRepository extends JpaRepository<ArtistXSongEntity, ArtistXSongId> {
     List<ArtistXSongEntity> findByArtistArtistId(Long artistId);
+
+    List<ArtistXSongEntity> findBySongSongId(Long songId);
 
 }
