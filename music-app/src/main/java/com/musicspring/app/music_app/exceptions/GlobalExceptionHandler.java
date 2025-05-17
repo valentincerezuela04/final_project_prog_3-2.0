@@ -18,7 +18,6 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(ErrorDetails.from(ex.getMessage(), request.getDescription(false)));
     }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception ex, WebRequest request) {
         return ResponseEntity
@@ -37,5 +36,12 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body(ErrorDetails.from("Could not connect to Spotify service", request.getDescription(false)));
     }
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorDetails> handleIllegalStateException(IllegalStateException ex, WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorDetails.from(ex.getMessage(), request.getDescription(false)));
+    }
+
 
 }
