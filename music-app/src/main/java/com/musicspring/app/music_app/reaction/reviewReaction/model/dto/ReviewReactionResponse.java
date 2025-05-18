@@ -23,7 +23,7 @@ public class ReviewReactionResponse extends ReactionResponse {
     public static ReviewReactionResponse of(@NotNull ReviewReactionEntity entity, UserMapper userMapper) {
         ReviewReactionResponse response = new ReviewReactionResponse();
         response.setReactionId(entity.getReactionId());
-        response.setReactionType(entity.getType());
+        response.setReactionType(entity.getReactionType());
         response.setUserId(entity.getUser().getUserId());
         response.setCreatedAt(entity.getCreatedAt());
         response.setUser(userMapper.toResponse(entity.getUser()));

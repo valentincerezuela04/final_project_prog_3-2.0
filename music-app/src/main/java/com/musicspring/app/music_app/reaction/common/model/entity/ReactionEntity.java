@@ -20,7 +20,7 @@ public abstract class ReactionEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReactionType type;
+    private ReactionType reactionType;
 
     /// FetchType.LAZY prevents unnecessary loading of the user when it's not always needed.
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

@@ -1,6 +1,8 @@
 package com.musicspring.app.music_app.reaction.reviewReaction.repository;
 
 import com.musicspring.app.music_app.reaction.reviewReaction.model.entity.ReviewReactionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,9 +12,9 @@ import java.util.List;
 public interface ReviewReactionRepository extends JpaRepository<ReviewReactionEntity, Long> {
 
     /// Finds all reactions linked to a specific album review by its ID
-    List<ReviewReactionEntity> findByAlbumReview_AlbumReviewId(Long albumReviewId);
+    Page<ReviewReactionEntity> findByAlbumReview_AlbumReviewId(Long albumReviewId, Pageable pageable);
     /// Finds all reactions linked to a specific song review by its ID
-    List<ReviewReactionEntity> findBySongReview_SongReviewId(Long songReviewId);
+    Page<ReviewReactionEntity> findBySongReview_SongReviewId(Long songReviewId, Pageable pageable);
     /// Finds all reactions created by a specific user by user ID
-    List<ReviewReactionEntity> findByUser_UserId(Long userId);
+    Page<ReviewReactionEntity> findByUser_UserId(Long userId, Pageable pageable);
 }
