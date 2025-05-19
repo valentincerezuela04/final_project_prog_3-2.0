@@ -6,7 +6,9 @@ import com.musicspring.app.music_app.album.model.mapper.AlbumMapper;
 import com.musicspring.app.music_app.album.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,39 +20,46 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/albums")
 public class AlbumController {
-    @Autowired
     private AlbumService albumService;
 
     @Autowired
-    private AlbumMapper albumMapper;
+    public AlbumController(AlbumService albumService) {
+        this.albumService = albumService;
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlbumResponse>getAlbumsById(@PathVariable Long id){
+    public ResponseEntity<AlbumResponse>getAlbumById(@PathVariable Long id){
         try{
-            AlbumEntity albumEntity = albumService.findById(id);
-            return ResponseEntity.ok(albumMapper.toResponse(albumEntity));
+            return ResponseEntity.ok(albumService.findById(id));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AlbumResponse>> getAllAlbums (Pageable pageable){
-        Page<AlbumEntity> albumPage = albumService.findAll(pageable);
-        return ResponseEntity.ok(albumMapper.toResponseList(albumPage.getContent()));
+    public ResponseEntity<Page<AlbumResponse>> getAllAlbums (@RequestParam int size, @RequestParam int pageNumber, @RequestParam String sort){
+        Pageable pageable = PageRequest.of(pageNumber,size, Sort.by(sort));
+        return ResponseEntity.ok(albumService.findAll(pageable));
     }
 
-    @GetMapping("/albums/spotify/{spotifyId}")
+    @GetMapping("/spotify/{spotifyId}")
     public ResponseEntity<AlbumResponse> getAlbumBySpotifyId (@PathVariable String spotifyId){
-        Optional<AlbumEntity> optAlbum = albumService.findBySpotifyId(spotifyId);
-        return  optAlbum.map(value -> ResponseEntity.ok(albumMapper.toResponse(value)))
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return ResponseEntity.ok(albumService.findBySpotifyId(spotifyId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/create")
-    public ResponseEntity<AlbumResponse> createAlbum (@RequestBody AlbumEntity albumEntity){
-        AlbumEntity savedAlbum = albumService.save(albumEntity);
-        return new ResponseEntity<>(albumMapper.toResponse(savedAlbum), HttpStatus.CREATED);
+    public ResponseEntity<AlbumResponse> saveAlbum (@RequestBody AlbumEntity albumEntity){
+        return ResponseEntity.ok(albumService.save(albumEntity));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<AlbumResponse>> searchAlbums (@RequestParam String query, @RequestParam int size, @RequestParam int pageNumber, @RequestParam String sort){
+        Pageable pageable = PageRequest.of(pageNumber,size, Sort.by(sort));
+        return ResponseEntity.ok(albumService.search(query,pageable));
     }
 
 }
