@@ -1,58 +1,61 @@
 package com.musicspring.app.music_app.song.service;
 
-import com.musicspring.app.music_app.shared.IService;
+import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
+import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.song.repository.SongRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 
 @Service
-public class SongService implements IService<SongEntity> {
+public class SongService  {
 
     private final SongRepository songRepository;
-    public SongService(SongRepository songRepository) {
+    private final SongMapper songMapper;
+
+    public SongService(SongRepository songRepository, SongMapper songMapper) {
         this.songRepository = songRepository;
+        this.songMapper = songMapper;
     }
 
-    @Override
-    public Page<SongEntity> findAll(Pageable pageable) {
-        return songRepository.findAll(pageable);
+    public Page<SongResponse> findAll(Pageable pageable) {
+        return songMapper.toResponsePage(songRepository.findAll(pageable));
     }
 
-    @Override
-    public SongEntity findById(Long id) {
-        return songRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."));
+    public SongResponse findById(Long id) {
+        return songMapper.toResponse(songRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found.")));
     }
 
-    @Override
     public void deleteById(Long id) {
-        SongEntity songEntity = findById(id);
+        SongEntity songEntity = songRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."))
         songEntity.setActive(false);
         songRepository.save(songEntity);
     }
 
-    @Override
-    public SongEntity save(SongEntity songEntity) {
+    public SongResponse saveSong(SongEntity songEntity) {
         songEntity.setActive(true);
-        return songRepository.save(songEntity);
+        return songMapper.toResponse(songRepository.save(songEntity));
     }
 
-    public SongEntity findBySpotifyId(String spotifyId) {
-        return songRepository.findBySpotifyId(spotifyId)
-                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found."));
+    public SongResponse findBySpotifyId(String spotifyId) {
+        return songMapper.toResponse(songRepository.findBySpotifyId(spotifyId)
+                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found.")));
     }
 
     public boolean existsById (Long id){
         return songRepository.existsById(id);
     }
 
-    public List<SongEntity> search(String query) {
-        return songRepository.findByNameContainingIgnoreCaseOrArtistNameContainingIgnoreCase(query, query);
+    public Page<SongResponse> searchSongs(String query, Pageable pageable) {
+        Page<SongEntity> songPage = songRepository.findByNameContainingIgnoreCaseOrArtistNameContainingIgnoreCase(
+                query, query, pageable
+        );
+
+        return songMapper.toResponsePage(songPage);
     }
 }
