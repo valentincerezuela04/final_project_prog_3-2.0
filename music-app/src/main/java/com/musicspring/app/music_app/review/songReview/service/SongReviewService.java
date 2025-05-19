@@ -1,6 +1,7 @@
 package com.musicspring.app.music_app.review.songReview.service;
 
 import com.musicspring.app.music_app.review.songReview.model.dto.SongReviewRequest;
+import com.musicspring.app.music_app.review.songReview.model.dto.SongReviewResponse;
 import com.musicspring.app.music_app.review.songReview.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.review.songReview.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.review.songReview.repository.SongReviewRepository;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.NoSuchElementException;
 
 @Service
-public class SongReviewService implements IService<SongReviewEntity> {
+public class SongReviewService {
 
     private final SongReviewRepository songReviewRepository;
     private final SongService songService;
@@ -34,31 +35,24 @@ public class SongReviewService implements IService<SongReviewEntity> {
         this.songReviewMapper = songReviewMapper;
     }
 
-    @Override
-    public Page<SongReviewEntity> findAll(Pageable pageable) {
-        return songReviewRepository.findAll(pageable);
+    public Page<SongReviewResponse> findAll(Pageable pageable) {
+        return songReviewMapper.toResponsePage(songReviewRepository.findAll(pageable));
     }
 
-    @Override
-    public SongReviewEntity findById(Long id) {
-        return songReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Song Review with ID: " + id + " was not found.")); ///Reemplazar por una excepcion personalizada
+    public SongReviewResponse findById(Long id) {
+        return songReviewMapper.toResponse(songReviewRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Song Review with ID: " + id + " was not found.")));
     }
 
-    @Override
     public void deleteById(Long id) {
-        SongReviewEntity songReviewEntity = findById(id);
+        SongReviewEntity songReviewEntity = songReviewRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Song Review with ID: " + id + " was not found."));
         songReviewEntity.setActive(false);
         songReviewRepository.save(songReviewEntity);
     }
 
-    @Override
-    /// No se que hacer con este metodo, no lo uso pero viene de la interfaz service
-    public SongReviewEntity save(SongReviewEntity songReview) {
-        return songReviewRepository.save(songReview);
-    }
 
-    public SongReviewEntity save(SongReviewRequest songReviewRequest) {
+    public SongReviewResponse createSong(SongReviewRequest songReviewRequest) {
         // Buscar las entidades relacionadas
         UserEntity user = userService.findById(songReviewRequest.getUserId());
         SongEntity song = songService.findById(songReviewRequest.getSongId());
@@ -67,13 +61,13 @@ public class SongReviewService implements IService<SongReviewEntity> {
         SongReviewEntity songReviewEntity = songReviewMapper.toEntity(songReviewRequest, user, song);
 
         // Guardar la entidad en la base de datos
-        return songReviewRepository.save(songReviewEntity);
+        return songReviewMapper.toResponse(songReviewRepository.save(songReviewEntity));
     }
 
-    public Page<SongReviewEntity> findBySongId (Long songId, Pageable pageable){
-        return songReviewRepository.findBySong_Id(songId,pageable);
+    public Page<SongReviewResponse> findBySongId (Long songId, Pageable pageable){
+        return songReviewMapper.toResponsePage(songReviewRepository.findBySong_Id(songId,pageable));
     }
-    public Page<SongReviewEntity> findByUserId(Long songId, Pageable pageable){
-        return songReviewRepository.findByUser_UserId(songId,pageable);
+    public Page<SongReviewResponse> findByUserId(Long songId, Pageable pageable){
+        return songReviewMapper.toResponsePage(songReviewRepository.findByUser_UserId(songId,pageable));
     }
 }
