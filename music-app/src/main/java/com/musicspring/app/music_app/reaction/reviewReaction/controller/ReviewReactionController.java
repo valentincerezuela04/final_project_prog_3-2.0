@@ -81,7 +81,7 @@ public class ReviewReactionController {
         return ResponseEntity.ok(responsePage);
     }
 
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity<ReviewReactionResponse> createReviewReaction(@RequestBody @Valid ReviewReactionRequest request,
                                                                        @RequestParam Long userId){
         request.validate(); /// Validate request (only one of albumReviewId or songReviewId must be set)
@@ -104,7 +104,7 @@ public class ReviewReactionController {
 
         ReviewReactionResponse response = ReviewReactionResponse.of(saved, userMapper);
         return ResponseEntity.ok(response);
-    }
+    }*/
 
     @PutMapping("/{id}")
     public ResponseEntity<ReviewReactionResponse> updateReviewReaction(@PathVariable Long id,

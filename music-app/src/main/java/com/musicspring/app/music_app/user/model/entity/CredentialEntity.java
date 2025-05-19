@@ -20,8 +20,8 @@ public class CredentialEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
     private UserEntity user;
 
     @NotBlank

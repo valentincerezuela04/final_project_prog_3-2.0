@@ -17,20 +17,17 @@ import java.util.List;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    @Autowired
+
     private UserService userService;
 
     @Autowired
-    private UserMapper userMapper;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/auth/signup")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
-        if (userService.existsByUsername(signupRequest.getUsername())) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        UserEntity user = userService.registerUser(signupRequest);
-        UserResponse userResponse = userMapper.toResponse(user);
+        UserResponse userResponse = userService.registerUser(signupRequest);
         return ResponseEntity.ok(userResponse);
     }
 
@@ -42,16 +39,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping("/username/{username}")
     public ResponseEntity<UserResponse> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 
     @DeleteMapping("/{id}")

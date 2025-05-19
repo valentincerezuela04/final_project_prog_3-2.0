@@ -19,6 +19,7 @@ public class UserMapper {
         return UserEntity.builder()
                 .username(request.getUsername())
                 .role(ERole.USER)
+                .active(true)
                 .build();
     }
 }
