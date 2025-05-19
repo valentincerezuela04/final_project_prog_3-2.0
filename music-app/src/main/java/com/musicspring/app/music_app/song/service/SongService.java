@@ -32,7 +32,7 @@ public class SongService  {
 
     public void deleteById(Long id) {
         SongEntity songEntity = songRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."))
+                        .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."));
         songEntity.setActive(false);
         songRepository.save(songEntity);
     }
