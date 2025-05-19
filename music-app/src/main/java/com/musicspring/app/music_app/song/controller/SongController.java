@@ -2,17 +2,17 @@ package com.musicspring.app.music_app.song.controller;
 
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
-import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.song.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/songs")
@@ -21,36 +21,36 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @Autowired
-    private SongMapper songMapper;
-
     @GetMapping
-    public ResponseEntity<List<SongResponse>> getAllSongs(Pageable pageable) {
-        Page<SongEntity> songPage = songService.findAll(pageable);
-        return ResponseEntity.ok(songMapper.toResponseList(songPage.getContent()));
+    public ResponseEntity<Page<SongResponse>> getAllSongs(
+            @RequestParam int size,
+            @RequestParam int pageNumber,
+            @RequestParam String sort
+    ) {
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
+        return ResponseEntity.ok(songService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SongResponse> getSongById(@PathVariable Long id) {
-            SongEntity songEntity = songService.findById(id);
-            return ResponseEntity.ok(songMapper.toResponse(songEntity));
+        return ResponseEntity.ok(songService.findById(id));
     }
 
     @GetMapping("/spotify/{spotifyId}")
     public ResponseEntity<SongResponse> getSongBySpotifyId(@PathVariable String spotifyId) {
-        SongEntity song = songService.findBySpotifyId(spotifyId);
-        return ResponseEntity.ok(songMapper.toResponse(song));
+        return ResponseEntity.ok(songService.findBySpotifyId(spotifyId));
     }
 
     @PostMapping
-    public ResponseEntity<SongResponse> createSong(@RequestBody SongEntity songEntity) {
-        SongEntity savedSong = songService.save(songEntity);
-        return new ResponseEntity<>(songMapper.toResponse(savedSong), HttpStatus.CREATED);
+    public ResponseEntity<SongResponse> saveSong(@RequestBody SongEntity songEntity) {
+        SongResponse savedSong = songService.saveSong(songEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedSong);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<SongResponse>> searchSongs(@RequestParam String query) {
-        List<SongEntity> songs = songService.search(query);
-        return ResponseEntity.ok(songMapper.toResponseList(songs));
+    public ResponseEntity<Page<SongResponse>> searchSongs(@RequestParam String query,
+                                                          Pageable pageable) {
+        Page<SongResponse> songPage = songService.searchSongs(query, pageable);
+        return ResponseEntity.ok(songPage);
     }
 }
