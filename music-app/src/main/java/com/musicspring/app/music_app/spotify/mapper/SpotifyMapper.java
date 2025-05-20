@@ -1,7 +1,10 @@
 package com.musicspring.app.music_app.spotify.mapper;
 
+import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
+import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 
 import org.springframework.stereotype.Component;
@@ -12,103 +15,90 @@ import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Image;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 @Component
 public class SpotifyMapper {
 
-    public AlbumEntity toAlbumEntity(AlbumSimplified spotifyAlbum) {
+    public AlbumRequest toAlbumRequest(AlbumSimplified spotifyAlbum) {
         if (spotifyAlbum == null) {
             return null;
         }
 
-        AlbumEntity album = new AlbumEntity();
-        album.setSpotifyId(spotifyAlbum.getId());
-        album.setTitle(spotifyAlbum.getName());
-        album.setReleaseDate(parseReleaseDate(spotifyAlbum.getReleaseDate()));
-        album.setActive(true);
-
-        return album;
+        return AlbumRequest.builder()
+                .spotifyId(spotifyAlbum.getId())
+                .title(spotifyAlbum.getName())
+                .releaseDate(parseReleaseDate(spotifyAlbum.getReleaseDate()))
+                .build();
     }
-
-    public AlbumEntity toAlbumEntity(Album spotifyAlbum) {
+    
+    public AlbumRequest toAlbumRequest(Album spotifyAlbum) {
         if (spotifyAlbum == null) {
             return null;
         }
 
-        AlbumEntity album = new AlbumEntity();
-        album.setSpotifyId(spotifyAlbum.getId());
-        album.setTitle(spotifyAlbum.getName());
-        album.setReleaseDate(parseReleaseDate(spotifyAlbum.getReleaseDate()));
-        album.setActive(true);
-
-        return album;
-    }
-
-    public ArtistEntity toArtistEntity(ArtistSimplified spotifyArtist) {
-        if (spotifyArtist == null) {
-            return null;
-        }
-
-        return ArtistEntity.builder()
-                .name(spotifyArtist.getName())
-                .active(true)
+        return AlbumRequest.builder()
+                .spotifyId(spotifyAlbum.getId())
+                .title(spotifyAlbum.getName())
+                .releaseDate(parseReleaseDate(spotifyAlbum.getReleaseDate()))
                 .build();
     }
 
-    public ArtistEntity toArtistEntity(Artist spotifyArtist) {
+
+    public ArtistRequest toArtistRequest(Artist spotifyArtist) {
         if (spotifyArtist == null) {
             return null;
         }
 
-
-        return ArtistEntity.builder()
+        return ArtistRequest.builder()
                 .name(spotifyArtist.getName())
                 .followers(spotifyArtist.getFollowers().getTotal())
-                .active(true)
+                .spotifyId(spotifyArtist.getId())
                 .build();
     }
-    public SongEntity toSongEntity(Track spotifyTrack) {
+    
+    public SongRequest toSongRequest(Track spotifyTrack) {
         if (spotifyTrack == null) {
             return null;
         }
-
-        SongEntity song = new SongEntity();
-        song.setSpotifyId(spotifyTrack.getId());
-        song.setName(spotifyTrack.getName());
-        song.setDurationMs(spotifyTrack.getDurationMs());
-        song.setActive(true);
-
+        
+        SongRequest songRequest = new SongRequest();
+        songRequest.setSpotifyId(spotifyTrack.getId());
+        songRequest.setName(spotifyTrack.getName());
+        songRequest.setDurationMs(spotifyTrack.getDurationMs());
+        
         if (spotifyTrack.getExternalUrls() != null) {
-            song.setSpotifyLink(spotifyTrack.getExternalUrls().get("spotify"));
+            songRequest.setSpotifyLink(spotifyTrack.getExternalUrls().get("spotify"));
         }
-
-        song.setPreviewUrl(spotifyTrack.getPreviewUrl());
-
+        
+        songRequest.setPreviewUrl(spotifyTrack.getPreviewUrl());
+        
         ArtistSimplified[] artists = spotifyTrack.getArtists();
         if (artists != null && artists.length > 0) {
-            song.setArtistName(artists[0].getName());
+            songRequest.setArtistName(artists[0].getName());
         } else {
-            song.setArtistName("Unknown artist");
+            songRequest.setArtistName("Unknown artist");
         }
-
+        
         AlbumSimplified album = spotifyTrack.getAlbum();
         if (album != null) {
-            song.setAlbumName(album.getName());
-
+            songRequest.setAlbumName(album.getName());
+            
             Image[] images = album.getImages();
             if (images != null && images.length > 0) {
-                song.setImageUrl(images[0].getUrl());
+                songRequest.setImageUrl(images[0].getUrl());
             }
-
+            
             LocalDate releaseDate = parseReleaseDate(album.getReleaseDate());
             if (releaseDate != null) {
-                song.setReleaseDate(java.sql.Date.valueOf(releaseDate));
+                songRequest.setReleaseDate(Date.valueOf(releaseDate));
             }
         }
-
-        return song;
+        
+        return songRequest;
     }
+
 
     private LocalDate parseReleaseDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) {
