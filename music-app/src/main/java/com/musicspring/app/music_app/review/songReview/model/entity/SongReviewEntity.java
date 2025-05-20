@@ -2,6 +2,7 @@ package com.musicspring.app.music_app.review.songReview.model.entity;
 
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Check;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@Schema(description = "Entity representing a review for a song")
 @Entity
 @Table(name = "song_reviews")
 @Check(constraints = "rating >= 0.5 AND rating <= 5.0")

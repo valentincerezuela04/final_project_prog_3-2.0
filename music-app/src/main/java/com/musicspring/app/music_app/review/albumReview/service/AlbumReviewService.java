@@ -56,7 +56,7 @@ public class AlbumReviewService {
         albumReviewRepository.save(albumReviewEntity);
     }
 
-    public AlbumReviewResponse createAlbum(AlbumReviewRequest albumReviewRequest) {
+    public AlbumReviewResponse createAlbumReview (AlbumReviewRequest albumReviewRequest) {
         // Buscar las entidades relacionadas
         UserEntity user = userService.findById(albumReviewRequest.getUserId());
         AlbumEntity album = albumService.findById(albumReviewRequest.getAlbumId());
