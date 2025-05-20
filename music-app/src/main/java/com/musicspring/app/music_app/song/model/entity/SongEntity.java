@@ -31,7 +31,7 @@ public class SongEntity {
     private String artistName;
 
     @Column(name = "album_name")
-    private String album;
+    private String albumName;
 
     @Column(name = "image_url")
     private String imageUrl;

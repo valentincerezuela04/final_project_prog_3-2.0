@@ -94,7 +94,7 @@ public class SpotifyMapper {
 
         AlbumSimplified album = spotifyTrack.getAlbum();
         if (album != null) {
-            song.setAlbum(album.getName());
+            song.setAlbumName(album.getName());
 
             Image[] images = album.getImages();
             if (images != null && images.length > 0) {

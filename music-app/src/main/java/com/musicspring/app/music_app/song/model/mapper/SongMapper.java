@@ -12,16 +12,14 @@ import java.util.stream.Collectors;
 public class SongMapper {
 
     public SongResponse toResponse(SongEntity song) {
-        if (song == null) {
-            return null;
-        }
+        if (song == null) return null;
 
         return SongResponse.builder()
-                .id(song.getSongId())
+                .songId(song.getSongId())
                 .spotifyId(song.getSpotifyId())
                 .name(song.getName())
                 .artistName(song.getArtistName())
-                .album(song.getAlbum())
+                .album(song.getAlbumName())
                 .imageUrl(song.getImageUrl())
                 .durationMs(song.getDurationMs())
                 .previewUrl(song.getPreviewUrl())
@@ -30,19 +28,35 @@ public class SongMapper {
                 .build();
     }
 
+    public SongEntity toEntity(SongResponse song){
+        if(song == null) return null;
+
+        return SongEntity.builder()
+                .songId(song.getSongId())
+                .spotifyId(song.getSpotifyId())
+                .name(song.getName())
+                .artistName(song.getArtistName())
+                .albumName(song.getAlbum())
+                .imageUrl(song.getImageUrl())
+                .durationMs(song.getDurationMs())
+                .previewUrl(song.getPreviewUrl())
+                .spotifyLink(song.getSpotifyLink())
+                .releaseDate(song.getReleaseDate())
+                .active(true)
+                .build();
+    }
+
     public List<SongResponse> toResponseList(List<SongEntity> songs) {
-        if (songs == null) {
-            return null;
-        }
+        if (songs == null) return null;
+
         return songs.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
     public Page<SongResponse> toResponsePage(Page<SongEntity> songEntityPage){
-        if(songEntityPage == null){
-            return Page.empty();
-        }
+        if(songEntityPage == null) return Page.empty();
+
         return songEntityPage.map(this::toResponse);
     }
 
