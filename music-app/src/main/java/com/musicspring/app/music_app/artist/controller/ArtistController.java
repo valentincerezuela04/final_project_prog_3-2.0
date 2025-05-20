@@ -20,23 +20,24 @@ import java.util.List;
 @RequestMapping("/api/v1/artists")
 public class ArtistController {
 
-    @Autowired
-    private ArtistService artistService;
+    private final ArtistService artistService;
 
     @Autowired
-    private ArtistMapper artistMapper;
+    public ArtistController(ArtistService artistService) {
+        this.artistService = artistService;
+    }
 
     @GetMapping
     public ResponseEntity<Page<ArtistResponse>> getAllArtists(Pageable pageable) {
-        Page<ArtistEntity> artistsPage = artistService.findAll(pageable);
-        return ResponseEntity.ok(artistsPage.map(artistMapper::toResponse));
+        Page<ArtistResponse> response = artistService.getAllArtists(pageable);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ArtistResponse> getArtistById(@PathVariable Long id) {
         try {
-            ArtistEntity artist = artistService.findById(id);
-            return ResponseEntity.ok(artistMapper.toResponse(artist));
+            ArtistResponse artist = artistService.findById(id);
+            return ResponseEntity.ok(artist);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -44,9 +45,8 @@ public class ArtistController {
 
     @PostMapping
     public ResponseEntity<ArtistResponse> addArtist(@Valid @RequestBody ArtistEntity artistEntity) {
-        ArtistEntity savedArtist = artistService.save(artistEntity);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(artistMapper.toResponse(savedArtist));
+        ArtistResponse saved = artistService.save(artistEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @DeleteMapping("/{id}")
@@ -71,7 +71,7 @@ public class ArtistController {
 
     @GetMapping("/search")
     public ResponseEntity<List<ArtistResponse>> searchArtistsByName(@RequestParam String name) {
-        List<ArtistEntity> artists = artistService.findByName(name);
-        return ResponseEntity.ok(artistMapper.toResponseList(artists));
+        List<ArtistResponse> artists = artistService.findByName(name);
+        return ResponseEntity.ok(artists);
     }
 }
