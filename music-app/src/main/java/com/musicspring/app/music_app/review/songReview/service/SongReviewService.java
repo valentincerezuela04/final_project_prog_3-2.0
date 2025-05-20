@@ -52,7 +52,7 @@ public class SongReviewService {
     }
 
 
-    public SongReviewResponse createSong(SongReviewRequest songReviewRequest) {
+    public SongReviewResponse createSongReview(SongReviewRequest songReviewRequest) {
         // Buscar las entidades relacionadas
         UserEntity user = userService.findById(songReviewRequest.getUserId());
         SongEntity song = songService.findById(songReviewRequest.getSongId());
