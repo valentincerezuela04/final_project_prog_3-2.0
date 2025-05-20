@@ -1,16 +1,23 @@
 package com.musicspring.app.music_app.spotify.service;
 
+import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
+import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
 import com.musicspring.app.music_app.artist.model.entities.ArtistXSongId;
 import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.spotify.config.SpotifyConfig;
 import com.musicspring.app.music_app.spotify.mapper.SpotifyMapper;
+import com.musicspring.app.music_app.spotify.model.UnifiedSearchResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -31,7 +38,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-// We could create personalized exceptions.
 public class SpotifyService {
 
     private final SpotifyApi spotifyApi;
@@ -48,156 +54,137 @@ public class SpotifyService {
         }
     }
 
-    public List<AlbumEntity> searchAlbums(String query, int limit, int offset) {
+    public Page<AlbumRequest> searchAlbums(String query, Pageable pageable) {
         checkTokenExpiration();
 
         try {
             SearchAlbumsRequest request = spotifyApi.searchAlbums(query)
-                    .limit(limit)
-                    .offset(offset)
+                    .limit(pageable.getPageSize())
+                    .offset((int) pageable.getOffset())
                     .build();
 
             Paging<AlbumSimplified> results = request.execute();
 
-            return Arrays.stream(results.getItems())
-                    .map(spotifyMapper::toAlbumEntity)
+            List<AlbumRequest> albumRequests = Arrays.stream(results.getItems())
+                    .map(spotifyMapper::toAlbumRequest)
                     .collect(Collectors.toList());
 
+            return new PageImpl<>(albumRequests, pageable, results.getTotal());
+
         } catch (IOException | SpotifyWebApiException | ParseException e) {
-            throw new RuntimeException("Error buscando álbumes: " + e.getMessage(), e);
+            throw new RuntimeException("Error searching albums: " + e.getMessage(), e);
         }
     }
 
-    public long getTotalAlbumsCount(String query) {
-        checkTokenExpiration();
 
-        try {
-            SearchAlbumsRequest countRequest = spotifyApi.searchAlbums(query)
-                    .limit(1)
-                    .offset(0)
-                    .build();
 
-            Paging<AlbumSimplified> countResults = countRequest.execute();
-            return countResults.getTotal();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public List<ArtistEntity> searchArtists(String query, int limit, int offset) {
+    public Page<ArtistRequest> searchArtists(String query, Pageable pageable) {
         checkTokenExpiration();
 
         try {
             SearchArtistsRequest request = spotifyApi.searchArtists(query)
-                    .limit(limit)
-                    .offset(offset)
+                    .limit(pageable.getPageSize())
+                    .offset((int) pageable.getOffset())
                     .build();
 
             Paging<Artist> results = request.execute();
 
-            return Arrays.stream(results.getItems())
-                    .map(spotifyMapper::toArtistEntity)
+            List<ArtistRequest> artistRequests = Arrays.stream(results.getItems())
+                    .map(spotifyMapper::toArtistRequest)
                     .collect(Collectors.toList());
+
+            return new PageImpl<>(artistRequests, pageable, results.getTotal());
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException("Error while searching artists: " + e.getMessage(), e);
         }
     }
 
-    public long getTotalArtistsCount(String query) {
-        checkTokenExpiration();
 
-        try {
-            SearchArtistsRequest countRequest = spotifyApi.searchArtists(query)
-                    .limit(1)
-                    .offset(0)
-                    .build();
 
-            Paging<Artist> countResults = countRequest.execute();
-            return countResults.getTotal();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public List<SongEntity> searchSongs(String query, int limit, int offset) {
+    public Page<SongRequest> searchSongs(String query, Pageable pageable) {
         checkTokenExpiration();
 
         try {
             SearchTracksRequest request = spotifyApi.searchTracks(query)
-                    .limit(limit)
-                    .offset(offset)
+                    .limit(pageable.getPageSize())
+                    .offset((int) pageable.getOffset())
                     .build();
 
             Paging<Track> results = request.execute();
 
-            return Arrays.stream(results.getItems())
-                    .map(spotifyMapper::toSongEntity)
+            List<SongRequest> songRequests = Arrays.stream(results.getItems())
+                    .map(spotifyMapper::toSongRequest)
                     .collect(Collectors.toList());
+
+            return new PageImpl<>(songRequests, pageable, results.getTotal());
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException("Error while searching songs: " + e.getMessage(), e);
         }
     }
 
-    public long getTotalSongsCount(String query) {
-        checkTokenExpiration();
 
-        try {
-            SearchTracksRequest countRequest = spotifyApi.searchTracks(query)
-                    .limit(1)
-                    .offset(0)
-                    .build();
 
-            Paging<Track> countResults = countRequest.execute();
-            return countResults.getTotal();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    public AlbumEntity getAlbum(String albumId) {
+    public AlbumRequest getAlbum(String albumId) {
         checkTokenExpiration();
 
         try {
             GetAlbumRequest request = spotifyApi.getAlbum(albumId).build();
             se.michaelthelin.spotify.model_objects.specification.Album spotifyAlbum = request.execute();
 
-            return spotifyMapper.toAlbumEntity(spotifyAlbum);
+            return spotifyMapper.toAlbumRequest(spotifyAlbum);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException("Error while obtaining album: " + e.getMessage(), e);
         }
     }
 
-    public ArtistEntity getArtist(String artistId) {
+    public ArtistRequest getArtist(String artistId) {
         checkTokenExpiration();
 
         try {
             GetArtistRequest request = spotifyApi.getArtist(artistId).build();
             se.michaelthelin.spotify.model_objects.specification.Artist spotifyArtist = request.execute();
 
-            return spotifyMapper.toArtistEntity(spotifyArtist);
+            return spotifyMapper.toArtistRequest(spotifyArtist);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException("Error while obtaining artist: " + e.getMessage(), e);
         }
     }
 
-    public SongEntity getSong(String trackId) {
+    public SongRequest getSong(String trackId) {
         checkTokenExpiration();
 
         try {
             GetTrackRequest request = spotifyApi.getTrack(trackId).build();
             Track spotifyTrack = request.execute();
 
-            return spotifyMapper.toSongEntity(spotifyTrack);
+            return spotifyMapper.toSongRequest(spotifyTrack);
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             throw new RuntimeException("Error while obtaining song: " + e.getMessage(), e);
         }
     }
-    public void createArtistSongRelationship(ArtistEntity artist, SongEntity song) {
+
+    public UnifiedSearchResponse searchAll(String query, Pageable pageable) {
+        UnifiedSearchResponse response = new UnifiedSearchResponse();
+        response.setQuery(query);
+
+        Page<SongRequest> songResults = searchSongs(query, pageable);
+        Page<ArtistRequest> artistResults = searchArtists(query, pageable);
+        Page<AlbumRequest> albumResults = searchAlbums(query, pageable);
+        
+        response.setSongs(songResults);
+        response.setArtists(artistResults);
+        response.setAlbums(albumResults);
+        
+        return response;
+    }
+    
+    public void createArtistSongRelationship(ArtistRequest artistRequest, SongRequest songRequest, 
+                                          ArtistEntity artist, SongEntity song) {
         ArtistXSongId id = new ArtistXSongId(artist.getArtistId(), song.getSongId());
 
         ArtistXSongEntity relation = ArtistXSongEntity.builder()
