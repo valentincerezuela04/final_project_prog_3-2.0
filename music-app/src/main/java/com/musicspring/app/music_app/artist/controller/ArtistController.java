@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.artist.controller;
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
@@ -44,8 +45,8 @@ public class ArtistController {
     }
 
     @PostMapping
-    public ResponseEntity<ArtistResponse> addArtist(@Valid @RequestBody ArtistEntity artistEntity) {
-        ArtistResponse saved = artistService.save(artistEntity);
+    public ResponseEntity<ArtistResponse> addArtist(@Valid @RequestBody ArtistRequest artistRequest) {
+        ArtistResponse saved = artistService.save(artistRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 

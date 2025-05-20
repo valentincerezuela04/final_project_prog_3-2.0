@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.artist.service;
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistXSongResponse;
@@ -50,7 +51,6 @@ public class ArtistService {
         this.songMapper = songMapper;
     }
 
-    // ✅ Devuelve artista + sus canciones
     public ArtistWithSongsResponse getArtistWithSongs(Long artistId) {
         ArtistEntity artist = findEntityById(artistId);
         List<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId);
@@ -74,7 +74,7 @@ public class ArtistService {
         return artistMapper.toResponse(artist);
     }
 
-    // ✅ Este método devuelve la Entity (uso interno)
+
     private ArtistEntity findEntityById(Long id) {
         return artistRepository.findByArtistIdAndActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
@@ -84,10 +84,11 @@ public class ArtistService {
         return artistRepository.existsByArtistIdAndActiveTrue(id);
     }
 
-    public ArtistResponse save(ArtistEntity artistEntity) {
-        if (artistEntity == null) {
+    public ArtistResponse save(ArtistRequest artistRequest) {
+        if (artistRequest == null) {
             throw new IllegalArgumentException("ArtistEntity cannot be null");
         }
+       ArtistEntity artistEntity = artistMapper.toEntity(artistRequest);
         artistEntity.setActive(true);
         ArtistEntity saved = artistRepository.save(artistEntity);
         return artistMapper.toResponse(saved);
