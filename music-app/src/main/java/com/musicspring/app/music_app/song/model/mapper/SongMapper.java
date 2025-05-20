@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.song.model.mapper;
 
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import org.springframework.data.domain.Page;
@@ -19,30 +20,12 @@ public class SongMapper {
                 .spotifyId(song.getSpotifyId())
                 .name(song.getName())
                 .artistName(song.getArtistName())
-                .album(song.getAlbumName())
+                .albumName(song.getAlbumName())
                 .imageUrl(song.getImageUrl())
                 .durationMs(song.getDurationMs())
                 .previewUrl(song.getPreviewUrl())
                 .spotifyLink(song.getSpotifyLink())
                 .releaseDate(song.getReleaseDate())
-                .build();
-    }
-
-    public SongEntity toEntity(SongResponse song){
-        if(song == null) return null;
-
-        return SongEntity.builder()
-                .songId(song.getSongId())
-                .spotifyId(song.getSpotifyId())
-                .name(song.getName())
-                .artistName(song.getArtistName())
-                .albumName(song.getAlbum())
-                .imageUrl(song.getImageUrl())
-                .durationMs(song.getDurationMs())
-                .previewUrl(song.getPreviewUrl())
-                .spotifyLink(song.getSpotifyLink())
-                .releaseDate(song.getReleaseDate())
-                .active(true)
                 .build();
     }
 
@@ -60,6 +43,37 @@ public class SongMapper {
         return songEntityPage.map(this::toResponse);
     }
 
+    public SongEntity toEntity(SongRequest song){
+        if(song == null) return null;
 
+        return SongEntity.builder()
+                .spotifyId(song.getSpotifyId())
+                .name(song.getName())
+                .artistName(song.getArtistName())
+                .albumName(song.getAlbumName())
+                .imageUrl(song.getImageUrl())
+                .durationMs(song.getDurationMs())
+                .previewUrl(song.getPreviewUrl())
+                .spotifyLink(song.getSpotifyLink())
+                .releaseDate(song.getReleaseDate())
+                .active(true)
+                .build();
+    }
+
+    public SongRequest toRequest(SongEntity song){
+        if(song == null) return null;
+
+        return SongRequest.builder()
+                .spotifyId(song.getSpotifyId())
+                .name(song.getName())
+                .artistName(song.getArtistName())
+                .albumName(song.getAlbumName())
+                .imageUrl(song.getImageUrl())
+                .durationMs(song.getDurationMs())
+                .previewUrl(song.getPreviewUrl())
+                .spotifyLink(song.getSpotifyLink())
+                .releaseDate(song.getReleaseDate())
+                .build();
+    }
 
 }
