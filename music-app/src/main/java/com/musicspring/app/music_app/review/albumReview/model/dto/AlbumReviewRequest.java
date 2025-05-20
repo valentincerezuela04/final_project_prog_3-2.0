@@ -14,11 +14,11 @@ import lombok.*;
         requiredProperties = {"userId", "albumId", "rating", "description"})
 public class AlbumReviewRequest {
 
-    @Schema(description = "ID of the user submitting the review", example = "123")
+    @Schema(description = "ID of the user submitting the review", example = "1")
     @NotNull(message = "User ID is required")
     private Long userId;
 
-    @Schema(description = "ID of the album being reviewed", example = "456")
+    @Schema(description = "ID of the album being reviewed", example = "2")
     @NotNull(message = "Album ID is required")
     private Long albumId;
 

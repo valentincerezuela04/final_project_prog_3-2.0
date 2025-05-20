@@ -18,10 +18,12 @@ public class SpotifyController {
     private SpotifyService spotifyService;
 
     @GetMapping("/search/songs")
-    public ResponseEntity<List<SongEntity>> searchSongs(@RequestParam String query,
+    public ResponseEntity<List<SongEntity>> searchSongs(
                                                         @RequestParam(defaultValue = "20") int limit,
-                                                        @RequestParam(defaultValue = "0") int offset) {
-        List<SongEntity> songs = spotifyService.searchSongs(query, limit, offset);
+                                                        @RequestParam(defaultValue = "0") int offset,
+                                                        @RequestParam(defaultValue = "song") String name
+                                                        ) {
+        List<SongEntity> songs = spotifyService.searchSongs( limit, offset);
         return ResponseEntity.ok(songs);
     }
 

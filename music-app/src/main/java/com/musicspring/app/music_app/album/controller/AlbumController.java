@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.album.controller;
 
+import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
 import com.musicspring.app.music_app.album.model.dto.AlbumResponse;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.album.model.mapper.AlbumMapper;
@@ -52,7 +53,7 @@ public class AlbumController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<AlbumResponse> saveAlbum (@RequestBody AlbumEntity albumEntity){
+    public ResponseEntity<AlbumResponse> saveAlbum (@RequestBody AlbumRequest albumEntity){
         return ResponseEntity.ok(albumService.save(albumEntity));
     }
 

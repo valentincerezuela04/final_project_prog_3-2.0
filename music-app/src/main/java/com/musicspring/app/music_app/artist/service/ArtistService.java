@@ -10,6 +10,7 @@ import com.musicspring.app.music_app.artist.model.mapper.ArtistXSongMapper;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
 import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
 import com.musicspring.app.music_app.shared.IService;
+import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.song.service.SongService;
 import jakarta.persistence.EntityNotFoundException;
@@ -87,7 +88,8 @@ public class ArtistService implements IService<ArtistEntity> {
     @Transactional
     public ArtistXSongResponse createArtistSongRelationship(Long artistId, Long songId) {
         ArtistEntity artist = findById(artistId);
-        SongEntity song = songService.findById(songId);
+        SongResponse song = songService.findById(songId);
+        SongEntity songEntity = songService.songResponseToEntity(song);
 
         ArtistXSongId id = new ArtistXSongId(artistId, songId);
 
@@ -99,7 +101,7 @@ public class ArtistService implements IService<ArtistEntity> {
         ArtistXSongEntity relation = ArtistXSongEntity.builder()
                 .artistXSongId(id)
                 .artist(artist)
-                .song(song)
+                .song(songEntity)
                 .build();
 
         ArtistXSongEntity savedRelation = artistXSongRepository.save(relation);

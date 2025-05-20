@@ -52,17 +52,17 @@ public class SongReviewService {
     }
 
 
-    public SongReviewResponse createSongReview(SongReviewRequest songReviewRequest) {
-        // Buscar las entidades relacionadas
-        UserEntity user = userService.findById(songReviewRequest.getUserId());
-        SongEntity song = songService.findById(songReviewRequest.getSongId());
-
-        // Crear la entidad usando el mapper
-        SongReviewEntity songReviewEntity = songReviewMapper.toEntity(songReviewRequest, user, song);
-
-        // Guardar la entidad en la base de datos
-        return songReviewMapper.toResponse(songReviewRepository.save(songReviewEntity));
-    }
+//    public SongReviewResponse createSongReview(SongReviewRequest songReviewRequest) {
+//        // Buscar las entidades relacionadas
+//        UserEntity user = userService.findById(songReviewRequest.getUserId());
+//        SongEntity song = songService.findById(songReviewRequest.getSongId());
+//
+//        // Crear la entidad usando el mapper
+//        SongReviewEntity songReviewEntity = songReviewMapper.toEntity(songReviewRequest, user, song);
+//
+//        // Guardar la entidad en la base de datos
+//        return songReviewMapper.toResponse(songReviewRepository.save(songReviewEntity));
+//    }
 
     public Page<SongReviewResponse> findBySongId (Long songId, Pageable pageable){
         return songReviewMapper.toResponsePage(songReviewRepository.findBySong_Id(songId,pageable));

@@ -113,36 +113,36 @@ public class AlbumReviewController {
         return ResponseEntity.ok(albumReviewService.findById(id));
     }
 
-    @Operation(
-            summary = "Create a new album review",
-            description = "Creates a new album review with the provided data."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Album review created successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = AlbumReviewResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid input data",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            )
-    })
+//    @Operation(
+//            summary = "Create a new album review",
+//            description = "Creates a new album review with the provided data."
+//    )
+//    @ApiResponses(value = {
+//            @ApiResponse(
+//                    responseCode = "201",
+//                    description = "Album review created successfully",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = AlbumReviewResponse.class)
+//                    )
+//            ),
+//            @ApiResponse(
+//                    responseCode = "400",
+//                    description = "Invalid input data",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ErrorDetails.class)
+//                    )
+//            ),
+//            @ApiResponse(
+//                    responseCode = "500",
+//                    description = "Internal server error",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ErrorDetails.class)
+//                    )
+//            )
+//    })
     @PostMapping
     public ResponseEntity<AlbumReviewResponse> createAlbumReview(
             @Parameter(description = "Data for the new album review", required = true)

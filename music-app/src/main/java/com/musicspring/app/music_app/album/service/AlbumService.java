@@ -51,9 +51,11 @@ public class AlbumService  {
         }
     }
 
-    public AlbumResponse save(AlbumEntity albumEntity) {
-        albumRepository.save(albumEntity);
-        return albumMapper.toResponse(albumEntity);
+    public AlbumResponse save(AlbumRequest albumEntity) {
+        AlbumEntity albumEntity1 = albumMapper.requestToEntity(albumEntity,
+                artistService.findById(albumEntity.getArtistId()));
+
+        return albumMapper.toResponse(albumRepository.save(albumEntity1));
     }
 
     public AlbumResponse findBySpotifyId(String spotifyId){

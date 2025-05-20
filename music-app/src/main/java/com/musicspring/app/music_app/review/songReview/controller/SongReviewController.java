@@ -131,44 +131,44 @@ public class SongReviewController {
             @PathVariable Long id) {
         return ResponseEntity.ok(songReviewService.findById(id));
     }
-
-    @Operation(
-            summary = "Create a new song review",
-            description = "Creates a new song review with the provided data."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Song review created successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = SongReviewResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid input data",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            )
-    })
-    @PostMapping()
-    public ResponseEntity<SongReviewResponse> createSongReview(
-            @Parameter(description = "Data for the new song review", required = true)
-            @RequestBody SongReviewRequest songReviewRequest) {
-        SongReviewResponse savedReview = songReviewService.createSongReview(songReviewRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
-    }
+//
+//    @Operation(
+//            summary = "Create a new song review",
+//            description = "Creates a new song review with the provided data."
+//    )
+//    @ApiResponses(value = {
+//            @ApiResponse(
+//                    responseCode = "201",
+//                    description = "Song review created successfully",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = SongReviewResponse.class)
+//                    )
+//            ),
+//            @ApiResponse(
+//                    responseCode = "400",
+//                    description = "Invalid input data",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ErrorDetails.class)
+//                    )
+//            ),
+//            @ApiResponse(
+//                    responseCode = "500",
+//                    description = "Internal server error",
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            schema = @Schema(implementation = ErrorDetails.class)
+//                    )
+//            )
+//    })
+//    @PostMapping()
+//    public ResponseEntity<SongReviewResponse> createSongReview(
+//            @Parameter(description = "Data for the new song review", required = true)
+//            @RequestBody SongReviewRequest songReviewRequest) {
+//        SongReviewResponse savedReview = songReviewService.createSongReview(songReviewRequest);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
+//    }
 
     @Operation(
             summary = "Get song reviews by user ID",

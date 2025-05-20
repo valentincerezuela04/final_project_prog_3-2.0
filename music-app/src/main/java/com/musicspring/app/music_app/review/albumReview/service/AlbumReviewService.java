@@ -56,17 +56,17 @@ public class AlbumReviewService {
         albumReviewRepository.save(albumReviewEntity);
     }
 
-    public AlbumReviewResponse createAlbumReview (AlbumReviewRequest albumReviewRequest) {
-        // Buscar las entidades relacionadas
-        UserEntity user = userService.findById(albumReviewRequest.getUserId());
-        AlbumEntity album = albumService.findById(albumReviewRequest.getAlbumId());
-
-        // Crear la entidad usando el mapper
-        AlbumReviewEntity albumReviewEntity = albumReviewMapper.toEntity(albumReviewRequest, user, album);
-
-        // Guardar la entidad en la base de datos
-        return albumReviewMapper.toResponse(albumReviewRepository.save(albumReviewEntity));
-    }
+//    public AlbumReviewResponse createAlbumReview (AlbumReviewRequest albumReviewRequest) {
+//        // Buscar las entidades relacionadas
+//        UserEntity user = userService.findById(albumReviewRequest.getUserId());
+//        AlbumEntity album = albumService.findById(albumReviewRequest.getAlbumId());
+//
+//        // Crear la entidad usando el mapper
+//        AlbumReviewEntity albumReviewEntity = albumReviewMapper.toEntity(albumReviewRequest, user, album);
+//
+//        // Guardar la entidad en la base de datos
+//        return albumReviewMapper.toResponse(albumReviewRepository.save(albumReviewEntity));
+//    }
 
     public Page<AlbumReviewResponse> findByAlbumId(Long albumId, Pageable pageable) {
         return albumReviewMapper.toResponsePage(albumReviewRepository.findByAlbum_AlbumId(albumId, pageable));
