@@ -11,7 +11,6 @@ import com.musicspring.app.music_app.artist.model.mapper.ArtistMapper;
 import com.musicspring.app.music_app.artist.model.mapper.ArtistXSongMapper;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
 import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
-import com.musicspring.app.music_app.shared.IService;
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.song.model.mapper.SongMapper;
@@ -19,8 +18,8 @@ import com.musicspring.app.music_app.song.service.SongService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,21 +129,23 @@ public class ArtistService {
         artistXSongRepository.deleteById(id);
     }
 
-    public List<ArtistXSongResponse> getSongsByArtistId(Long artistId) {
+    public Page<ArtistXSongResponse> getSongsByArtistId(Long artistId, Pageable pageable) {
         if (!existsById(artistId)) {
             throw new EntityNotFoundException("Artist with id " + artistId + " not found");
         }
 
-        List<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId);
-        return artistXSongMapper.toResponseList(relations);
+        Page<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId, pageable);
+        List<ArtistXSongResponse> dtoList = artistXSongMapper.toResponseList(relations.getContent());
+        return new PageImpl<>(dtoList, pageable, relations.getTotalElements());
     }
 
-    public List<ArtistXSongResponse> getArtistsBySongId(Long songId) {
+    public Page<ArtistXSongResponse> getArtistsBySongId(Long songId, Pageable pageable) {
         if (!songService.existsById(songId)) {
             throw new EntityNotFoundException("Song with id " + songId + " not found");
         }
 
-        List<ArtistXSongEntity> relations = artistXSongRepository.findBySongSongId(songId);
-        return artistXSongMapper.toResponseList(relations);
+        Page<ArtistXSongEntity> relations = artistXSongRepository.findBySongSongId(songId, pageable);
+        List<ArtistXSongResponse> dtoList = artistXSongMapper.toResponseList(relations.getContent());
+        return new PageImpl<>(dtoList, pageable, relations.getTotalElements());
     }
 }
