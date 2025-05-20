@@ -1,7 +1,9 @@
 package com.musicspring.app.music_app.album.model.mapper;
 
+import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
 import com.musicspring.app.music_app.album.model.dto.AlbumResponse;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
+import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -50,6 +52,27 @@ public class AlbumMapper {
             return  Page.empty();
         }
         return albumEntityPage.map(this::toResponse);
+    }
+
+    public AlbumEntity responseToEntity (AlbumResponse albumResponse, ArtistEntity artistEntity){
+        return AlbumEntity.builder()
+                .albumId(albumResponse.getAlbumId())
+                .spotifyId(albumResponse.getSpotifyId())
+                .title(albumResponse.getTitle())
+                .releaseDate(albumResponse.getReleaseDate())
+                .active(true)
+                .artist(artistEntity)
+                .build();
+    }
+
+    public AlbumEntity requestToEntity (AlbumRequest albumRequest, ArtistEntity artistEntity){
+        return AlbumEntity.builder()
+                .spotifyId(albumRequest.getSpotifyId())
+                .title(albumRequest.getTitle())
+                .releaseDate(albumRequest.getReleaseDate())
+                .artist(artistEntity)
+                .active(true)
+                .build();
     }
 }
 
