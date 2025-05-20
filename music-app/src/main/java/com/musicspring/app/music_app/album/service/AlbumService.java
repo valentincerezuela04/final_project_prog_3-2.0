@@ -1,9 +1,12 @@
 package com.musicspring.app.music_app.album.service;
 
+import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
 import com.musicspring.app.music_app.album.model.dto.AlbumResponse;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.album.model.mapper.AlbumMapper;
 import com.musicspring.app.music_app.album.repository.AlbumRepository;
+import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
+import com.musicspring.app.music_app.artist.service.ArtistService;
 import com.musicspring.app.music_app.shared.IService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +22,13 @@ public class AlbumService  {
 
     private final AlbumRepository albumRepository;
     private final AlbumMapper albumMapper;
+    private final ArtistService artistService;
 
     @Autowired
-    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper) {
+    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper, ArtistService artistService) {
         this.albumRepository = albumRepository;
         this.albumMapper = albumMapper;
+        this.artistService = artistService;
     }
 
 
@@ -61,5 +66,12 @@ public class AlbumService  {
                 (query, pageable);
         Page<AlbumEntity> albumEntityPage = albumMapper.toEntityPage(albumEntityList,pageable);
         return albumMapper.toResponsePage(albumEntityPage);
+    }
+
+    public AlbumResponse createAlbum (AlbumRequest albumRequest){
+        /// verifico que el artista existAa
+        ArtistEntity artistEntity = artistService.findById(albumRequest.getArtistId());
+        AlbumEntity albumEntity = albumMapper.responseToEntity(findBySpotifyId(albumRequest.getSpotifyId()),artistEntity);
+        return albumMapper.toResponse(albumRepository.save(albumEntity));
     }
 }
