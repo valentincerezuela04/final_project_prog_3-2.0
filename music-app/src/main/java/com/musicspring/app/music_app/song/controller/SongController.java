@@ -1,10 +1,14 @@
 package com.musicspring.app.music_app.song.controller;
 
+import com.musicspring.app.music_app.exceptions.ErrorDetails;
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.song.service.SongService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,8 +36,35 @@ public class SongController {
             description = "Returns a paginated list of songs, sorted by the given field."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Songs retrieved successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
+            @ApiResponse(responseCode = "200",
+                    description = "Songs retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid pagination parameters",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Entity not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
     })
     @GetMapping
     public ResponseEntity<Page<SongResponse>> getAllSongs(
@@ -55,8 +86,28 @@ public class SongController {
             description = "Retrieves a song using its internal unique identifier."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Song found"),
-            @ApiResponse(responseCode = "404", description = "Song not found")
+            @ApiResponse(responseCode = "200",
+                    description = "Song found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SongResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Song not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
     })
     @GetMapping("/{id}")
     public ResponseEntity<SongResponse> getSongById(
@@ -66,13 +117,34 @@ public class SongController {
         return ResponseEntity.ok(songService.findById(id));
     }
 
+
     @Operation(
             summary = "Get a song by Spotify ID",
             description = "Retrieves a song using its Spotify identifier."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Song found"),
-            @ApiResponse(responseCode = "404", description = "Song not found")
+            @ApiResponse(responseCode = "200",
+                    description = "Song found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SongResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Song not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
     })
     @GetMapping("/spotify/{spotifyId}")
     public ResponseEntity<SongResponse> getSongBySpotifyId(
@@ -82,21 +154,40 @@ public class SongController {
         return ResponseEntity.ok(songService.findBySpotifyId(spotifyId));
     }
 
-
     @Operation(
             summary = "Save a new song",
             description = "Creates a new song record and returns the saved song."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Song created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid song data")
+            @ApiResponse(responseCode = "201",
+                    description = "Song created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SongResponse.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid song data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
     })
     @PostMapping
     public ResponseEntity<SongResponse> saveSong(
             @Parameter(description = "Song entity to be saved")
-            @RequestBody SongEntity songEntity
+            @RequestBody SongRequest songRequest
     ) {
-        SongResponse savedSong = songService.saveSong(songEntity);
+        SongResponse savedSong = songService.saveSong(songRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSong);
     }
 
@@ -105,8 +196,27 @@ public class SongController {
             description = "Performs a text search on songs using title or artist name."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Search completed successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid search parameters")
+            @ApiResponse(responseCode = "200",
+                    description = "Search completed successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid search parameters",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
     })
     @GetMapping("/search")
     public ResponseEntity<Page<SongResponse>> searchSongs(
@@ -118,4 +228,39 @@ public class SongController {
         Page<SongResponse> songPage = songService.searchSongs(query, pageable);
         return ResponseEntity.ok(songPage);
     }
+
+    @Operation(
+            summary = "Soft delete a song by ID",
+            description = "Marks a song as inactive using its internal unique identifier."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",
+                    description = "Song deleted successfully",
+                    content = @Content
+            ),
+            @ApiResponse(responseCode = "404",
+                    description = "Song not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSongById(
+            @Parameter(description = "Internal song ID", example = "1")
+            @PathVariable Long id
+    ) {
+        songService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
