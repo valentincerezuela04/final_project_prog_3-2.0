@@ -25,7 +25,7 @@ public class SongReviewMapper {
             return null;
         }
         return SongReviewResponse.builder()
-                .songReviewId(songReview.getSongReviewId())
+                .songReviewId(songReview.getReviewId())
                 .userId(songReview.getUser().getUserId())
                 .username(songReview.getUser().getUsername())
                 .rating(songReview.getRating())
@@ -52,6 +52,7 @@ public class SongReviewMapper {
     public SongReviewEntity toEntity (SongReviewRequest songReviewRequest, UserEntity userEntity,SongEntity songEntity){
         return SongReviewEntity.builder()
                 .active(true)
+                .reviewId(songReviewRequest.getSongId())
                 .description(songReviewRequest.getDescription())
                 .rating(songReviewRequest.getRating())
                 .song(songEntity)
