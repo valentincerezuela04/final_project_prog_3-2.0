@@ -23,7 +23,7 @@ public class AlbumRequest {
 
     @NotBlank(message = "Title can not be empty.")
     @Schema(description = "Title of the album",
-            example = "Future Nostalgia")
+            example = "Ill Comunication")
     private String title;
 
     @NotNull(message = "Artist ID can not be empty")
@@ -33,6 +33,6 @@ public class AlbumRequest {
 
     @NotNull(message = "Release date can not be null.")
     @Schema(description = "Release date of the album in ISO format (yyyy-MM-dd)",
-            example = "2020-03-27", type = "string", format = "date")
+            example = "1994-05-31", type = "string", format = "date")
     private LocalDate releaseDate;
 }
