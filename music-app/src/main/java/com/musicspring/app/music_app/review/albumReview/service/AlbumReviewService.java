@@ -1,6 +1,7 @@
 package com.musicspring.app.music_app.review.albumReview.service;
 
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
+import com.musicspring.app.music_app.album.repository.AlbumRepository;
 import com.musicspring.app.music_app.album.service.AlbumService;
 import com.musicspring.app.music_app.review.albumReview.model.dto.AlbumReviewRequest;
 import com.musicspring.app.music_app.review.albumReview.model.dto.AlbumReviewResponse;
@@ -10,6 +11,7 @@ import com.musicspring.app.music_app.review.albumReview.repository.AlbumReviewRe
 import com.musicspring.app.music_app.review.songReview.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.shared.IService;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
+import com.musicspring.app.music_app.user.repository.UserRepository;
 import com.musicspring.app.music_app.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +22,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlbumReviewService {
     private final AlbumReviewRepository albumReviewRepository;
-    private final AlbumService albumService;
-    private final UserService userService;
     private final AlbumReviewMapper albumReviewMapper;
-    private final SongReviewMapper songReviewMapper;
+    private final UserRepository userRepository;
+    private final AlbumRepository albumRepository;
 
     @Autowired
     public AlbumReviewService(AlbumReviewRepository albumReviewRepository,
-                              UserService userService,
-                              AlbumService albumService,
-                              AlbumReviewMapper albumReviewMapper, SongReviewMapper songReviewMapper) {
+                              AlbumReviewMapper albumReviewMapper,
+                              UserRepository userRepository,
+                              AlbumRepository albumRepository) {
         this.albumReviewRepository = albumReviewRepository;
-        this.userService = userService;
-        this.albumService = albumService;
         this.albumReviewMapper = albumReviewMapper;
-        this.songReviewMapper = songReviewMapper;
+        this.userRepository = userRepository;
+        this.albumRepository = albumRepository;
+
     }
 
 
@@ -57,14 +58,14 @@ public class AlbumReviewService {
     }
 
     public AlbumReviewResponse createAlbumReview (AlbumReviewRequest albumReviewRequest) {
-        // Buscar las entidades relacionadas
-        UserEntity user = userService.findById(albumReviewRequest.getUserId());
-        AlbumEntity album = albumService.findById(albumReviewRequest.getAlbumId());
 
-        // Crear la entidad usando el mapper
+        UserEntity user = userRepository.findById(albumReviewRequest.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User with ID: " + albumReviewRequest.getUserId() + " was not found."));
+        AlbumEntity album = albumRepository.findById(albumReviewRequest.getAlbumId())
+                .orElseThrow(() -> new EntityNotFoundException("Album with ID: " + albumReviewRequest.getAlbumId() + " was not found."));
+
         AlbumReviewEntity albumReviewEntity = albumReviewMapper.toEntity(albumReviewRequest, user, album);
 
-        // Guardar la entidad en la base de datos
         return albumReviewMapper.toResponse(albumReviewRepository.save(albumReviewEntity));
     }
 
