@@ -7,8 +7,12 @@ import com.musicspring.app.music_app.review.songReview.model.mapper.SongReviewMa
 import com.musicspring.app.music_app.review.songReview.repository.SongReviewRepository;
 import com.musicspring.app.music_app.shared.IService;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
+import com.musicspring.app.music_app.song.model.mapper.SongMapper;
+import com.musicspring.app.music_app.song.repository.SongRepository;
 import com.musicspring.app.music_app.song.service.SongService;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
+import com.musicspring.app.music_app.user.model.mapper.UserMapper;
+import com.musicspring.app.music_app.user.repository.UserRepository;
 import com.musicspring.app.music_app.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.catalina.User;
@@ -23,16 +27,18 @@ import java.util.NoSuchElementException;
 public class SongReviewService {
 
     private final SongReviewRepository songReviewRepository;
-    private final SongService songService;
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final SongRepository songRepository;
     private final SongReviewMapper songReviewMapper;
 
+
     @Autowired
-    public SongReviewService (SongReviewRepository songReviewRepository,UserService userService,SongService songService,SongReviewMapper songReviewMapper){
+    public SongReviewService (SongReviewRepository songReviewRepository,SongReviewMapper songReviewMapper,UserRepository userRepository,SongRepository songRepository){
         this.songReviewRepository = songReviewRepository;
-        this.userService = userService;
-        this.songService = songService;
         this.songReviewMapper = songReviewMapper;
+        this.userRepository = userRepository;
+        this.songRepository = songRepository;
+
     }
 
     public Page<SongReviewResponse> findAll(Pageable pageable) {
@@ -53,14 +59,14 @@ public class SongReviewService {
 
 
     public SongReviewResponse createSongReview(SongReviewRequest songReviewRequest) {
-        // Buscar las entidades relacionadas
-        UserEntity user = userService.findById(songReviewRequest.getUserId());
-        SongEntity song = songService.findById(songReviewRequest.getSongId());
 
-        // Crear la entidad usando el mapper
+        UserEntity user = userRepository.findById(songReviewRequest.getUserId())
+                .orElseThrow(() ->(new EntityNotFoundException("User with ID: " + songReviewRequest.getUserId() + " was not found.")));
+        SongEntity song = songRepository.findById(songReviewRequest.getSongId())
+                .orElseThrow(() ->(new EntityNotFoundException("Song with ID: " + songReviewRequest.getSongId() + " was not found.")));
+
         SongReviewEntity songReviewEntity = songReviewMapper.toEntity(songReviewRequest, user, song);
 
-        // Guardar la entidad en la base de datos
         return songReviewMapper.toResponse(songReviewRepository.save(songReviewEntity));
     }
 
