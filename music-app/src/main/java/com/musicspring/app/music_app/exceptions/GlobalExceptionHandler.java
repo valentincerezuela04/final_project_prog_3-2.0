@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.exceptions;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 
+@Hidden
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
