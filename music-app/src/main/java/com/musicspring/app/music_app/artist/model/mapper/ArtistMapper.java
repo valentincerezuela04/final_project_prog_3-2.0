@@ -69,4 +69,15 @@ public class ArtistMapper {
                 .build();
     }
 
-}
+    public ArtistEntity toEntityResponse(ArtistResponse response){
+        if (response == null) {
+            return null;
+        }
+
+        return ArtistEntity.builder()
+                .name(response.getName())
+                .followers(response.getFollowers())
+                .build();
+    }
+    }
+
