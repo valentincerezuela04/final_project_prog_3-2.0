@@ -5,7 +5,9 @@ import com.musicspring.app.music_app.album.model.dto.AlbumResponse;
 import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.album.model.mapper.AlbumMapper;
 import com.musicspring.app.music_app.album.repository.AlbumRepository;
+import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
+import com.musicspring.app.music_app.artist.model.mapper.ArtistMapper;
 import com.musicspring.app.music_app.artist.service.ArtistService;
 import com.musicspring.app.music_app.shared.IService;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,12 +25,14 @@ public class AlbumService  {
     private final AlbumRepository albumRepository;
     private final AlbumMapper albumMapper;
     private final ArtistService artistService;
+    private final ArtistMapper artistMapper;
 
     @Autowired
-    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper, ArtistService artistService) {
+    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper, ArtistService artistService, ArtistMapper artistMapper) {
         this.albumRepository = albumRepository;
         this.albumMapper = albumMapper;
         this.artistService = artistService;
+        this.artistMapper = artistMapper;
     }
 
 
@@ -42,7 +46,8 @@ public class AlbumService  {
     }
 
     public void deleteById(Long id) {
-        AlbumEntity albumEntity = albumRepository.findById(id).get();
+        AlbumEntity albumEntity = albumRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Album with ID " + id + " was not found."));
         if (!albumEntity.getActive()){
             System.out.println("This album has already been deleted.");
         }else{
@@ -51,7 +56,9 @@ public class AlbumService  {
         }
     }
 
-    public AlbumResponse save(AlbumEntity albumEntity) {
+    public AlbumResponse save(AlbumRequest albumRequest) {
+        ArtistEntity artistEntity = artistMapper.toEntityResponse(artistService.findById(albumRequest.getArtistId()));
+        AlbumEntity albumEntity = albumMapper.requestToEntity(albumRequest,artistEntity);
         albumRepository.save(albumEntity);
         return albumMapper.toResponse(albumEntity);
     }
@@ -69,8 +76,7 @@ public class AlbumService  {
     }
 
     public AlbumResponse createAlbum (AlbumRequest albumRequest){
-        /// verifico que el artista existAa
-        ArtistEntity artistEntity = artistService.findById(albumRequest.getArtistId());
+        ArtistEntity artistEntity = artistMapper.toEntityResponse(artistService.findById(albumRequest.getArtistId()));
         AlbumEntity albumEntity = albumMapper.responseToEntity(findBySpotifyId(albumRequest.getSpotifyId()),artistEntity);
         return albumMapper.toResponse(albumRepository.save(albumEntity));
     }
