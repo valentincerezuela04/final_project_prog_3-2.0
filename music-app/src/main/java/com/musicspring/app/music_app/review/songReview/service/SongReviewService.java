@@ -64,7 +64,6 @@ public class SongReviewService {
 
 
     public SongReviewResponse createSongReview(SongReviewRequest songReviewRequest) {
-        // Validate input
         if (songReviewRequest.getUserId() == null) {
             throw new IllegalArgumentException("UserId is required");
         }

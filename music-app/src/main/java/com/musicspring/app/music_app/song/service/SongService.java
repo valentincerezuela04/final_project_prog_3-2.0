@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.song.service;
 
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.song.model.mapper.SongMapper;
@@ -37,9 +38,9 @@ public class SongService  {
         songRepository.save(songEntity);
     }
 
-    public SongResponse saveSong(SongEntity songEntity) {
-        songEntity.setActive(true);
-        return songMapper.toResponse(songRepository.save(songEntity));
+    public SongResponse saveSong(SongRequest songRequest) {
+        SongEntity song = songMapper.toEntity(songRequest);
+        return songMapper.toResponse(songRepository.save(song));
     }
 
 

@@ -1,16 +1,17 @@
 package com.musicspring.app.music_app.review.songReview.model.entity;
 
+import com.musicspring.app.music_app.review.Review;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "Entity representing a review for a song")
 @Entity
 @Table(name = "song_reviews")
 @Check(constraints = "rating >= 0.5 AND rating <= 5.0")
@@ -18,33 +19,11 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class SongReviewEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "song_review_id")
-    private Long songReviewId;
-
-    @Column(name = "rating", columnDefinition = "DECIMAL(3,2) DEFAULT 5.0")
-    private Double rating;
-
-
-    @Column(name = "description")
-    private String description;
-
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime date;
-
-    @Column(name = "active", nullable = false)
-    private Boolean active;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+public class SongReviewEntity extends Review {
 
     @ManyToOne
     @JoinColumn(name = "song_id", nullable = false)

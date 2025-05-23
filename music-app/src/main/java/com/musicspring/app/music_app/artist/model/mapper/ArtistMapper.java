@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.artist.model.mapper;
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
@@ -56,4 +57,27 @@ public class ArtistMapper {
                 .songs(songs)
                 .build();
     }
-}
+
+    public ArtistEntity toEntity(ArtistRequest request) {
+        if (request == null) {
+            return null;
+        }
+
+        return ArtistEntity.builder()
+                .name(request.getName())
+                .followers(request.getFollowers())
+                .build();
+    }
+
+    public ArtistEntity toEntityResponse(ArtistResponse response){
+        if (response == null) {
+            return null;
+        }
+
+        return ArtistEntity.builder()
+                .name(response.getName())
+                .followers(response.getFollowers())
+                .build();
+    }
+    }
+
