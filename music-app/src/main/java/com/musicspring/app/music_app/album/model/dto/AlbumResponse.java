@@ -30,4 +30,5 @@ public class AlbumResponse {
     @NotNull(message = "Release date can not be null.")
     private LocalDate releaseDate;
 
+    private String imageUrl;
 }

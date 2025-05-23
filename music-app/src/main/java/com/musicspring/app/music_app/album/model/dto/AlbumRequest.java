@@ -1,6 +1,7 @@
 package com.musicspring.app.music_app.album.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -30,6 +31,11 @@ public class AlbumRequest {
     @Schema(description = "ID of the artist associated with the album",
             example = "101")
     private Long artistId;
+
+    @Schema(description = "URL of the album's cover image",
+            example = "https://i.scdn.co/image/ab67616d0000b273e5d7e3a7f93b4e2e7e8b2b53")
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @NotNull(message = "Release date can not be null.")
     @Schema(description = "Release date of the album in ISO format (yyyy-MM-dd)",

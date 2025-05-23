@@ -25,6 +25,7 @@ public class AlbumMapper {
                     .title(album.getTitle())
                     .artistId(album.getArtist().getArtistId())
                     .releaseDate(album.getReleaseDate())
+                    .imageUrl(album.getImageUrl())
                     .build();
         }
     }
@@ -60,6 +61,7 @@ public class AlbumMapper {
                 .spotifyId(albumResponse.getSpotifyId())
                 .title(albumResponse.getTitle())
                 .releaseDate(albumResponse.getReleaseDate())
+                .imageUrl(albumResponse.getImageUrl())
                 .active(true)
                 .artist(artistEntity)
                 .build();
@@ -70,6 +72,7 @@ public class AlbumMapper {
                 .spotifyId(albumRequest.getSpotifyId())
                 .title(albumRequest.getTitle())
                 .releaseDate(albumRequest.getReleaseDate())
+                .imageUrl(albumRequest.getImageUrl())
                 .artist(artistEntity)
                 .active(true)
                 .build();

@@ -36,6 +36,10 @@ public class AlbumEntity {
     @NotNull(message = "Release date can not be empty.")
     private LocalDate releaseDate;
 
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "active", nullable = false)
     @NotNull(message = "Active can not be empty.")
     private Boolean active;
