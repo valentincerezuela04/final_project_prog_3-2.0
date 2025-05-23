@@ -15,7 +15,4 @@ public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
 
     List<AlbumEntity> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
-//    @Query("SELECT a FROM AlbumEntity a WHERE a.artist.id = :artistId") // jpql
-    @Query("SELECT a FROM AlbumEntity a WHERE a.artist.artistId = :artistId") // jpql
-    List<AlbumEntity> findAllByArtistId(@Param("artistId") Long artistId);
 }

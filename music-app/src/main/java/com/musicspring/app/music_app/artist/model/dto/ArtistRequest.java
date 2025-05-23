@@ -1,29 +1,31 @@
 package com.musicspring.app.music_app.artist.model.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-@Data
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "ArtistRequest", description = "Request DTO to create or update an artist")
+@Schema(description = "Request object for artist operations")
 public class ArtistRequest {
 
-    @NotBlank
-    @Schema(description = "Name of the artist", example = "The Beatles", required = true)
+    @Schema(description = "Spotify ID of the artist", example = "0OdUWJ0sBjDrqHygGUXeCF")
+    private String spotifyId;
+
+    @Schema(description = "Name of the artist", example = "Taylor Swift")
     private String name;
 
-    @NotNull
-    @Min(value = 0, message = "Followers must be non-negative")
-    @Schema(description = "Number of followers the artist has (non-negative integer)", example = "5000000", required = true)
+    @Schema(description = "Number of followers the artist has on Spotify", example = "84573485")
     private Integer followers;
 
-    @Schema(description = "Flag indicating if the artist is currently active", example = "true")
-    private boolean active;
+    @Schema(description = "Maximum number of results to return", example = "10")
+    private Integer limit;
+
+    @Schema(description = "Result page offset", example = "0")
+    private Integer offset;
+
+    @Schema(description = "Sort results by specific field", example = "popularity")
+    private String sortBy;
 }

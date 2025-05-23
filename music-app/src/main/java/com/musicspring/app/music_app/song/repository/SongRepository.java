@@ -16,7 +16,4 @@ public interface SongRepository extends JpaRepository<SongEntity, Long> {
     Page<SongEntity> findByNameContainingIgnoreCaseOrArtistNameContainingIgnoreCase(
             String name, String artistName, Pageable pageable);
 
-    // Page<Song> findByArtistNameContainingIgnoreCase(String artistName, Pageable pageable);
-
-
 }

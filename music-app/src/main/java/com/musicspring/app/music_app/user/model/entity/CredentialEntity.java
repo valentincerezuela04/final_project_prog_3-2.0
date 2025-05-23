@@ -21,7 +21,8 @@ public class CredentialEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
+    // user is a reservated word on h2
+    @JoinColumn(name = "user_ref")
     private UserEntity user;
 
     @NotBlank

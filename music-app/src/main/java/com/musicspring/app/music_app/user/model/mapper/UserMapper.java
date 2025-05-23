@@ -22,4 +22,13 @@ public class UserMapper {
                 .active(true)
                 .build();
     }
+    public UserEntity toUserEntity(UserResponse userResponse) {
+        return UserEntity.builder()
+                .userId(userResponse.getId())
+                .username(userResponse.getUsername())
+                .role(ERole.valueOf(userResponse.getRole().toUpperCase()))
+                .active(true)
+                .build();
+    }
+
 }

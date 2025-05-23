@@ -10,9 +10,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SongReviewRepository extends JpaRepository<SongReviewEntity,Long> {
-    @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.song.id = :songId")
+    @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.song.songId = :songId")
     Page<SongReviewEntity> findBySong_Id(@Param("songId") Long songId, Pageable pageable);
 
     @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.user.userId = :userId")
     Page<SongReviewEntity> findByUser_UserId(@Param("userId") Long userId, Pageable pageable);
+    
+    @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.song.spotifyId = :spotifyId")
+    Page<SongReviewEntity> findBySong_SpotifyId(@Param("spotifyId") String spotifyId, Pageable pageable);
 }
