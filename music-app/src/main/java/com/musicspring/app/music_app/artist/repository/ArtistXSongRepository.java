@@ -11,9 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ArtistXSongRepository extends JpaRepository<ArtistXSongEntity, ArtistXSongId> {
-    Page<ArtistXSongEntity> findByArtistArtistId(Long artistId, Pageable pagable);
     List<ArtistXSongEntity> findByArtistArtistId(Long artistId);
-    Page<ArtistXSongEntity> findBySongSongId(Long songId,Pageable pagable);
-    List<ArtistXSongEntity> findBySongSongId(Long songId);
 
 }

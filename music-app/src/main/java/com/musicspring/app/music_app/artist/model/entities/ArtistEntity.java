@@ -24,6 +24,9 @@ public class ArtistEntity {
     @Column(name = "followers")
     private Integer followers;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(nullable = false)
     private boolean active;
 

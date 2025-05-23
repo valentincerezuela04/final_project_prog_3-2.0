@@ -28,6 +28,7 @@ public class ArtistMapper {
                 .artistId(entity.getArtistId())
                 .name(entity.getName())
                 .followers(entity.getFollowers())
+                .imageUrl(entity.getImageUrl())
                 .build();
     }
 
@@ -54,6 +55,7 @@ public class ArtistMapper {
                 .artistId(artist.getArtistId())
                 .name(artist.getName())
                 .followers(artist.getFollowers())
+                .imageUrl(artist.getImageUrl())
                 .songs(songs)
                 .build();
     }
@@ -66,6 +68,7 @@ public class ArtistMapper {
         return ArtistEntity.builder()
                 .name(request.getName())
                 .followers(request.getFollowers())
+                .imageUrl(request.getImageUrl())
                 .build();
     }
 
@@ -77,6 +80,7 @@ public class ArtistMapper {
         return ArtistEntity.builder()
                 .name(response.getName())
                 .followers(response.getFollowers())
+                .imageUrl(response.getImageUrl())
                 .build();
     }
     }

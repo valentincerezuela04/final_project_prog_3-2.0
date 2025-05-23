@@ -13,6 +13,7 @@ public class ArtistWithSongsResponse {
     private Long artistId;
     private String name;
     private Integer followers;
+    private String imageUrl;
     private List<SongResponse> songs;
 
 }

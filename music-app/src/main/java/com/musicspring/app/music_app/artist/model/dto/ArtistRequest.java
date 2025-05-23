@@ -20,6 +20,9 @@ public class ArtistRequest {
     @Schema(description = "Number of followers the artist has on Spotify", example = "84573485")
     private Integer followers;
 
+    @Schema(description = "URL of the artist's image", example = "https://i.scdn.co/image/ab6761610000e5eb1b5c9ad7e921fa9a9fbb2d0e")
+    private String imageUrl;
+
     @Schema(description = "Maximum number of results to return", example = "10")
     private Integer limit;
 
