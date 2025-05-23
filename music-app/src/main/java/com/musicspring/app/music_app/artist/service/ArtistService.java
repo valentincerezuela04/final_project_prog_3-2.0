@@ -10,7 +10,10 @@ import com.musicspring.app.music_app.artist.model.mapper.ArtistXSongMapper;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
 import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
 import com.musicspring.app.music_app.shared.IService;
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
+import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
+import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.song.service.SongService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +31,21 @@ public class ArtistService implements IService<ArtistEntity> {
     private final ArtistXSongRepository artistXSongRepository;
     private final ArtistXSongMapper artistXSongMapper;
     private final SongService songService;
+    private final SongMapper songMapper;
 
     @Autowired
     public ArtistService(ArtistRepository artistRepository,
                          ArtistMapper artistMapper,
                          ArtistXSongRepository artistXSongRepository,
                          ArtistXSongMapper artistXSongMapper,
-                         SongService songService) {
+                         SongService songService,
+                         SongMapper songMapper) {
         this.artistRepository = artistRepository;
         this.artistMapper = artistMapper;
         this.artistXSongRepository = artistXSongRepository;
         this.artistXSongMapper = artistXSongMapper;
         this.songService = songService;
+        this.songMapper = songMapper;
     }
 
     public ArtistWithSongsResponse getArtistWithSongs(Long artistId) {
@@ -87,7 +93,7 @@ public class ArtistService implements IService<ArtistEntity> {
     @Transactional
     public ArtistXSongResponse createArtistSongRelationship(Long artistId, Long songId) {
         ArtistEntity artist = findById(artistId);
-        SongEntity song = songService.findById(songId);
+        SongResponse song = songService.findById(songId);
 
         ArtistXSongId id = new ArtistXSongId(artistId, songId);
 
@@ -99,7 +105,7 @@ public class ArtistService implements IService<ArtistEntity> {
         ArtistXSongEntity relation = ArtistXSongEntity.builder()
                 .artistXSongId(id)
                 .artist(artist)
-                .song(song)
+                .song(songMapper.toEntity(song))
                 .build();
 
         ArtistXSongEntity savedRelation = artistXSongRepository.save(relation);

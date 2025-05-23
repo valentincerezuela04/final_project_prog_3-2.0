@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -165,7 +166,7 @@ public class SongReviewController {
     @PostMapping()
     public ResponseEntity<SongReviewResponse> createSongReview(
             @Parameter(description = "Data for the new song review", required = true)
-            @RequestBody SongReviewRequest songReviewRequest) {
+            @Valid @RequestBody SongReviewRequest songReviewRequest) {
         SongReviewResponse savedReview = songReviewService.createSongReview(songReviewRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);
     }
@@ -273,6 +274,59 @@ public class SongReviewController {
             @RequestParam String sort) {
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
         Page<SongReviewResponse> songReviewResponsePage = songReviewService.findBySongId(songId, pageable);
+        return ResponseEntity.ok(songReviewResponsePage);
+    }
+
+    @Operation(
+            summary = "Get song reviews by Spotify ID",
+            description = "Retrieves a paginated list of reviews for the specified song using its Spotify ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Song reviews retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Song not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request parameters",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
+    })
+    @GetMapping("/spotify/{spotifyId}")
+    public ResponseEntity<Page<SongReviewResponse>> getSongReviewsBySpotifyId(
+            @Parameter(description = "Spotify ID of the song whose reviews are requested", example = "4iV5W9uYEdYUVa79Axb7Rh")
+            @PathVariable String spotifyId,
+            @Parameter(description = "Number of items per page", example = "10")
+            @RequestParam int size,
+            @Parameter(description = "Page number to retrieve (0-based)", example = "0")
+            @RequestParam int pageNumber,
+            @Parameter(description = "Field to sort by", example = "date")
+            @RequestParam String sort) {
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
+        Page<SongReviewResponse> songReviewResponsePage = songReviewService.findBySpotifyId(spotifyId, pageable);
         return ResponseEntity.ok(songReviewResponsePage);
     }
 

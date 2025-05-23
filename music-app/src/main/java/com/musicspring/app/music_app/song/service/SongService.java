@@ -42,9 +42,6 @@ public class SongService  {
         return songMapper.toResponse(songRepository.save(songEntity));
     }
 
-    public SongEntity songResponseToEntity(SongResponse songResponse){
-        return songMapper.toEntity(songResponse);
-    }
 
     public SongResponse findBySpotifyId(String spotifyId) {
         return songMapper.toResponse(songRepository.findBySpotifyId(spotifyId)
