@@ -62,7 +62,7 @@ public class ArtistController {
             @Parameter(description = "ID of the artist to retrieve", example = "1")
             @PathVariable Long id) {
         try {
-            ArtistResponse artist = artistService.findById(id);
+            ArtistResponse artist = artistService.getArtistResponseById(id);
             return ResponseEntity.ok(artist);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

@@ -1,18 +1,14 @@
 package com.musicspring.app.music_app.artist.service;
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
+import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
-import com.musicspring.app.music_app.artist.model.dto.ArtistXSongResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
-import com.musicspring.app.music_app.artist.model.entities.ArtistXSongId;
 import com.musicspring.app.music_app.artist.model.mapper.ArtistMapper;
 import com.musicspring.app.music_app.artist.model.mapper.ArtistXSongMapper;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
 import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
-import com.musicspring.app.music_app.shared.IService;
-import com.musicspring.app.music_app.song.model.dto.SongRequest;
-import com.musicspring.app.music_app.song.model.dto.SongResponse;
-import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.song.service.SongService;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ArtistService implements IService<ArtistEntity> {
+public class ArtistService{
     private final ArtistRepository artistRepository;
     private final ArtistMapper artistMapper;
     private final ArtistXSongRepository artistXSongRepository;
@@ -54,7 +50,7 @@ public class ArtistService implements IService<ArtistEntity> {
         return artistMapper.toArtistWithSongsResponse(artist, relations);
     }
 
-    @Override
+
     @Transactional
     public void deleteById(Long id) {
         ArtistEntity artist = findById(id);
@@ -62,12 +58,10 @@ public class ArtistService implements IService<ArtistEntity> {
         artistRepository.save(artist);
     }
 
-    @Override
     public Page<ArtistEntity> findAll(Pageable pageable) {
         return artistRepository.findByActiveTrue(pageable);
     }
 
-    @Override
     public ArtistEntity findById(Long id) {
         return artistRepository.findByArtistIdAndActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
@@ -77,65 +71,29 @@ public class ArtistService implements IService<ArtistEntity> {
         return artistRepository.existsByArtistIdAndActiveTrue(id);
     }
 
-    @Override
-    public ArtistEntity save(ArtistEntity artistEntity) {
-        if(artistEntity == null) {
-            throw new IllegalArgumentException("ArtistEntity cannot be null");
-        }
-        artistEntity.setActive(true);
-        return artistRepository.save(artistEntity);
+
+    public ArtistResponse save(ArtistRequest artistRequest) {
+        ArtistEntity entity = artistMapper.toEntity(artistRequest);
+        entity.setActive(true);
+        ArtistEntity saved = artistRepository.save(entity);
+        return artistMapper.toResponse(saved);
     }
 
-    public List<ArtistEntity> findByName(String name) {
+
+    public List<ArtistResponse> findByName(String name) {
         return artistRepository.findByNameContainingIgnoreCaseAndActiveTrue(name);
     }
 
-    @Transactional
-    public ArtistXSongResponse createArtistSongRelationship(Long artistId, Long songId) {
-        ArtistEntity artist = findById(artistId);
-        SongResponse song = songService.findById(songId);
 
-        ArtistXSongId id = new ArtistXSongId(artistId, songId);
 
-        // Check if already exists
-        if (artistXSongRepository.existsById(id)) {
-            throw new IllegalStateException("Relationship between artist " + artistId + " and song " + songId + " already exists");
-        }
 
-        ArtistXSongEntity relation = ArtistXSongEntity.builder()
-                .artistXSongId(id)
-                .artist(artist)
-                .song(songMapper.toEntity(song))
-                .build();
-
-        ArtistXSongEntity savedRelation = artistXSongRepository.save(relation);
-        return artistXSongMapper.toResponse(savedRelation);
+    public ArtistResponse getArtistResponseById(Long id) {
+        ArtistEntity entity = findById(id);
+        return artistMapper.toResponse(entity);
     }
 
-    @Transactional
-    public void deleteArtistSongRelationship(Long artistId, Long songId) {
-        ArtistXSongId id = new ArtistXSongId(artistId, songId);
-        if (!artistXSongRepository.existsById(id)) {
-            throw new EntityNotFoundException("Relationship between artist " + artistId + " and song " + songId + " not found");
-        }
-        artistXSongRepository.deleteById(id);
-    }
-
-    public List<ArtistXSongResponse> getSongsByArtistId(Long artistId) {
-        if (!existsById(artistId)) {
-            throw new EntityNotFoundException("Artist with id " + artistId + " not found");
-        }
-
-        List<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId);
-        return artistXSongMapper.toResponseList(relations);
-    }
-
-    public List<ArtistXSongResponse> getArtistsBySongId(Long songId) {
-        if (!songService.existsById(songId)) {
-            throw new EntityNotFoundException("Song with id " + songId + " not found");
-        }
-
-        List<ArtistXSongEntity> relations = artistXSongRepository.findBySongSongId(songId);
-        return artistXSongMapper.toResponseList(relations);
+    public Page<ArtistResponse> getAllArtists(Pageable pageable) {
+        return artistRepository.findByActiveTrue(pageable)
+                .map(artistMapper::toResponse);
     }
 }

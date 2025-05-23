@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.artist.repository;
 
+import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
 
     Page<ArtistEntity> findByActiveTrue(Pageable pageable);
 
-    List<ArtistEntity> findByNameContainingIgnoreCaseAndActiveTrue(String name);
+    List<ArtistResponse> findByNameContainingIgnoreCaseAndActiveTrue(String name);
 
     boolean existsByArtistIdAndActiveTrue(Long artistId);
 }
