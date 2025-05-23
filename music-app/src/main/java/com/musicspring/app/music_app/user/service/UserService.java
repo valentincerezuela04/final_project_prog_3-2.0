@@ -51,6 +51,11 @@ public class UserService {
                 .orElseThrow(()-> new EntityNotFoundException("User with ID: " + id + " was not found."));
     }
 
+    public UserEntity findEntityById(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("User with ID: " + id + " was not found."));
+    }
+
     public UserResponse getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(userMapper::toResponse)

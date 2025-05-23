@@ -5,24 +5,17 @@ import com.musicspring.app.music_app.review.songReview.model.dto.SongReviewRespo
 import com.musicspring.app.music_app.review.songReview.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.review.songReview.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.review.songReview.repository.SongReviewRepository;
-import com.musicspring.app.music_app.shared.IService;
-import com.musicspring.app.music_app.song.model.dto.SongResponse;
+import com.musicspring.app.music_app.song.model.dto.SongRequest;
 import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.song.service.SongService;
-import com.musicspring.app.music_app.user.model.dto.UserResponse;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
-import com.musicspring.app.music_app.user.model.mapper.UserMapper;
 import com.musicspring.app.music_app.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.NoSuchElementException;
-import java.util.Date;
 
 @Service
 public class SongReviewService {
@@ -31,18 +24,15 @@ public class SongReviewService {
     private final SongService songService;
     private final UserService userService;
     private final SongReviewMapper songReviewMapper;
-    private final UserMapper userMapper;
     private final SongMapper songMapper;
 
     @Autowired
-    public SongReviewService (SongReviewRepository songReviewRepository,UserService userService
-            ,SongService songService,SongReviewMapper songReviewMapper, UserMapper userMapper,
-                              SongMapper songMapper){
+    public SongReviewService (SongReviewRepository songReviewRepository, UserService userService,
+            SongService songService, SongReviewMapper songReviewMapper, SongMapper songMapper){
         this.songReviewRepository = songReviewRepository;
         this.userService = userService;
         this.songService = songService;
         this.songReviewMapper = songReviewMapper;
-        this.userMapper = userMapper;
         this.songMapper = songMapper;
     }
 
@@ -72,11 +62,8 @@ public class SongReviewService {
             throw new IllegalArgumentException("Either songId or spotifyId is required");
         }
 
-        UserResponse user = userService.findById(songReviewRequest.getUserId());
-        SongResponse song = findOrCreateSong(songReviewRequest);
-
-        UserEntity userEntity = userMapper.toUserEntity(user);
-        SongEntity songEntity = songMapper.toEntity(song);
+        UserEntity userEntity = userService.findEntityById(songReviewRequest.getUserId());
+        SongEntity songEntity = findOrCreateSongEntity(songReviewRequest);
         
         SongReviewEntity songReviewEntity = songReviewMapper.toEntity(songReviewRequest, userEntity, songEntity);
         
@@ -85,55 +72,30 @@ public class SongReviewService {
         return songReviewMapper.toResponse(savedEntity);
     }
 
-    private SongResponse findOrCreateSong(SongReviewRequest songReviewRequest) {
-        // If songId is provided, use existing song
+    private SongEntity findOrCreateSongEntity(SongReviewRequest songReviewRequest) {
         if (songReviewRequest.getSongId() != null) {
-            return songService.findById(songReviewRequest.getSongId());
+            return songService.findEntityById(songReviewRequest.getSongId());
         }
-        
-        // If spotifyId is provided, find or create song
+
         if (songReviewRequest.getSpotifyId() != null) {
-            try {
-                return songService.findBySpotifyId(songReviewRequest.getSpotifyId());
-            } catch (EntityNotFoundException e) {
-                return createNewSongFromSpotifyData(songReviewRequest);
+            if (songService.existsBySpotifyId(songReviewRequest.getSpotifyId())) {
+                return songService.findEntityBySpotifyId(songReviewRequest.getSpotifyId());
+            } else {
+                return createNewSongEntityFromSpotifyData(songReviewRequest);
             }
         }
         
         throw new IllegalArgumentException("Either songId or spotifyId must be provided");
     }
 
-    private SongResponse createNewSongFromSpotifyData(SongReviewRequest songReviewRequest) {
+    private SongEntity createNewSongEntityFromSpotifyData(SongReviewRequest songReviewRequest) {
         if (songReviewRequest.getSongName() == null || songReviewRequest.getArtistName() == null) {
             throw new IllegalArgumentException("songName and artistName are required when creating new song from Spotify data");
         }
-        
-        // Convert release date string to Date if provided
-        Date releaseDate = null;
-        if (songReviewRequest.getReleaseDate() != null) {
-            try {
-                releaseDate = java.sql.Date.valueOf(songReviewRequest.getReleaseDate());
-            } catch (IllegalArgumentException e) {
-                // Invalid date format, continue without date
-                releaseDate = null;
-            }
-        }
 
-        // Create song entity with Spotify data
-        SongEntity newSong = SongEntity.builder()
-                .spotifyId(songReviewRequest.getSpotifyId())
-                .name(songReviewRequest.getSongName())
-                .artistName(songReviewRequest.getArtistName())
-                .albumName(songReviewRequest.getAlbumName())
-                .imageUrl(songReviewRequest.getImageUrl())
-                .durationMs(songReviewRequest.getDurationMs())
-                .previewUrl(songReviewRequest.getPreviewUrl())
-                .spotifyLink(songReviewRequest.getSpotifyLink())
-                .releaseDate(releaseDate)
-                .active(true)
-                .build();
+        SongRequest songRequest = songMapper.toRequestFromReviewRequest(songReviewRequest);
         
-        return songService.saveSong(newSong);
+        return songService.saveSongEntity(songRequest);
     }
 
     public Page<SongReviewResponse> findBySongId (Long songId, Pageable pageable){

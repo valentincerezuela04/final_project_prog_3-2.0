@@ -48,11 +48,7 @@ public class AlbumController {
     public ResponseEntity<AlbumResponse> getAlbumById(
             @Parameter(description = "Internal ID of the album", example = "1")
             @PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(albumService.findById(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(albumService.findById(id));
     }
 
 
@@ -84,11 +80,7 @@ public class AlbumController {
     public ResponseEntity<AlbumResponse> getAlbumBySpotifyId(
             @Parameter(description = "Spotify ID of the album", example = "6z4NLXyHPga1UmSJsPK7G1")
             @PathVariable String spotifyId) {
-        try {
-            return ResponseEntity.ok(albumService.findBySpotifyId(spotifyId));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(albumService.findBySpotifyId(spotifyId));
     }
 
 

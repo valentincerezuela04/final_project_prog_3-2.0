@@ -12,9 +12,9 @@ import java.util.List;
 public interface ReviewReactionRepository extends JpaRepository<ReviewReactionEntity, Long> {
 
     /// Finds all reactions linked to a specific album review by its ID
-    Page<ReviewReactionEntity> findByAlbumReview_AlbumReviewId(Long albumReviewId, Pageable pageable);
+    Page<ReviewReactionEntity> findByAlbumReview_ReviewId(Long albumReviewId, Pageable pageable);
     /// Finds all reactions linked to a specific song review by its ID
-    Page<ReviewReactionEntity> findBySongReview_SongReviewId(Long songReviewId, Pageable pageable);
+    Page<ReviewReactionEntity> findBySongReview_ReviewId(Long songReviewId, Pageable pageable);
     /// Finds all reactions created by a specific user by user ID
     Page<ReviewReactionEntity> findByUser_UserId(Long userId, Pageable pageable);
 }

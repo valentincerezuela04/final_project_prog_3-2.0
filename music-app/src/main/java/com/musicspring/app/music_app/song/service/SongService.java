@@ -31,6 +31,11 @@ public class SongService  {
                 .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found.")));
     }
 
+    public SongEntity findEntityById(Long id) {
+        return songRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."));
+    }
+
     public void deleteById(Long id) {
         SongEntity songEntity = songRepository.findById(id)
                         .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."));
@@ -43,14 +48,19 @@ public class SongService  {
         return songMapper.toResponse(songRepository.save(song));
     }
 
+    public SongEntity saveSongEntity(SongRequest songRequest) {
+        SongEntity song = songMapper.toEntity(songRequest);
+        return songRepository.save(song);
+    }
 
     public SongResponse findBySpotifyId(String spotifyId) {
         return songMapper.toResponse(songRepository.findBySpotifyId(spotifyId)
                 .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found.")));
     }
 
-    public boolean existsById (Long id){
-        return songRepository.existsById(id);
+    public SongEntity findEntityBySpotifyId(String spotifyId) {
+        return songRepository.findBySpotifyId(spotifyId)
+                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found."));
     }
 
     public Page<SongResponse> searchSongs(String query, Pageable pageable) {
@@ -59,5 +69,13 @@ public class SongService  {
         );
 
         return songMapper.toResponsePage(songPage);
+    }
+
+    public boolean existsById(Long id) {
+        return songRepository.existsById(id);
+    }
+
+    public boolean existsBySpotifyId(String spotifyId) {
+        return songRepository.findBySpotifyId(spotifyId).isPresent();
     }
 }
