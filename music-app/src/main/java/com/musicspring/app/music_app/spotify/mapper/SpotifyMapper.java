@@ -26,10 +26,17 @@ public class SpotifyMapper {
             return null;
         }
 
+        String imageUrl = null;
+        Image[] images = spotifyAlbum.getImages();
+        if (images != null && images.length > 0) {
+            imageUrl = images[0].getUrl();
+        }
+
         return AlbumRequest.builder()
                 .spotifyId(spotifyAlbum.getId())
                 .title(spotifyAlbum.getName())
                 .releaseDate(parseReleaseDate(spotifyAlbum.getReleaseDate()))
+                .imageUrl(imageUrl)
                 .build();
     }
     
@@ -38,10 +45,17 @@ public class SpotifyMapper {
             return null;
         }
 
+        String imageUrl = null;
+        Image[] images = spotifyAlbum.getImages();
+        if (images != null && images.length > 0) {
+            imageUrl = images[0].getUrl();
+        }
+
         return AlbumRequest.builder()
                 .spotifyId(spotifyAlbum.getId())
                 .title(spotifyAlbum.getName())
                 .releaseDate(parseReleaseDate(spotifyAlbum.getReleaseDate()))
+                .imageUrl(imageUrl)
                 .build();
     }
 
@@ -51,10 +65,17 @@ public class SpotifyMapper {
             return null;
         }
 
+        String imageUrl = null;
+        Image[] images = spotifyArtist.getImages();
+        if (images != null && images.length > 0) {
+            imageUrl = images[0].getUrl();
+        }
+
         return ArtistRequest.builder()
                 .name(spotifyArtist.getName())
                 .followers(spotifyArtist.getFollowers().getTotal())
                 .spotifyId(spotifyArtist.getId())
+                .imageUrl(imageUrl)
                 .build();
     }
     
