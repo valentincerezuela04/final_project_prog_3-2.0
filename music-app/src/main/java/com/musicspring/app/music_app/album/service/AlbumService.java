@@ -37,6 +37,11 @@ public class AlbumService  {
                 -> new EntityNotFoundException("Album with ID " + id + " was not found.")));
     }
 
+    public AlbumEntity findEntityById(Long id) {
+        return albumRepository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Album with ID " + id + " was not found."));
+    }
+
     public void deleteById(Long id) {
         AlbumEntity albumEntity = albumRepository.findById(id).orElseThrow(()->
                 new EntityNotFoundException("Album with ID " + id + " was not found."));

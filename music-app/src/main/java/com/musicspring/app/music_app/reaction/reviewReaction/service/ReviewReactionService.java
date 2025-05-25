@@ -41,14 +41,18 @@ public class ReviewReactionService implements IService<ReviewReactionEntity> {
     }
 
     public Page<ReviewReactionEntity> findByAlbumReviewId(Long albumReviewId, Pageable pageable){
-        return reviewReactionRepository.findByAlbumReview_AlbumReviewId(albumReviewId, pageable);
+        return reviewReactionRepository.findByAlbumReview_ReviewId(albumReviewId, pageable);
     }
 
     public Page<ReviewReactionEntity> findBySongReviewId(Long songReviewId, Pageable pageable){
-        return reviewReactionRepository.findBySongReview_SongReviewId(songReviewId, pageable);
+        return reviewReactionRepository.findBySongReview_ReviewId(songReviewId, pageable);
     }
 
     public Page<ReviewReactionEntity> findByUserId(Long userId, Pageable pageable){
         return reviewReactionRepository.findByUser_UserId(userId, pageable);
+    }
+
+    public Page<ReviewReactionEntity> findByAlbumId(Long albumId, Pageable pageable){
+        return reviewReactionRepository.findByAlbumReview_Album_AlbumId(albumId, pageable);
     }
 }

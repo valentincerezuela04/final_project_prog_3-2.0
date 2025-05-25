@@ -3,7 +3,7 @@ package com.musicspring.app.music_app.song.model.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Setter
