@@ -72,11 +72,9 @@ public class SongReviewService {
             throw new IllegalArgumentException("Either songId or spotifyId is required");
         }
 
-        UserResponse user = userService.findById(songReviewRequest.getUserId());
-        SongResponse song = findOrCreateSong(songReviewRequest);
-
-        UserEntity userEntity = userMapper.toUserEntity(user);
-        SongEntity songEntity = songMapper.toEntity(song);
+        // Get managed entities directly from repositories instead of converting from DTOs
+        UserEntity userEntity = userService.findEntityById(songReviewRequest.getUserId());
+        SongEntity songEntity = findOrCreateSongEntity(songReviewRequest);
         
         SongReviewEntity songReviewEntity = songReviewMapper.toEntity(songReviewRequest, userEntity, songEntity);
         
@@ -85,25 +83,25 @@ public class SongReviewService {
         return songReviewMapper.toResponse(savedEntity);
     }
 
-    private SongResponse findOrCreateSong(SongReviewRequest songReviewRequest) {
-        // If songId is provided, use existing song
+    private SongEntity findOrCreateSongEntity(SongReviewRequest songReviewRequest) {
+        // If songId is provided, use existing song entity
         if (songReviewRequest.getSongId() != null) {
-            return songService.findById(songReviewRequest.getSongId());
+            return songService.findEntityById(songReviewRequest.getSongId());
         }
         
         // If spotifyId is provided, find or create song
         if (songReviewRequest.getSpotifyId() != null) {
             try {
-                return songService.findBySpotifyId(songReviewRequest.getSpotifyId());
+                return songService.findEntityBySpotifyId(songReviewRequest.getSpotifyId());
             } catch (EntityNotFoundException e) {
-                return createNewSongFromSpotifyData(songReviewRequest);
+                return createNewSongEntityFromSpotifyData(songReviewRequest);
             }
         }
         
         throw new IllegalArgumentException("Either songId or spotifyId must be provided");
     }
 
-    private SongResponse createNewSongFromSpotifyData(SongReviewRequest songReviewRequest) {
+    private SongEntity createNewSongEntityFromSpotifyData(SongReviewRequest songReviewRequest) {
         if (songReviewRequest.getSongName() == null || songReviewRequest.getArtistName() == null) {
             throw new IllegalArgumentException("songName and artistName are required when creating new song from Spotify data");
         }
@@ -133,7 +131,7 @@ public class SongReviewService {
                 .active(true)
                 .build();
         
-        return songService.saveSong(newSong);
+        return songService.saveEntity(newSong);
     }
 
     public Page<SongReviewResponse> findBySongId (Long songId, Pageable pageable){

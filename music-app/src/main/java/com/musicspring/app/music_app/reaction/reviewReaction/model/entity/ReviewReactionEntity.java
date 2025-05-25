@@ -44,9 +44,9 @@ public class ReviewReactionEntity extends ReactionEntity {
     /// Returns the ID of the associated review (album or song), or null if none is set.
     public Long getAssociatedReviewId(){
         if(albumReview != null){
-            return albumReview.getAlbumReviewId();
+            return albumReview.getReviewId();
         } else if (songReview != null) {
-            return songReview.getSongReviewId();
+            return songReview.getReviewId();
         }
         return null;
     }

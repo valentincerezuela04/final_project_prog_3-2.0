@@ -59,6 +59,22 @@ public class SongMapper {
                 .active(true)
                 .build();
     }
+    public SongEntity toEntity(SongResponse song){
+        if(song == null) return null;
+
+        return SongEntity.builder()
+                .spotifyId(song.getSpotifyId())
+                .name(song.getName())
+                .artistName(song.getArtistName())
+                .albumName(song.getAlbumName())
+                .imageUrl(song.getImageUrl())
+                .durationMs(song.getDurationMs())
+                .previewUrl(song.getPreviewUrl())
+                .spotifyLink(song.getSpotifyLink())
+                .releaseDate(song.getReleaseDate())
+                .active(true)
+                .build();
+    }
 
     public SongRequest toRequest(SongEntity song){
         if(song == null) return null;
