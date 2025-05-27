@@ -10,11 +10,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Schema(description = "Request payload for creating or updating an album review",
+@Schema(description = "Request payload for creating or updating an album reviewEntity",
         requiredProperties = {"userId", "albumId", "rating", "description"})
 public class AlbumReviewRequest {
 
-    @Schema(description = "ID of the user submitting the review", example = "123")
+    @Schema(description = "ID of the user submitting the reviewEntity", example = "123")
     @NotNull(message = "User ID is required")
     private Long userId;
 
@@ -29,7 +29,7 @@ public class AlbumReviewRequest {
     @Digits(integer = 1, fraction = 2, message = "Rating format is invalid")
     private Double rating;
 
-    @Schema(description = "Description of the review, max 500 characters", example = "Great album with amazing tracks!")
+    @Schema(description = "Description of the reviewEntity, max 500 characters", example = "Great album with amazing tracks!")
     @NotBlank(message = "Description is required")
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;

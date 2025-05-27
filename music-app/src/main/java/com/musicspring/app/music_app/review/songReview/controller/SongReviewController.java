@@ -95,7 +95,7 @@ public class SongReviewController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Song review retrieved successfully",
+                    description = "Song reviewEntity retrieved successfully",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = SongReviewResponse.class)
@@ -103,7 +103,7 @@ public class SongReviewController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Song review not found",
+                    description = "Song reviewEntity not found",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)
@@ -140,7 +140,7 @@ public class SongReviewController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Song review created successfully",
+                    description = "Song reviewEntity created successfully",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = SongReviewResponse.class)

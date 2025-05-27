@@ -27,7 +27,7 @@ public class ReviewReactionService implements IService<ReviewReactionEntity> {
     @Override
     public ReviewReactionEntity findById(Long id) {
         return reviewReactionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Review reaction with ID: " + id + " was not found." ));
+                .orElseThrow(() -> new EntityNotFoundException("ReviewEntity reaction with ID: " + id + " was not found." ));
     }
 
     @Override

@@ -39,13 +39,13 @@ public class AlbumReviewService {
 
     public AlbumReviewResponse findById(Long id) {
         return albumReviewMapper.toResponse(albumReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Album Review with ID: " + id + " was not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("Album ReviewEntity with ID: " + id + " was not found.")));
     }
 
 
     public void deleteById(Long id) {
         AlbumReviewEntity albumReviewEntity = albumReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Album Review with ID: " + id + " was not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Album ReviewEntity with ID: " + id + " was not found."));
         albumReviewEntity.setActive(false);
         albumReviewRepository.save(albumReviewEntity);
     }

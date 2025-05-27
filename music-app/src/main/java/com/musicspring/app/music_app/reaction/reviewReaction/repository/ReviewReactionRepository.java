@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewReactionRepository extends JpaRepository<ReviewReactionEntity, Long> {
 
-    /// Finds all reactions linked to a specific album review by its ID
+    /// Finds all reactions linked to a specific album reviewEntity by its ID
     Page<ReviewReactionEntity> findByAlbumReview_ReviewId(Long albumReviewId, Pageable pageable);
-    /// Finds all reactions linked to a specific song review by its ID
+    /// Finds all reactions linked to a specific song reviewEntity by its ID
     Page<ReviewReactionEntity> findBySongReview_ReviewId(Long songReviewId, Pageable pageable);
     /// Finds all reactions created by a specific user by user ID
     Page<ReviewReactionEntity> findByUser_UserId(Long userId, Pageable pageable);

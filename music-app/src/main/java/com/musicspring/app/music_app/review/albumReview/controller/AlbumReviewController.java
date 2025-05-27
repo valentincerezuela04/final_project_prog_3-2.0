@@ -77,13 +77,13 @@ public class AlbumReviewController {
     }
 
     @Operation(
-            summary = "Retrieve an album review by ID",
+            summary = "Retrieve an album reviewEntity by ID",
             description = "Fetches the details of a specific album review based on its unique ID."
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Album review retrieved successfully.",
+                    description = "Album reviewEntity retrieved successfully.",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = AlbumReviewResponse.class)
@@ -91,7 +91,7 @@ public class AlbumReviewController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Album review not found.",
+                    description = "Album reviewEntity not found.",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = ErrorDetails.class)
@@ -145,7 +145,7 @@ public class AlbumReviewController {
     })
     @PostMapping
     public ResponseEntity<AlbumReviewResponse> createAlbumReview(
-            @Parameter(description = "Data for the new album review", required = true)
+            @Parameter(description = "Data for the new album reviewEntity", required = true)
             @RequestBody AlbumReviewRequest albumReviewRequest) {
         AlbumReviewResponse savedReview = albumReviewService.createAlbumReview(albumReviewRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReview);

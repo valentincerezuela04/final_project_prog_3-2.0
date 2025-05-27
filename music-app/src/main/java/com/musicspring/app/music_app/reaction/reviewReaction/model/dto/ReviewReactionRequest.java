@@ -44,7 +44,7 @@ public class ReviewReactionRequest {
         entity.setReactionType(this.reactionType);
         entity.setUser(userEntity);
 
-        /// Set the appropriate review association.
+        /// Set the appropriate reviewEntity association.
         /// Exactly one of albumReview or songReview must be non-null.
         /// We check and set only the non-null one.
         if(albumReviewEntity != null && songReviewEntity == null){

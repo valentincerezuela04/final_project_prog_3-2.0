@@ -52,12 +52,12 @@ public class SongReviewService {
 
     public SongReviewResponse findById(Long id) {
         return songReviewMapper.toResponse(songReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Song Review with ID: " + id + " was not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("Song ReviewEntity with ID: " + id + " was not found.")));
     }
 
     public void deleteById(Long id) {
         SongReviewEntity songReviewEntity = songReviewRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Song Review with ID: " + id + " was not found."));
+                .orElseThrow(()-> new EntityNotFoundException("Song ReviewEntity with ID: " + id + " was not found."));
         songReviewEntity.setActive(false);
         songReviewRepository.save(songReviewEntity);
     }

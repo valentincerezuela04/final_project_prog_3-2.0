@@ -10,12 +10,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Schema(description = "Request payload for creating or updating a song review",
+@Schema(description = "Request payload for creating or updating a song reviewEntity",
         requiredProperties = {"userId", "rating", "description"})
 public class SongReviewRequest {
 
     @NotNull
-    @Schema(description = "ID of the user who created the review",
+    @Schema(description = "ID of the user who created the reviewEntity",
             example = "789")
     private Long userId;
 
@@ -70,7 +70,7 @@ public class SongReviewRequest {
 
     @NotBlank
     @Size(max = 500)
-    @Schema(description = "Textual description of the review",
+    @Schema(description = "Textual description of the reviewEntity",
             example = "Great song with amazing vocals!", maxLength = 500)
     private String description;
 

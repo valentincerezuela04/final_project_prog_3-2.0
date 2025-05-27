@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/review-reactions")
+@RequestMapping("/api/v1/reviewEntity-reactions")
 public class ReviewReactionController {
 
     private final ReviewReactionService reviewReactionService;
@@ -60,14 +60,14 @@ public class ReviewReactionController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/album-review/{reviewId}")
+    @GetMapping("/album-reviewEntity/{reviewId}")
     public ResponseEntity<Page<ReviewReactionResponse>> getByAlbumReviewId(@PathVariable Long reviewId, Pageable pageable){
         Page<ReviewReactionEntity> page = reviewReactionService.findByAlbumReviewId(reviewId, pageable);
         Page<ReviewReactionResponse> responsePage = page.map(entity -> ReviewReactionResponse.of(entity, userMapper));
         return ResponseEntity.ok(responsePage);
     }
 
-    @GetMapping("/song-review/{reviewId}")
+    @GetMapping("/song-reviewEntity/{reviewId}")
     public ResponseEntity<Page<ReviewReactionResponse>> getBySongReviewId(@PathVariable Long reviewId, Pageable pageable){
         Page<ReviewReactionEntity> page = reviewReactionService.findBySongReviewId(reviewId, pageable);
         Page<ReviewReactionResponse> responsePage = page.map(entity -> ReviewReactionResponse.of(entity, userMapper));
@@ -91,7 +91,7 @@ public class ReviewReactionController {
         AlbumReviewEntity albumReviewEntity = null;
         SongReviewEntity songReviewEntity = null;
 
-        /// Load the related review entity based on the request
+        /// Load the related reviewEntity entity based on the request
         if (request.getAlbumReviewId() != null){
             albumReviewEntity = albumReviewService.findById(request.getAlbumReviewId());
         } else if (request.getSongReviewId() != null) {

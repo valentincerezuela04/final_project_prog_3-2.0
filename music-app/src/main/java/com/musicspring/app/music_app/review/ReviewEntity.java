@@ -4,9 +4,15 @@ import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "reviews")
+@Check(constraints = "rating >= 0.5 AND rating <= 5.0")
 
 @Getter
 @Setter
@@ -14,8 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@MappedSuperclass
-public abstract class Review {
+public abstract class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
