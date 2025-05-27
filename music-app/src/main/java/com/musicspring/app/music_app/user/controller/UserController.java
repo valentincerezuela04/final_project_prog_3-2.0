@@ -1,7 +1,9 @@
 package com.musicspring.app.music_app.user.controller;
 
 import com.musicspring.app.music_app.user.model.dto.SignupRequest;
+import com.musicspring.app.music_app.user.model.dto.SignupWithEmailRequest;
 import com.musicspring.app.music_app.user.model.dto.UserResponse;
+import com.musicspring.app.music_app.user.model.dto.AuthUserResponse;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import com.musicspring.app.music_app.user.model.mapper.UserMapper;
 import com.musicspring.app.music_app.user.service.UserService;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
+
 public class UserController {
 
 
@@ -29,6 +32,12 @@ public class UserController {
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         UserResponse userResponse = userService.registerUser(signupRequest);
         return ResponseEntity.ok(userResponse);
+    }
+
+    @PostMapping("/auth/register")
+    public ResponseEntity<AuthUserResponse> registerUserWithEmail(@Valid @RequestBody SignupWithEmailRequest signupRequest) {
+        AuthUserResponse authResponse = userService.registerUserWithEmail(signupRequest);
+        return ResponseEntity.ok(authResponse);
     }
 
 

@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final CredentialRepository credentialsRepository;
     private final AuthenticationManager authenticationManager;
+    
     public AuthService(CredentialRepository credentialsRepository,
                        AuthenticationManager authenticationManager) {
         this.credentialsRepository = credentialsRepository;
         this.authenticationManager = authenticationManager;
     }
+    
     public UserDetails authenticate(AuthRequest input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -23,8 +25,6 @@ public class AuthService {
                         input.password()
                 )
         );
-        return
-                credentialsRepository.findByEmail(input.username()).orElseThrow();
+        return credentialsRepository.findByEmail(input.username()).orElseThrow();
     }
-
 }

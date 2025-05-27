@@ -1,7 +1,11 @@
 package com.musicspring.app.music_app.config;
 
 import com.musicspring.app.music_app.security.entities.CredentialEntity;
+import com.musicspring.app.music_app.security.entities.RoleEntity;
+import com.musicspring.app.music_app.security.enums.AuthProvider;
+import com.musicspring.app.music_app.security.enums.Role;
 import com.musicspring.app.music_app.security.repositories.CredentialRepository;
+import com.musicspring.app.music_app.security.repositories.RoleRepository;
 import com.musicspring.app.music_app.song.repository.SongRepository;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import com.musicspring.app.music_app.user.repository.UserRepository;
@@ -10,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /* this class implements a spring boot functional interface, and string... args is part of it.
 initializes data, used for testing w/ h2.
@@ -22,52 +26,71 @@ public class DataInitializer {
 
     private final UserRepository userRepository;
     private final CredentialRepository credentialRepository;
+    private final RoleRepository roleRepository;
     private final SongRepository songRepository;
-    private final PasswordEncoder PasswordEncoder;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DataInitializer(UserRepository userRepository, CredentialRepository credentialRepository, SongRepository songRepository, PasswordEncoder passwordEncoder) {
+    public DataInitializer(UserRepository userRepository, 
+                          CredentialRepository credentialRepository,
+                          RoleRepository roleRepository,
+                          SongRepository songRepository, 
+                          PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.credentialRepository = credentialRepository;
+        this.roleRepository = roleRepository;
         this.songRepository = songRepository;
-        PasswordEncoder = passwordEncoder;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
     public void run() {
+        RoleEntity userRole = roleRepository.findByRole(Role.ROLE_USER)
+                .orElseGet(() -> roleRepository.save(RoleEntity.builder().role(Role.ROLE_USER).build()));
+        
+        RoleEntity adminRole = roleRepository.findByRole(Role.ROLE_ADMIN)
+                .orElseGet(() -> roleRepository.save(RoleEntity.builder().role(Role.ROLE_ADMIN).build()));
+
         if (userRepository.count() == 0) {
-            // Create admin user
-
-
-            CredentialEntity adminCredential = CredentialEntity.builder()
-                    .email("admin@gmail.com")
-                    .password(passwordEncoder.encode("admin123"))
-                    .build();
             UserEntity admin = UserEntity.builder()
                     .username("admin")
-                    .credential(adminCredential)
                     .active(true)
-                    .build();
-
-            CredentialEntity userCredential = CredentialEntity.builder()
-                    .email("user@gmail.com")
-                    .password(passwordEncoder.encode("password") )
                     .build();
             admin = userRepository.save(admin);
 
+            Set<RoleEntity> adminRoles = new HashSet<>();
+            adminRoles.add(adminRole);
+            
+            CredentialEntity adminCredential = CredentialEntity.builder()
+                    .email("admin@gmail.com")
+                    .password(passwordEncoder.encode("admin123"))
+                    .provider(AuthProvider.LOCAL)
+                    .user(admin)
+                    .roles(adminRoles)
+                    .build();
+            credentialRepository.save(adminCredential);
+
             UserEntity user = UserEntity.builder()
                     .username("user")
-                    .credential(userCredential)
                     .active(true)
                     .build();
             user = userRepository.save(user);
+
+            Set<RoleEntity> userRoles = new HashSet<>();
+            userRoles.add(userRole);
+            
+            CredentialEntity userCredential = CredentialEntity.builder()
+                    .email("user@gmail.com")
+                    .password(passwordEncoder.encode("password"))
+                    .provider(AuthProvider.LOCAL)
+                    .user(user)
+                    .roles(userRoles)
+                    .build();
+            credentialRepository.save(userCredential);
 
             System.out.println("Test users created:");
             System.out.println("- admin/admin123 (ID: " + admin.getUserId() + ")");
             System.out.println("- user/password (ID: " + user.getUserId() + ")");
         }
-
     }
 }

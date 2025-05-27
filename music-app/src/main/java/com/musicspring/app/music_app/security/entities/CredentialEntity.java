@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.security.entities;
 
+import com.musicspring.app.music_app.security.enums.AuthProvider;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +29,13 @@ public class CredentialEntity implements UserDetails {
     private String email;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
+
+    private String profilePictureUrl;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id",
@@ -61,5 +69,25 @@ public class CredentialEntity implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return user != null && user.getActive();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return user != null && user.getActive();
     }
 }
