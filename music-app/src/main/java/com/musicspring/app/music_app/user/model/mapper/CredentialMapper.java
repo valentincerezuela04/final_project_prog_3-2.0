@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.user.model.mapper;
 
+import com.musicspring.app.music_app.security.entities.CredentialEntity;
 import com.musicspring.app.music_app.user.model.dto.SignupRequest;
-import com.musicspring.app.music_app.user.model.entity.CredentialEntity;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import org.springframework.stereotype.Component;
 

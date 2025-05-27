@@ -1,9 +1,8 @@
 package com.musicspring.app.music_app.user.service;
 
+import com.musicspring.app.music_app.security.entities.CredentialEntity;
 import com.musicspring.app.music_app.user.model.dto.SignupRequest;
 import com.musicspring.app.music_app.user.model.dto.UserResponse;
-import com.musicspring.app.music_app.user.model.entity.CredentialEntity;
-import com.musicspring.app.music_app.user.model.entity.ERole;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import com.musicspring.app.music_app.user.model.mapper.CredentialMapper;
 import com.musicspring.app.music_app.user.model.mapper.UserMapper;

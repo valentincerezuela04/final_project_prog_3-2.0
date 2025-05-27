@@ -1,5 +1,7 @@
 package com.musicspring.app.music_app.user.model.entity;
 
+import com.musicspring.app.music_app.security.entities.CredentialEntity;
+import com.musicspring.app.music_app.security.entities.RoleEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,10 +26,6 @@ public class UserEntity {
     @Size(min = 3, max = 50)
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private ERole role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private CredentialEntity credential;
