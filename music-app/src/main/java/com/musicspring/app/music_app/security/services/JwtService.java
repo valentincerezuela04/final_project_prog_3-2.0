@@ -31,6 +31,16 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", userDetails.getAuthorities());
+        
+        // Add user ID to JWT if userDetails is CredentialEntity
+        if (userDetails instanceof com.musicspring.app.music_app.security.entities.CredentialEntity) {
+            com.musicspring.app.music_app.security.entities.CredentialEntity credential = 
+                (com.musicspring.app.music_app.security.entities.CredentialEntity) userDetails;
+            if (credential.getUser() != null) {
+                claims.put("userId", credential.getUser().getUserId());
+            }
+        }
+        
         return buildToken(claims, userDetails, jwtExpiration);
     }
 

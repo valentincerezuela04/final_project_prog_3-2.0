@@ -32,5 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 
-### Ignoring .env ###
-../.env
+### Ignoring .env files ###
+.env
+*.env
+.env.local
+.env.production

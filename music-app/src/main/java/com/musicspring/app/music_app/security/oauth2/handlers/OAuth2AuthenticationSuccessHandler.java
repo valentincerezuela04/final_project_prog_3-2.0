@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -68,7 +69,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         CredentialEntity credential = findOrCreateOAuth2User(email, name);
         String token = jwtService.generateToken(credential);
 
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
+        // Use hardcoded redirect URL for now
+        String redirectUri = "http://localhost:3000/oauth2/redirect";
+        String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("token", token)
                 .build().toUriString();
 
