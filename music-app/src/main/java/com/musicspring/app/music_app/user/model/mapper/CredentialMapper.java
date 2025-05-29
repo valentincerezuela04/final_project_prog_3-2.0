@@ -21,9 +21,7 @@ public class CredentialMapper {
                 .password(signupRequest.getPassword())
                 .provider(AuthProvider.LOCAL)
                 .user(user)
-                .roles(Set.of(RoleEntity.builder()
-                        .role(ROLE_USER)
-                        .build()))
+                .roles(null)
                 .build();
     }
     public CredentialEntity toCredentialEntity (SignupRequest signupRequest, UserEntity user) {
@@ -32,9 +30,7 @@ public class CredentialMapper {
                 .password(signupRequest.getPassword())
                 .provider(AuthProvider.LOCAL)
                 .user(user)
-                .roles(Set.of(RoleEntity.builder()
-                        .role(ROLE_USER)
-                        .build()))
+                .roles(null)
                 .build();
     }
 

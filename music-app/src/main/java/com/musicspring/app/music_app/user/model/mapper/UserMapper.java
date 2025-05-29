@@ -6,13 +6,15 @@ import com.musicspring.app.music_app.user.model.dto.UserResponse;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public class UserMapper {
     public UserResponse toResponse (UserEntity user) {
         return UserResponse.builder()
                 .id(user.getUserId())
                 .username(user.getUsername())
-                .roles(user.getCredential().getRoles())
+                .roles(user.getCredential() != null ? user.getCredential().getRoles() : Set.of())
                 .build();
     }
     public UserEntity toUserEntity(SignupRequest request) {
@@ -24,13 +26,6 @@ public class UserMapper {
     public UserEntity toUserEntity (SignupWithEmailRequest signupRequest) {
         return UserEntity.builder()
                 .username(signupRequest.getUsername())
-                .active(true)
-                .build();
-    }
-    public UserEntity toUserEntity(UserResponse userResponse) {
-        return UserEntity.builder()
-                .userId(userResponse.getId())
-                .username(userResponse.getUsername())
                 .active(true)
                 .build();
     }

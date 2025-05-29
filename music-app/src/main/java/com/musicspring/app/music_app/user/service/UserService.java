@@ -15,10 +15,12 @@ import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import com.musicspring.app.music_app.user.model.mapper.CredentialMapper;
 import com.musicspring.app.music_app.user.model.mapper.UserMapper;
 import com.musicspring.app.music_app.user.repository.UserRepository;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -53,15 +55,19 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
+    @Transactional // throughourly recommended
     public UserResponse registerUser(SignupRequest signupRequest) {
         UserEntity user = userMapper.toUserEntity(signupRequest);
 
         CredentialEntity credential = credentialMapper.toCredentialEntity(signupRequest, user);
+        credential.setRoles(Set.of(roleRepository
+                .findByRole(Role.ROLE_USER)
+                .orElseThrow(() -> new EntityNotFoundException("Default role ROLE_USER not found"))));
 
         user.setCredential(credential);
         return userMapper.toResponse(user);
     }
-
+    @Transactional
     public AuthUserResponse registerUserWithEmail(SignupWithEmailRequest signupRequest) {
 
         if (credentialRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
@@ -79,6 +85,9 @@ public class UserService {
         CredentialEntity credential = credentialMapper.toCredentialEntity(signupRequest, user);
 
         credential.setPassword(passwordEncoder.encode(credential.getPassword()));
+        credential.setRoles(Set.of(roleRepository
+                .findByRole(Role.ROLE_USER)
+                .orElseThrow(() -> new EntityNotFoundException("Default role ROLE_USER not found."))));
 
         credential = credentialRepository.save(credential);
 
@@ -119,12 +128,5 @@ public class UserService {
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-
-    public boolean existsByUsername(String username) {
-        return userRepository.existsByUsername(username);
-    }
-
-    public boolean existsById (Long id){
-        return userRepository.existsById(id);
-    }
+    
 }
