@@ -18,7 +18,7 @@ public class SongReviewRequest {
     @Schema(description = "ID of the user who created the review",
             example = "789")
     private Long userId;
-
+    
     @Schema(description = "ID of the song being reviewed (for existing songs in database)",
             example = "456")
     private Long songId;
