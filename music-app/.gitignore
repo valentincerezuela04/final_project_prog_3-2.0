@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Ignoring .env files ###
-.env
+../.env
 *.env
 .env.local
 .env.production

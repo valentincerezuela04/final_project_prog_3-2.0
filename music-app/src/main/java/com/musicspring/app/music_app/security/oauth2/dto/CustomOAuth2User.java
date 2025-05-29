@@ -23,7 +23,6 @@ public class CustomOAuth2User implements OAuth2User {
         return attributes;
     }
 
-    // preguntar a edu
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return credential.getAuthorities();

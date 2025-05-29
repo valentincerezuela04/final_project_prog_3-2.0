@@ -1,6 +1,7 @@
 package com.musicspring.app.music_app.user.model.mapper;
 
 import com.musicspring.app.music_app.user.model.dto.SignupRequest;
+import com.musicspring.app.music_app.user.model.dto.SignupWithEmailRequest;
 import com.musicspring.app.music_app.user.model.dto.UserResponse;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,12 @@ public class UserMapper {
     public UserEntity toUserEntity(SignupRequest request) {
         return UserEntity.builder()
                 .username(request.getUsername())
+                .active(true)
+                .build();
+    }
+    public UserEntity toUserEntity (SignupWithEmailRequest signupRequest) {
+        return UserEntity.builder()
+                .username(signupRequest.getUsername())
                 .active(true)
                 .build();
     }

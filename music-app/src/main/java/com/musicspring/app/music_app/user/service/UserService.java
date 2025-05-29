@@ -72,20 +72,13 @@ public class UserService {
             throw new IllegalArgumentException("Username already taken: " + signupRequest.getUsername());
         }
 
-        UserEntity user = UserEntity.builder()
-                .username(signupRequest.getUsername())
-                .active(true)
-                .build();
+        UserEntity user = userMapper.toUserEntity(signupRequest);
 
         user = userRepository.save(user);
 
-        CredentialEntity credential = CredentialEntity.builder()
-                .email(signupRequest.getEmail())
-                .password(passwordEncoder.encode(signupRequest.getPassword()))
-                .provider(AuthProvider.LOCAL)
-                .user(user)
-                .roles(getDefaultRoles())
-                .build();
+        CredentialEntity credential = credentialMapper.toCredentialEntity(signupRequest, user);
+
+        credential.setPassword(passwordEncoder.encode(credential.getPassword()));
 
         credential = credentialRepository.save(credential);
 
@@ -97,13 +90,6 @@ public class UserService {
                 .email(credential.getEmail())
                 .token(token)
                 .build();
-    }
-    
-    private Set<RoleEntity> getDefaultRoles() {
-        Set<RoleEntity> roles = new HashSet<>();
-        roleRepository.findByRole(Role.ROLE_USER)
-                .ifPresent(roles::add);
-        return roles;
     }
 
     public List<UserResponse> getAllUsers() {
