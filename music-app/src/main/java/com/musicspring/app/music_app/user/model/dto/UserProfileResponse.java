@@ -1,20 +1,19 @@
 package com.musicspring.app.music_app.user.model.dto;
 
-import com.musicspring.app.music_app.security.entities.RoleEntity;
 import lombok.*;
-
-import java.util.Set;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-
-public class UserResponse {
+public class UserProfileResponse {
     private Long id;
     private String username;
-    private Set<RoleEntity> roles;
-    private String profilePictureUrl;
     private String biography;
+    private String profilePictureUrl;
+
+    private Long totalAlbumReviews;
+    private Long totalSongReviews;
+    private Double averageRating;
 }
