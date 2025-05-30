@@ -1,5 +1,14 @@
 package com.musicspring.app.music_app.user.service;
 
+import com.musicspring.app.music_app.album.model.mapper.AlbumMapper;
+import com.musicspring.app.music_app.review.albumReview.model.dto.AlbumReviewResponse;
+import com.musicspring.app.music_app.review.albumReview.model.entity.AlbumReviewEntity;
+import com.musicspring.app.music_app.review.albumReview.model.mapper.AlbumReviewMapper;
+import com.musicspring.app.music_app.review.albumReview.repository.AlbumReviewRepository;
+import com.musicspring.app.music_app.review.songReview.model.dto.SongReviewResponse;
+import com.musicspring.app.music_app.review.songReview.model.entity.SongReviewEntity;
+import com.musicspring.app.music_app.review.songReview.model.mapper.SongReviewMapper;
+import com.musicspring.app.music_app.review.songReview.repository.SongReviewRepository;
 import com.musicspring.app.music_app.security.entities.CredentialEntity;
 import com.musicspring.app.music_app.security.entities.RoleEntity;
 import com.musicspring.app.music_app.security.enums.AuthProvider;
@@ -7,6 +16,7 @@ import com.musicspring.app.music_app.security.enums.Role;
 import com.musicspring.app.music_app.security.repositories.CredentialRepository;
 import com.musicspring.app.music_app.security.repositories.RoleRepository;
 import com.musicspring.app.music_app.security.services.JwtService;
+import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.user.model.dto.*;
 import com.musicspring.app.music_app.user.model.entity.UserEntity;
 import com.musicspring.app.music_app.user.model.mapper.CredentialMapper;
@@ -14,6 +24,8 @@ import com.musicspring.app.music_app.user.model.mapper.UserMapper;
 import com.musicspring.app.music_app.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +45,10 @@ public class UserService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final AlbumReviewRepository albumReviewRepository;
+    private final AlbumReviewMapper albumReviewMapper;
+    private final SongReviewRepository songReviewRepository;
+    private final SongReviewMapper songReviewMapper;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -41,7 +57,11 @@ public class UserService {
                        CredentialRepository credentialRepository,
                        JwtService jwtService,
                        PasswordEncoder passwordEncoder,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository,
+                       AlbumReviewRepository albumReviewRepository,
+                       SongReviewRepository songReviewRepository,
+                       AlbumReviewMapper albumReviewMapper,
+                       SongReviewMapper songReviewMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.credentialMapper = credentialMapper;
@@ -49,6 +69,10 @@ public class UserService {
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.albumReviewRepository = albumReviewRepository;
+        this.albumReviewMapper = albumReviewMapper;
+        this.songReviewMapper = songReviewMapper;
+        this.songReviewRepository = songReviewRepository;
     }
 
     @Transactional // throughourly recommended
@@ -124,6 +148,11 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public Page<UserResponse> searchUsers(String query, Pageable pageable) {
+        Page<UserEntity> userPage = userRepository.findByUsernameContainingIgnoreCase(query, pageable);
+        return userPage.map(userMapper::toResponse);
+    }
+
     @Transactional
     public UserResponse updateUser(Long id, UserUpdateRequest updateRequest) {
 
@@ -195,6 +224,41 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         return userMapper.toResponse(credential.getUser());
+    }
+
+    public UserProfileResponse getUserProfile(String username) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User with username: " + username + " was not found."));
+
+        long albumReviewCount = albumReviewRepository.countByUser_UserId(user.getUserId());
+        long songReviewCount = songReviewRepository.countByUser_UserId(user.getUserId());
+
+        Double avgRating = calculateUserAverageRating(user.getUserId());
+
+        UserProfileResponse userProfile = userMapper.toUserProfile(user);
+        userProfile.setTotalAlbumReviews(albumReviewCount);
+        userProfile.setTotalSongReviews(songReviewCount);
+        userProfile.setAverageRating(avgRating);
+        return userProfile;
+    }
+    public Page<AlbumReviewResponse> getUserAlbumReviews(String username, Pageable pageable) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User with username: " + username + " was not found."));
+
+        Page<AlbumReviewEntity> reviewPage = albumReviewRepository.findByUser_UserId(user.getUserId(), pageable);
+        return albumReviewMapper.toResponsePage(reviewPage);
+    }
+
+    public Page<SongReviewResponse> getUserSongReviews(String username, Pageable pageable) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("User with username: " + username + " was not found."));
+
+        Page<SongReviewEntity> reviewPage = songReviewRepository.findByUser_UserId(user.getUserId(), pageable);
+        return songReviewMapper.toResponsePage(reviewPage);
+    }
+    private Double calculateUserAverageRating(Long userId) {
+        Double average = userRepository.calculateUserAverageRating(userId);
+        return average != null ? average : 0.0;
     }
 
 }

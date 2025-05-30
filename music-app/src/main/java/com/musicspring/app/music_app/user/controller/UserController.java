@@ -1,6 +1,8 @@
 package com.musicspring.app.music_app.user.controller;
 
 import com.musicspring.app.music_app.exceptions.ErrorDetails;
+import com.musicspring.app.music_app.review.albumReview.model.dto.AlbumReviewResponse;
+import com.musicspring.app.music_app.review.songReview.model.dto.SongReviewResponse;
 import com.musicspring.app.music_app.user.model.dto.*;
 import com.musicspring.app.music_app.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -434,5 +438,70 @@ public class UserController {
             Authentication authentication) {
         UserResponse currentUser = userService.getCurrentUser(authentication);
         return ResponseEntity.ok(currentUser);
+    }
+    @Operation(
+            summary = "Search users by username",
+            description = "Performs a paginated search on users by username pattern."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Search completed successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)
+                    )
+            ),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid search parameters",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
+    })
+    @GetMapping("/search")
+    public ResponseEntity<Page<UserResponse>> searchUsers(
+            @Parameter(description = "Search query for username", example = "john")
+            @RequestParam String query,
+            @Parameter(hidden = true)
+            Pageable pageable) {
+        return ResponseEntity.ok(userService.searchUsers(query, pageable));
+    }
+
+    @Operation(
+            summary = "Get user profile",
+            description = "Retrieves user profile information with review statistics."
+    )
+    @GetMapping("/username/{username}/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile(
+            @Parameter(description = "Username", example = "johndoe123")
+            @PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserProfile(username));
+    }
+
+    @Operation(
+            summary = "Get user's album reviews",
+            description = "Retrieves paginated album reviews written by the user."
+    )
+    @GetMapping("/username/{username}/album-reviews")
+    public ResponseEntity<Page<AlbumReviewResponse>> getUserAlbumReviews(
+            @Parameter(description = "Username", example = "johndoe123")
+            @PathVariable String username,
+            @Parameter(hidden = true)
+            Pageable pageable) {
+        return ResponseEntity.ok(userService.getUserAlbumReviews(username, pageable));
+    }
+
+    @Operation(
+            summary = "Get user's song reviews",
+            description = "Retrieves paginated song reviews written by the user."
+    )
+    @GetMapping("/username/{username}/song-reviews")
+    public ResponseEntity<Page<SongReviewResponse>> getUserSongReviews(
+            @Parameter(description = "Username", example = "johndoe123")
+            @PathVariable String username,
+            @Parameter(hidden = true)
+            Pageable pageable) {
+        return ResponseEntity.ok(userService.getUserSongReviews(username, pageable));
     }
 }

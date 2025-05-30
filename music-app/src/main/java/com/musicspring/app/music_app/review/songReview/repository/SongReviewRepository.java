@@ -18,4 +18,6 @@ public interface SongReviewRepository extends JpaRepository<SongReviewEntity,Lon
     
     @Query("SELECT sr FROM SongReviewEntity sr WHERE sr.song.spotifyId = :spotifyId")
     Page<SongReviewEntity> findBySong_SpotifyId(@Param("spotifyId") String spotifyId, Pageable pageable);
+
+    long countByUser_UserId(Long userId);
 }

@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface AlbumReviewRepository extends JpaRepository<AlbumReviewEntity,Long> {
     Page<AlbumReviewEntity> findByAlbum_AlbumId(Long albumId, Pageable pageable);
     Page<AlbumReviewEntity> findByUser_UserId(Long userId,Pageable pageable);
+    long countByUser_UserId(Long userId);
+
+
 }
