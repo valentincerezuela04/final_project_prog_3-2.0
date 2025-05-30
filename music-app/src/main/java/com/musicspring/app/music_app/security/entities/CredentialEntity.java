@@ -37,6 +37,9 @@ public class CredentialEntity implements UserDetails {
 
     private String profilePictureUrl;
 
+    @Column(length = 500)
+    private String biography;
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id",
             unique = true)

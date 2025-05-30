@@ -10,11 +10,13 @@ import java.util.Set;
 
 @Component
 public class UserMapper {
-    public UserResponse toResponse (UserEntity user) {
+    public UserResponse toResponse(UserEntity user) {
         return UserResponse.builder()
                 .id(user.getUserId())
                 .username(user.getUsername())
                 .roles(user.getCredential() != null ? user.getCredential().getRoles() : Set.of())
+                .profilePictureUrl(user.getCredential() != null ? user.getCredential().getProfilePictureUrl() : null)
+                .biography(user.getCredential() != null ? user.getCredential().getBiography() : null)
                 .build();
     }
     public UserEntity toUserEntity(SignupRequest request) {
