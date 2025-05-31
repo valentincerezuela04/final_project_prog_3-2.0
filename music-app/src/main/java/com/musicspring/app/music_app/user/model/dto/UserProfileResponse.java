@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.user.model.dto;
 
+import com.musicspring.app.music_app.security.enums.AuthProvider;
 import lombok.*;
 
 @Builder
@@ -12,6 +13,8 @@ public class UserProfileResponse {
     private String username;
     private String biography;
     private String profilePictureUrl;
+    private AuthProvider authProvider;
+    private String email;
 
     private Long totalAlbumReviews;
     private Long totalSongReviews;

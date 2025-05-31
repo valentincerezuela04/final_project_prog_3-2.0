@@ -18,6 +18,8 @@ public class UserMapper {
                 .roles(user.getCredential() != null ? user.getCredential().getRoles() : Set.of())
                 .profilePictureUrl(user.getCredential() != null ? user.getCredential().getProfilePictureUrl() : null)
                 .biography(user.getCredential() != null ? user.getCredential().getBiography() : null)
+                .authProvider(user.getCredential() != null ? user.getCredential().getProvider() : null)
+                .email(user.getCredential() != null ? user.getCredential().getEmail() : null)
                 .build();
     }
     public UserEntity toUserEntity(SignupRequest request) {
@@ -38,6 +40,8 @@ public class UserMapper {
                 .username(user.getUsername())
                 .biography(user.getCredential() != null ? user.getCredential().getBiography() : null)
                 .profilePictureUrl(user.getCredential() != null ? user.getCredential().getProfilePictureUrl() : null)
+                .authProvider(user.getCredential() != null ? user.getCredential().getProvider() : null)
+                .email(user.getCredential() != null ? user.getCredential().getEmail() : null)
                 .build();
     }
 

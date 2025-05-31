@@ -16,5 +16,8 @@ public class UserUpdateRequest {
 
     private String profilePictureUrl;
 
+    @Size(max = 500, message = "Biography cannot exceed 500 characters")
+    private String biography;
+
     private Boolean active;
 }

@@ -168,8 +168,15 @@ public class UserService {
 
         CredentialEntity credential = existingUser.getCredential();
 
-        if (updateRequest.getProfilePictureUrl() != null)
-            credential.setProfilePictureUrl(updateRequest.getProfilePictureUrl());
+        if (credential != null) {
+            if (updateRequest.getProfilePictureUrl() != null)
+                credential.setProfilePictureUrl(updateRequest.getProfilePictureUrl());
+
+            if (updateRequest.getBiography() != null)
+                credential.setBiography(updateRequest.getBiography());
+
+            credentialRepository.save(credential);
+        }
 
         if (updateRequest.getActive() != null)
             existingUser.setActive(updateRequest.getActive());
@@ -186,6 +193,10 @@ public class UserService {
         if (credential == null)
             throw new IllegalStateException("User has no credentials");
 
+        // Check if user is OAuth-based (Google login)
+        if (credential.getProvider() == AuthProvider.GOOGLE) {
+            throw new IllegalArgumentException("Cannot change password for Google OAuth users");
+        }
 
         // Verify current password
         if (!passwordEncoder.matches(passwordRequest.getCurrentPassword(), credential.getPassword()))
@@ -202,6 +213,19 @@ public class UserService {
     public UserResponse updateProfile(Long id, ProfileUpdateRequest profileRequest) {
         UserEntity user = findEntityById(id);
         CredentialEntity credential = user.getCredential();
+
+        // Update username if provided and different
+        if (profileRequest.getUsername() != null && 
+            !profileRequest.getUsername().trim().isEmpty() &&
+            !profileRequest.getUsername().equals(user.getUsername())) {
+            
+            // Check if username is already taken
+            if (userRepository.existsByUsername(profileRequest.getUsername())) {
+                throw new IllegalArgumentException("Username already taken: " + profileRequest.getUsername());
+            }
+            user.setUsername(profileRequest.getUsername());
+            userRepository.save(user);
+        }
 
         if (credential != null) {
             if (profileRequest.getProfilePictureUrl() != null) {
