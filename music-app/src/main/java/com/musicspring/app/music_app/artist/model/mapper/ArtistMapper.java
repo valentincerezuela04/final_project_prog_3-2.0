@@ -4,7 +4,6 @@ import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
-import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
 import com.musicspring.app.music_app.song.model.dto.SongResponse;
 import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +41,13 @@ public class ArtistMapper {
                 .collect(Collectors.toList());
     }
 
-    public ArtistWithSongsResponse toArtistWithSongsResponse(ArtistEntity artist, List<ArtistXSongEntity> relations) {
+    public ArtistWithSongsResponse toArtistWithSongsResponse(ArtistEntity artist) {
         if (artist == null) {
             return null;
         }
 
-        List<SongResponse> songs = relations.stream()
-                .map(relation -> songMapper.toResponse(relation.getSong()))
+        List<SongResponse> songs = artist.getSongs().stream()
+                .map(songMapper::toResponse)
                 .collect(Collectors.toList());
 
         return ArtistWithSongsResponse.builder()

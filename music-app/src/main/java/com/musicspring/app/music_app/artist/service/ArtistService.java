@@ -4,11 +4,8 @@ import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
 import com.musicspring.app.music_app.artist.model.dto.ArtistResponse;
 import com.musicspring.app.music_app.artist.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
-import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
 import com.musicspring.app.music_app.artist.model.mapper.ArtistMapper;
-import com.musicspring.app.music_app.artist.model.mapper.ArtistXSongMapper;
 import com.musicspring.app.music_app.artist.repository.ArtistRepository;
-import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
 import com.musicspring.app.music_app.song.model.mapper.SongMapper;
 import com.musicspring.app.music_app.song.service.SongService;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,30 +21,23 @@ import java.util.List;
 public class ArtistService{
     private final ArtistRepository artistRepository;
     private final ArtistMapper artistMapper;
-    private final ArtistXSongRepository artistXSongRepository;
-    private final ArtistXSongMapper artistXSongMapper;
     private final SongService songService;
     private final SongMapper songMapper;
 
     @Autowired
     public ArtistService(ArtistRepository artistRepository,
                          ArtistMapper artistMapper,
-                         ArtistXSongRepository artistXSongRepository,
-                         ArtistXSongMapper artistXSongMapper,
                          SongService songService,
                          SongMapper songMapper) {
         this.artistRepository = artistRepository;
         this.artistMapper = artistMapper;
-        this.artistXSongRepository = artistXSongRepository;
-        this.artistXSongMapper = artistXSongMapper;
         this.songService = songService;
         this.songMapper = songMapper;
     }
 
     public ArtistWithSongsResponse getArtistWithSongs(Long artistId) {
         ArtistEntity artist = findById(artistId);
-        List<ArtistXSongEntity> relations = artistXSongRepository.findByArtistArtistId(artistId);
-        return artistMapper.toArtistWithSongsResponse(artist, relations);
+        return artistMapper.toArtistWithSongsResponse(artist);
     }
 
 

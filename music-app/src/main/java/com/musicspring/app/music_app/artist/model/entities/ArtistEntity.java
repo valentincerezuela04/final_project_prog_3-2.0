@@ -1,5 +1,6 @@
 package com.musicspring.app.music_app.artist.model.entities;
 
+import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,8 +31,13 @@ public class ArtistEntity {
     @Column(nullable = false)
     private boolean active;
 
-    @OneToMany(mappedBy = "artist",cascade = CascadeType.ALL)
-    private Set<ArtistXSongEntity> artistSongs = new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "artist_song",
+            joinColumns = @JoinColumn(name = "artist_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id")
+    )
+    private Set<SongEntity> songs = new HashSet<>();
 
 
 }
