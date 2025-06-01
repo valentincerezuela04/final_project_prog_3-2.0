@@ -1,14 +1,8 @@
 package com.musicspring.app.music_app.spotify.service;
 
 import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
-import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
-import com.musicspring.app.music_app.artist.model.entities.ArtistXSongEntity;
-import com.musicspring.app.music_app.artist.model.entities.ArtistXSongId;
-import com.musicspring.app.music_app.artist.repository.ArtistXSongRepository;
 import com.musicspring.app.music_app.song.model.dto.SongRequest;
-import com.musicspring.app.music_app.song.model.entity.SongEntity;
 import com.musicspring.app.music_app.spotify.config.SpotifyConfig;
 import com.musicspring.app.music_app.spotify.mapper.SpotifyMapper;
 import com.musicspring.app.music_app.spotify.model.UnifiedSearchResponse;
@@ -43,7 +37,6 @@ public class SpotifyService {
     private final SpotifyApi spotifyApi;
     private final SpotifyConfig spotifyConfig;
     private final SpotifyMapper spotifyMapper;
-    private final ArtistXSongRepository artistXSongRepository;
 
     @Value("${spotify.default.limit:20}")
     private int defaultLimit;
@@ -181,20 +174,5 @@ public class SpotifyService {
         response.setAlbums(albumResults);
         
         return response;
-    }
-    
-    public void createArtistSongRelationship(ArtistRequest artistRequest, SongRequest songRequest, 
-                                          ArtistEntity artist, SongEntity song) {
-        ArtistXSongId id = new ArtistXSongId(artist.getArtistId(), song.getSongId());
-
-        ArtistXSongEntity relation = ArtistXSongEntity.builder()
-                .artistXSongId(id)
-                .artist(artist)
-                .song(song)
-                .build();
-
-        artist.getArtistSongs().add(relation);
-
-        artistXSongRepository.save(relation);
     }
 }
