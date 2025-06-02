@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.security.config;
 
 import com.musicspring.app.music_app.security.RestAuthenticationEntryPoint;
-import com.musicspring.app.music_app.security.filters.JwtAuthenticationFilter;
+import com.musicspring.app.music_app.security.filter.JwtAuthenticationFilter;
 import com.musicspring.app.music_app.security.oauth2.handlers.OAuth2AuthenticationSuccessHandler;
 import com.musicspring.app.music_app.security.oauth2.services.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;

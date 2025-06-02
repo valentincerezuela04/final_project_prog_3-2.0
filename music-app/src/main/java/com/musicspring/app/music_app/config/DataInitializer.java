@@ -1,14 +1,14 @@
 package com.musicspring.app.music_app.config;
 
-import com.musicspring.app.music_app.security.entities.CredentialEntity;
-import com.musicspring.app.music_app.security.entities.RoleEntity;
+import com.musicspring.app.music_app.security.entity.CredentialEntity;
+import com.musicspring.app.music_app.security.entity.RoleEntity;
 import com.musicspring.app.music_app.security.enums.AuthProvider;
 import com.musicspring.app.music_app.security.enums.Role;
-import com.musicspring.app.music_app.security.repositories.CredentialRepository;
-import com.musicspring.app.music_app.security.repositories.RoleRepository;
-import com.musicspring.app.music_app.song.repository.SongRepository;
-import com.musicspring.app.music_app.user.model.entity.UserEntity;
-import com.musicspring.app.music_app.user.repository.UserRepository;
+import com.musicspring.app.music_app.security.repository.CredentialRepository;
+import com.musicspring.app.music_app.security.repository.RoleRepository;
+import com.musicspring.app.music_app.repository.SongRepository;
+import com.musicspring.app.music_app.model.entity.UserEntity;
+import com.musicspring.app.music_app.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

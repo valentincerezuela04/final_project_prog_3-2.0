@@ -1,6 +1,6 @@
 package com.musicspring.app.music_app.spotify.controller;
 
-import com.musicspring.app.music_app.exceptions.ErrorDetails;
+import com.musicspring.app.music_app.exception.ErrorDetails;
 import com.musicspring.app.music_app.spotify.model.UnifiedSearchResponse;
 import com.musicspring.app.music_app.spotify.service.SpotifyService;
 import io.swagger.v3.oas.annotations.Operation;

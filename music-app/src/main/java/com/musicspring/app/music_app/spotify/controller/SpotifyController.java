@@ -1,9 +1,9 @@
 package com.musicspring.app.music_app.spotify.controller;
 
-import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
-import com.musicspring.app.music_app.exceptions.ErrorDetails;
-import com.musicspring.app.music_app.song.model.dto.SongRequest;
+import com.musicspring.app.music_app.model.dto.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.ArtistRequest;
+import com.musicspring.app.music_app.exception.ErrorDetails;
+import com.musicspring.app.music_app.model.dto.SongRequest;
 import com.musicspring.app.music_app.spotify.service.SpotifyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
