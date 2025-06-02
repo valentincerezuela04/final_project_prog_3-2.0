@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.spotify.specification;
 
-import com.musicspring.app.music_app.album.model.entity.AlbumEntity;
-import com.musicspring.app.music_app.artist.model.entities.ArtistEntity;
-import com.musicspring.app.music_app.song.model.entity.SongEntity;
+import com.musicspring.app.music_app.model.entity.AlbumEntity;
+import com.musicspring.app.music_app.model.entity.ArtistEntity;
+import com.musicspring.app.music_app.model.entity.SongEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 

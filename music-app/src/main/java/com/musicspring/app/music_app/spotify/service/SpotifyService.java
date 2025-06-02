@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.spotify.service;
 
-import com.musicspring.app.music_app.album.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.artist.model.dto.ArtistRequest;
-import com.musicspring.app.music_app.song.model.dto.SongRequest;
+import com.musicspring.app.music_app.model.dto.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.ArtistRequest;
+import com.musicspring.app.music_app.model.dto.SongRequest;
 import com.musicspring.app.music_app.spotify.config.SpotifyConfig;
 import com.musicspring.app.music_app.spotify.mapper.SpotifyMapper;
 import com.musicspring.app.music_app.spotify.model.UnifiedSearchResponse;

@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.security.entities;
 
 import com.musicspring.app.music_app.security.enums.AuthProvider;
-import com.musicspring.app.music_app.user.model.entity.UserEntity;
+import com.musicspring.app.music_app.model.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
