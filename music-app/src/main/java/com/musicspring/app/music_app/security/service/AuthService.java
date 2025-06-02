@@ -1,7 +1,7 @@
-package com.musicspring.app.music_app.security.services;
+package com.musicspring.app.music_app.security.service;
 
 import com.musicspring.app.music_app.security.dto.AuthRequest;
-import com.musicspring.app.music_app.security.repositories.CredentialRepository;
+import com.musicspring.app.music_app.security.repository.CredentialRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,6 +1,6 @@
 package com.musicspring.app.music_app.model.dto;
 
-import com.musicspring.app.music_app.security.entities.RoleEntity;
+import com.musicspring.app.music_app.security.entity.RoleEntity;
 import lombok.*;
 
 import java.util.Set;

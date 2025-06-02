@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.security.entities;
+package com.musicspring.app.music_app.security.entity;
 
 import com.musicspring.app.music_app.security.enums.AuthProvider;
 import com.musicspring.app.music_app.model.entity.UserEntity;

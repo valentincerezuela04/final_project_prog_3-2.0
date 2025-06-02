@@ -1,6 +1,6 @@
 package com.musicspring.app.music_app.security.oauth2.dto;
 
-import com.musicspring.app.music_app.security.entities.CredentialEntity;
+import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

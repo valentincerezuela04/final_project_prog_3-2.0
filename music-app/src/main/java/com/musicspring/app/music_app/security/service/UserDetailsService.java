@@ -1,6 +1,6 @@
-package com.musicspring.app.music_app.security.services;
+package com.musicspring.app.music_app.security.service;
 
-import com.musicspring.app.music_app.security.repositories.CredentialRepository;
+import com.musicspring.app.music_app.security.repository.CredentialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,6 +1,6 @@
-package com.musicspring.app.music_app.security.repositories;
+package com.musicspring.app.music_app.security.repository;
 
-import com.musicspring.app.music_app.security.entities.RoleEntity;
+import com.musicspring.app.music_app.security.entity.RoleEntity;
 import com.musicspring.app.music_app.security.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,9 +1,9 @@
-package com.musicspring.app.music_app.security.controllers;
+package com.musicspring.app.music_app.security.controller;
 
 import com.musicspring.app.music_app.security.dto.AuthRequest;
 import com.musicspring.app.music_app.security.dto.AuthResponse;
-import com.musicspring.app.music_app.security.services.AuthService;
-import com.musicspring.app.music_app.security.services.JwtService;
+import com.musicspring.app.music_app.security.service.AuthService;
+import com.musicspring.app.music_app.security.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;

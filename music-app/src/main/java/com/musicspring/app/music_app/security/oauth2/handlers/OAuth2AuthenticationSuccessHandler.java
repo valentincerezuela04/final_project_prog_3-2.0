@@ -1,12 +1,12 @@
 package com.musicspring.app.music_app.security.oauth2.handlers;
 
-import com.musicspring.app.music_app.security.entities.CredentialEntity;
-import com.musicspring.app.music_app.security.entities.RoleEntity;
+import com.musicspring.app.music_app.security.entity.CredentialEntity;
+import com.musicspring.app.music_app.security.entity.RoleEntity;
 import com.musicspring.app.music_app.security.enums.AuthProvider;
 import com.musicspring.app.music_app.security.enums.Role;
-import com.musicspring.app.music_app.security.repositories.CredentialRepository;
-import com.musicspring.app.music_app.security.repositories.RoleRepository;
-import com.musicspring.app.music_app.security.services.JwtService;
+import com.musicspring.app.music_app.security.repository.CredentialRepository;
+import com.musicspring.app.music_app.security.repository.RoleRepository;
+import com.musicspring.app.music_app.security.service.JwtService;
 import com.musicspring.app.music_app.model.entity.UserEntity;
 import com.musicspring.app.music_app.repository.UserRepository;
 import jakarta.servlet.ServletException;

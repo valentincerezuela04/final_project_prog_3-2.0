@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.security.entities;
+package com.musicspring.app.music_app.security.entity;
 
 import com.musicspring.app.music_app.security.enums.Role;
 import jakarta.persistence.*;

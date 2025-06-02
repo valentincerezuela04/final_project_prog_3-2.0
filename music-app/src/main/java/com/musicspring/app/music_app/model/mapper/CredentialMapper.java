@@ -1,6 +1,6 @@
 package com.musicspring.app.music_app.model.mapper;
 
-import com.musicspring.app.music_app.security.entities.CredentialEntity;
+import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import com.musicspring.app.music_app.security.enums.AuthProvider;
 import com.musicspring.app.music_app.model.dto.SignupRequest;
 import com.musicspring.app.music_app.model.dto.SignupWithEmailRequest;

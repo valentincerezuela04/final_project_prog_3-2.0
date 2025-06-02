@@ -1,6 +1,6 @@
 package com.musicspring.app.music_app.model.entity;
 
-import com.musicspring.app.music_app.security.entities.CredentialEntity;
+import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

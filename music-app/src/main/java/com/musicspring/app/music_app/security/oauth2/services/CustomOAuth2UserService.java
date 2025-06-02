@@ -1,9 +1,9 @@
 package com.musicspring.app.music_app.security.oauth2.services;
 
-import com.musicspring.app.music_app.security.entities.CredentialEntity;
+import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import com.musicspring.app.music_app.security.enums.AuthProvider;
 import com.musicspring.app.music_app.security.oauth2.dto.CustomOAuth2User;
-import com.musicspring.app.music_app.security.repositories.CredentialRepository;
+import com.musicspring.app.music_app.security.repository.CredentialRepository;
 import com.musicspring.app.music_app.model.entity.UserEntity;
 import com.musicspring.app.music_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

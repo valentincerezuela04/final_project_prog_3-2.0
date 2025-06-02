@@ -1,7 +1,7 @@
-package com.musicspring.app.music_app.security.filters;
+package com.musicspring.app.music_app.security.filter;
 
-import com.musicspring.app.music_app.security.services.JwtService;
-import com.musicspring.app.music_app.security.services.UserDetailsService;
+import com.musicspring.app.music_app.security.service.JwtService;
+import com.musicspring.app.music_app.security.service.UserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
