@@ -18,8 +18,8 @@ public class SongEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "song_id")
-    private Long songId;
+    @Column()
+    private Long id;
 
     @Column(name = "spotify_id", unique = true, nullable = false)
     private String spotifyId;

@@ -15,8 +15,8 @@ public class CommentMapper {
         if(comment == null) return null;
 
         return CommentResponse.builder()
-                .commentId(comment.getCommentId())
-                .reviewId(comment.getReviewEntity().getReviewId())
+                .commentId(comment.getId())
+                .reviewId(comment.getReviewEntity().getId())
                 .userId(comment.getUser().getUserId())
                 .text(comment.getText())
                 .createdAt(comment.getCreatedAt())

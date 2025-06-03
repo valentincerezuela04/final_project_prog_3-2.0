@@ -29,7 +29,7 @@ public class SongReviewMapper {
             return null;
         }
         return SongReviewResponse.builder()
-                .songReviewId(songReview.getReviewId())
+                .songReviewId(songReview.getId())
                 .rating(songReview.getRating())
                 .description(songReview.getDescription())
                 .date(songReview.getDate())

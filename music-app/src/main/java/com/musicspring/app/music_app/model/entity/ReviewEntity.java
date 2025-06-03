@@ -22,8 +22,8 @@ import java.time.LocalDateTime;
 public abstract class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "review_id")
-    private Long reviewId;
+    @Column()
+    private Long id;
 
     @Column(name = "rating", columnDefinition = "DECIMAL(3,2) DEFAULT 5.0")
     private Double rating;

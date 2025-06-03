@@ -16,7 +16,7 @@ public class SongMapper {
         if (song == null) return null;
 
         return SongResponse.builder()
-                .songId(song.getSongId())
+                .songId(song.getId())
                 .spotifyId(song.getSpotifyId())
                 .name(song.getName())
                 .artistName(song.getArtistName())

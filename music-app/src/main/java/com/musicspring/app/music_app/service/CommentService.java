@@ -84,12 +84,12 @@ public class CommentService {
     }
 
     public Page<CommentResponse> getCommentsByReviewId(Long reviewId, Pageable pageable) {
-        Page<CommentEntity> commentPage = commentRepository.findByReviewEntity_ReviewId(reviewId, pageable);
+        Page<CommentEntity> commentPage = commentRepository.findByReviewEntity_id(reviewId, pageable);
         return commentMapper.toResponsePage(commentPage);
     }
 
     public Page<CommentResponse> getCommentsByReviewIdAndType(Long reviewId, CommentType commentType, Pageable pageable) {
-        Page<CommentEntity> commentPage = commentRepository.findByReviewEntity_ReviewIdAndCommentType(reviewId, commentType, pageable);
+        Page<CommentEntity> commentPage = commentRepository.findByReviewEntity_idAndCommentType(reviewId, commentType, pageable);
         return commentMapper.toResponsePage(commentPage);
     }
 

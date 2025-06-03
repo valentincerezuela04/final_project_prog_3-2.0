@@ -45,7 +45,7 @@ public class AlbumReviewMapper {
     public AlbumReviewEntity toEntity (AlbumReviewRequest albumReviewRequest, UserEntity userEntity, AlbumEntity albumEntity){
         return AlbumReviewEntity.builder()
                 .active(true)
-                .reviewId(albumReviewRequest.getAlbumId())
+                .id(albumReviewRequest.getAlbumId())
                 .description(albumReviewRequest.getDescription())
                 .rating(albumReviewRequest.getRating())
                 .album(albumEntity)

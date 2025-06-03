@@ -20,7 +20,7 @@ public class AlbumMapper {
             return null;
         }else{
             return AlbumResponse.builder()
-                    .albumId(album.getAlbumId())
+                    .albumId(album.getId())
                     .spotifyId(album.getSpotifyId())
                     .title(album.getTitle())
                     .artistId(album.getArtist().getArtistId())
@@ -57,7 +57,7 @@ public class AlbumMapper {
 
     public AlbumEntity responseToEntity (AlbumResponse albumResponse, ArtistEntity artistEntity){
         return AlbumEntity.builder()
-                .albumId(albumResponse.getAlbumId())
+                .id(albumResponse.getAlbumId())
                 .spotifyId(albumResponse.getSpotifyId())
                 .title(albumResponse.getTitle())
                 .releaseDate(albumResponse.getReleaseDate())
