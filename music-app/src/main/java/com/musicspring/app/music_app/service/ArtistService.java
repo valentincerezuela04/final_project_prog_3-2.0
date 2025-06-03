@@ -6,7 +6,6 @@ import com.musicspring.app.music_app.model.dto.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.model.entity.ArtistEntity;
 import com.musicspring.app.music_app.model.mapper.ArtistMapper;
 import com.musicspring.app.music_app.repository.ArtistRepository;
-import com.musicspring.app.music_app.model.mapper.SongMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,14 +45,17 @@ public class ArtistService {
     }
 
 
-    public Page<ArtistEntity> findAll(Pageable pageable) {
-        return artistRepository.findByActiveTrue(pageable);
+    public Page<ArtistResponse> findAll(Pageable pageable) {
+        return artistRepository.findByActiveTrue(pageable)
+                .map(artistMapper::toResponse);
     }
 
-    public ArtistEntity findById(Long id) {
+    private ArtistEntity findById(Long id) {
         return artistRepository.findByArtistIdAndActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
     }
+
+
 
     public ArtistResponse save(ArtistRequest artistRequest) {
         if (artistRequest == null) {
@@ -65,12 +67,6 @@ public class ArtistService {
         return artistMapper.toResponse(saved);
     }
 
-    public List<ArtistResponse> findByName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Search parameter 'name' must not be null or empty");
-        }
-        return artistRepository.findByNameContainingIgnoreCaseAndActiveTrue(name.trim());
-    }
 
     public ArtistResponse getArtistResponseById(Long id) {
         return artistRepository.findByArtistIdAndActiveTrue(id)
@@ -82,4 +78,16 @@ public class ArtistService {
         return artistRepository.findByActiveTrue(pageable)
                 .map(artistMapper::toResponse);
     }
+
+    public Page<ArtistResponse> searchArtists(String query, Pageable pageable) {
+        if (query == null || query.trim().isEmpty()) {
+            throw new IllegalArgumentException("Search query must not be null or empty");
+        }
+
+        Page<ArtistEntity> artistPage = artistRepository
+                .findByNameContainingIgnoreCaseAndActiveTrue(query.trim(), pageable);
+
+        return artistPage.map(artistMapper::toResponse);
+    }
+
 }

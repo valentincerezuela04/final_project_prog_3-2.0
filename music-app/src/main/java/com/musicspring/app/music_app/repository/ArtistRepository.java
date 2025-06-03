@@ -17,7 +17,7 @@ public interface ArtistRepository extends JpaRepository<ArtistEntity, Long> {
 
     Page<ArtistEntity> findByActiveTrue(Pageable pageable);
 
-    List<ArtistResponse> findByNameContainingIgnoreCaseAndActiveTrue(String name);
+    Page<ArtistEntity> findByNameContainingIgnoreCaseAndActiveTrue(String name, Pageable pageable);
 
     boolean existsByArtistIdAndActiveTrue(Long artistId);
 }
