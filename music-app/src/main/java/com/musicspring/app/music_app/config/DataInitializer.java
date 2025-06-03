@@ -60,12 +60,13 @@ public class DataInitializer {
 
             Set<RoleEntity> adminRoles = new HashSet<>();
             adminRoles.add(adminRole);
-            
+
             CredentialEntity adminCredential = CredentialEntity.builder()
                     .email("admin@gmail.com")
                     .password(passwordEncoder.encode("admin123"))
                     .provider(AuthProvider.LOCAL)
                     .user(admin)
+                    .refreshToken("1")
                     .roles(adminRoles)
                     .build();
             credentialRepository.save(adminCredential);
@@ -84,6 +85,7 @@ public class DataInitializer {
                     .password(passwordEncoder.encode("password"))
                     .provider(AuthProvider.LOCAL)
                     .user(user)
+                    .refreshToken("2")
                     .roles(userRoles)
                     .build();
             credentialRepository.save(userCredential);

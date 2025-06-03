@@ -53,6 +53,9 @@ public class CredentialEntity implements UserDetails {
     )
     private Set<RoleEntity> roles = new HashSet<>();
 
+    @Column(name = "refresh_token",length = 248,unique = true,nullable = false)
+    private String refreshToken;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -61,7 +64,6 @@ public class CredentialEntity implements UserDetails {
                 new SimpleGrantedAuthority(rol.getRole().name())));
         return authorities;
     }
-
 
     @Override
     public String getPassword() {

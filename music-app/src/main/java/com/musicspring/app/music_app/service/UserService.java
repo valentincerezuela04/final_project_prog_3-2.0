@@ -71,7 +71,7 @@ public class UserService {
         this.songReviewRepository = songReviewRepository;
     }
 
-    @Transactional // throughourly recommended
+    @Transactional
     public UserResponse registerUser(SignupRequest signupRequest) {
         UserEntity user = userMapper.toUserEntity(signupRequest);
 
@@ -104,15 +104,20 @@ public class UserService {
                 .findByRole(Role.ROLE_USER)
                 .orElseThrow(() -> new EntityNotFoundException("Default role ROLE_USER not found."))));
 
+        credential.setRefreshToken(jwtService.generateRefreshToken(credential));
+
         credential = credentialRepository.save(credential);
 
         String token = jwtService.generateToken(credential);
+
+        System.out.println(token);
 
         return AuthUserResponse.builder()
                 .id(user.getUserId())
                 .username(user.getUsername())
                 .email(credential.getEmail())
                 .token(token)
+                .refreshToken(credential.getRefreshToken())
                 .build();
     }
 
@@ -237,6 +242,7 @@ public class UserService {
         userProfile.setAverageRating(avgRating);
         return userProfile;
     }
+
     public Page<AlbumReviewResponse> getUserAlbumReviews(String username, Pageable pageable) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User with username: " + username + " was not found."));
@@ -252,6 +258,7 @@ public class UserService {
         Page<SongReviewEntity> reviewPage = songReviewRepository.findByUser_UserId(user.getUserId(), pageable);
         return songReviewMapper.toResponsePage(reviewPage);
     }
+
     private Double calculateUserAverageRating(Long userId) {
         Double average = userRepository.calculateUserAverageRating(userId);
         return average != null ? average : 0.0;
