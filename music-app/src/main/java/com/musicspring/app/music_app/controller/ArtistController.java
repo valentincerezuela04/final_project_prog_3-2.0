@@ -113,20 +113,24 @@ public class ArtistController {
 
     }
 
-    @Operation(summary = "Search artists by name", description = "Searches for artists matching the provided name (partial or full).")
+    @Operation(summary = "Search artists by name", description = "Searches for artists matching the provided name (partial or full) with pagination support.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Matching artists retrieved successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArtistResponse.class))),
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class))),
             @ApiResponse(responseCode = "400", description = "Invalid name parameter",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetails.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
+
     @GetMapping("/search")
-    public ResponseEntity<List<ArtistResponse>> searchArtistsByName(
-            @Parameter(description = "Name or partial name to search for", example = "Taylor")
-            @RequestParam String name) {
-        List<ArtistResponse> artists = artistService.findByName(name);
-        return ResponseEntity.ok(artists);
+    public ResponseEntity<Page<ArtistResponse>> searchArtistsByName(
+            @Parameter(description = "Name or partial name to search for", example = "Eminem")
+            @RequestParam String name,
+            Pageable pageable) {
+        Page<ArtistResponse> artistsPage = artistService.searchArtists(name, pageable);
+        return ResponseEntity.ok(artistsPage);
     }
+
 }
