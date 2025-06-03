@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 
@@ -31,4 +33,10 @@ public class UserEntity {
 
     @Column(name = "active", nullable = false)
     private Boolean active;
+
+    @OneToMany(mappedBy = "user")
+    private List<ReactionEntity> reactions;
+
+    @OneToMany(mappedBy = "user")
+    private List<ReviewEntity> reviews;
 }
