@@ -17,21 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class ArtistService{
+public class ArtistService {
     private final ArtistRepository artistRepository;
     private final ArtistMapper artistMapper;
-    private final SongService songService;
-    private final SongMapper songMapper;
 
     @Autowired
     public ArtistService(ArtistRepository artistRepository,
-                         ArtistMapper artistMapper,
-                         SongService songService,
-                         SongMapper songMapper) {
+                         ArtistMapper artistMapper) {
         this.artistRepository = artistRepository;
         this.artistMapper = artistMapper;
-        this.songService = songService;
-        this.songMapper = songMapper;
     }
 
     public ArtistWithSongsResponse getArtistWithSongs(Long artistId) {
@@ -39,13 +33,18 @@ public class ArtistService{
         return artistMapper.toArtistWithSongsResponse(artist);
     }
 
-
     @Transactional
     public void deleteById(Long id) {
         ArtistEntity artist = findById(id);
+
+        if (!artist.isActive()) {
+            throw new IllegalStateException("Artist with id " + id + " is already inactive");
+        }
+
         artist.setActive(false);
         artistRepository.save(artist);
     }
+
 
     public Page<ArtistEntity> findAll(Pageable pageable) {
         return artistRepository.findByActiveTrue(pageable);
@@ -56,31 +55,29 @@ public class ArtistService{
                 .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
     }
 
-    public boolean existsById(Long id) {
-        return artistRepository.existsByArtistIdAndActiveTrue(id);
-    }
-
-
     public ArtistResponse save(ArtistRequest artistRequest) {
+        if (artistRequest == null) {
+            throw new IllegalArgumentException("Artist request must not be null");
+        }
         ArtistEntity entity = artistMapper.toEntity(artistRequest);
         entity.setActive(true);
         ArtistEntity saved = artistRepository.save(entity);
         return artistMapper.toResponse(saved);
     }
 
-
     public List<ArtistResponse> findByName(String name) {
-        return artistRepository.findByNameContainingIgnoreCaseAndActiveTrue(name);
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Search parameter 'name' must not be null or empty");
+        }
+        return artistRepository.findByNameContainingIgnoreCaseAndActiveTrue(name.trim());
     }
-
-
-
 
     public ArtistResponse getArtistResponseById(Long id) {
-        ArtistEntity entity = findById(id);
-        return artistMapper.toResponse(entity);
-    }
+        return artistRepository.findByArtistIdAndActiveTrue(id)
+                .map(artistMapper::toResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Artist with id " + id + " not found"));
 
+    }
     public Page<ArtistResponse> getAllArtists(Pageable pageable) {
         return artistRepository.findByActiveTrue(pageable)
                 .map(artistMapper::toResponse);
