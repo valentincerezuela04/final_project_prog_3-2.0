@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,12 +60,7 @@ public class ArtistController {
     public ResponseEntity<ArtistResponse> getArtistById(
             @Parameter(description = "ID of the artist to retrieve", example = "1")
             @PathVariable Long id) {
-        try {
-            ArtistResponse artist = artistService.getArtistResponseById(id);
-            return ResponseEntity.ok(artist);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+            return ResponseEntity.ok(artistService.getArtistResponseById(id));
     }
 
     @Operation(summary = "Create a new artist", description = "Registers a new artist with the provided details.")
@@ -98,12 +92,8 @@ public class ArtistController {
     public ResponseEntity<Void> deleteArtist(
             @Parameter(description = "ID of the artist to delete", example = "1")
             @PathVariable Long id) {
-        try {
             artistService.deleteById(id);
             return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @Operation(summary = "Retrieve an artist along with their songs", description = "Fetches an artist's details including a list of their songs.")
@@ -119,12 +109,8 @@ public class ArtistController {
     public ResponseEntity<ArtistWithSongsResponse> getArtistWithSongs(
             @Parameter(description = "ID of the artist", example = "1")
             @PathVariable Long id) {
-        try {
-            ArtistWithSongsResponse response = artistService.getArtistWithSongs(id);
-            return ResponseEntity.ok(response);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+            return ResponseEntity.ok(artistService.getArtistWithSongs(id));
+
     }
 
     @Operation(summary = "Search artists by name", description = "Searches for artists matching the provided name (partial or full).")
