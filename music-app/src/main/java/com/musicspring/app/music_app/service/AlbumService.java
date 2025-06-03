@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.service;
 
-import com.musicspring.app.music_app.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.model.dto.AlbumResponse;
+import com.musicspring.app.music_app.model.dto.request.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.response.AlbumResponse;
 import com.musicspring.app.music_app.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.model.mapper.AlbumMapper;
 import com.musicspring.app.music_app.repository.AlbumRepository;
@@ -34,17 +34,17 @@ public class AlbumService  {
 
     public AlbumResponse findById(Long id) {
         return albumMapper.toResponse(albumRepository.findById(id).orElseThrow(()
-                -> new EntityNotFoundException("Album with ID " + id + " was not found.")));
+                -> new EntityNotFoundException("Album with ID " + id + " not found.")));
     }
 
     public AlbumEntity findEntityById(Long id) {
         return albumRepository.findById(id).orElseThrow(()
-                -> new EntityNotFoundException("Album with ID " + id + " was not found."));
+                -> new EntityNotFoundException("Album with ID " + id + " not found."));
     }
 
     public void deleteById(Long id) {
         AlbumEntity albumEntity = albumRepository.findById(id).orElseThrow(()->
-                new EntityNotFoundException("Album with ID " + id + " was not found."));
+                new EntityNotFoundException("Album with ID " + id + " not found."));
         if (!albumEntity.getActive()){
             System.out.println("This album has already been deleted.");
         }else{
@@ -55,14 +55,14 @@ public class AlbumService  {
 
     public AlbumResponse save(AlbumRequest albumRequest) {
         ArtistEntity artistEntity = artistRepository.findById(albumRequest.getArtistId()).orElseThrow(()
-                -> new EntityNotFoundException("Artist with ID " + albumRequest.getArtistId() + " was not found."));
+                -> new EntityNotFoundException("Artist with ID " + albumRequest.getArtistId() + " not found."));
         AlbumEntity albumEntity = albumMapper.requestToEntity(albumRequest,artistEntity);
         return albumMapper.toResponse(albumRepository.save(albumEntity));
     }
 
     public AlbumResponse findBySpotifyId(String spotifyId){
         return albumMapper.toResponse(albumRepository.findBySpotifyId(spotifyId).orElseThrow(()
-                -> new EntityNotFoundException("Album with Spotify ID " + spotifyId + " was not found.")));
+                -> new EntityNotFoundException("Album with Spotify ID " + spotifyId + " not found.")));
     }
 
     public Page<AlbumResponse> search (String query, Pageable pageable){

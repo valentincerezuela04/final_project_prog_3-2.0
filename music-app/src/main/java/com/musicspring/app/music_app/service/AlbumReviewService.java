@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.service;
 
-import com.musicspring.app.music_app.model.dto.AlbumReviewRequest;
-import com.musicspring.app.music_app.model.dto.AlbumReviewResponse;
+import com.musicspring.app.music_app.model.dto.request.AlbumReviewRequest;
+import com.musicspring.app.music_app.model.dto.response.AlbumReviewResponse;
 import com.musicspring.app.music_app.model.entity.AlbumReviewEntity;
 import com.musicspring.app.music_app.model.mapper.AlbumReviewMapper;
 import com.musicspring.app.music_app.repository.AlbumReviewRepository;
@@ -37,13 +37,13 @@ public class AlbumReviewService {
 
     public AlbumReviewResponse findById(Long id) {
         return albumReviewMapper.toResponse(albumReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Album review with ID: " + id + " was not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("Album review with ID: " + id + " not found.")));
     }
 
 
     public void deleteById(Long id) {
         AlbumReviewEntity albumReviewEntity = albumReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Album review with ID: " + id + " was not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Album review with ID: " + id + " not found."));
         albumReviewEntity.setActive(false);
         albumReviewRepository.save(albumReviewEntity);
     }

@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.controller;
 
 import com.musicspring.app.music_app.exception.ErrorDetails;
-import com.musicspring.app.music_app.model.dto.CommentRequest;
-import com.musicspring.app.music_app.model.dto.CommentResponse;
+import com.musicspring.app.music_app.model.dto.request.CommentRequest;
+import com.musicspring.app.music_app.model.dto.response.CommentResponse;
 import com.musicspring.app.music_app.model.enums.CommentType;
 import com.musicspring.app.music_app.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;

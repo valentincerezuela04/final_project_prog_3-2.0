@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.model.dto;
+package com.musicspring.app.music_app.model.dto.response;
 
 import com.musicspring.app.music_app.model.enums.ReactedType;
 import com.musicspring.app.music_app.model.enums.ReactionType;
@@ -17,8 +17,8 @@ public class ReactionResponse {
     @Schema(description = "Unique identifier of the reaction", example = "3")
     private Long reactionId;
 
-    @Schema(description = "ID of the user who made the reaction", example = "1")
-    private Long userId;
+    @Schema(description = "Username of the user who made the reaction", example = "music_lover_123")
+    private String username;
 
     @Schema(description = "Type of the reaction (Like, dislike, love)", example = "LOVE")
     private ReactionType reactionType;
@@ -29,6 +29,4 @@ public class ReactionResponse {
     @Schema(description = "ID of the object reacted", example = "5")
     private Long reactedId;
 
-    @Schema(description = "Username of the user who made the reaction", example = "music_lover_123")
-    private String username;
 }

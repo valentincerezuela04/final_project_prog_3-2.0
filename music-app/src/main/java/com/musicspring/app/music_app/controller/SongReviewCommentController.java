@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.controller;
 
 import com.musicspring.app.music_app.exception.ErrorDetails;
-import com.musicspring.app.music_app.model.dto.CommentRequest;
-import com.musicspring.app.music_app.model.dto.CommentResponse;
+import com.musicspring.app.music_app.model.dto.request.CommentRequest;
+import com.musicspring.app.music_app.model.dto.response.CommentResponse;
 import com.musicspring.app.music_app.model.enums.CommentType;
 import com.musicspring.app.music_app.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +30,52 @@ public class SongReviewCommentController {
     @Autowired
     public SongReviewCommentController(CommentService commentService) {
         this.commentService = commentService;
+    }
+
+    @Operation(
+            summary = "Create a new comment for a song or album review",
+            description = "Adds a new comment associated with the specified song or album review."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Comment created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = CommentResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid input data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Review or User not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
+    })
+    @PostMapping()
+    public ResponseEntity<CommentResponse> createComment(
+            @PathVariable Long reviewId,
+            @Valid @RequestBody CommentRequest commentRequest) {
+        CommentResponse createdComment = commentService.createComment(reviewId, commentRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
     @Operation(
@@ -84,52 +130,6 @@ public class SongReviewCommentController {
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
         Page<CommentResponse> comments = commentService.getCommentsByReviewId(reviewId, pageable);
         return ResponseEntity.ok(comments);
-    }
-
-    @Operation(
-            summary = "Create a new comment for a song review",
-            description = "Adds a new comment associated with the specified song review."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Comment created successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = CommentResponse.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid input data",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Review or User not found",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class)
-                    )
-            )
-    })
-    @PostMapping()
-    public ResponseEntity<CommentResponse> createComment(
-            @PathVariable Long reviewId,
-            @Valid @RequestBody CommentRequest commentRequest) {
-        CommentResponse createdComment = commentService.createComment(reviewId, commentRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
     @Operation(

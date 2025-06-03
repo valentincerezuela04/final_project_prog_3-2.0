@@ -1,6 +1,6 @@
 package com.musicspring.app.music_app.repository;
 
-import com.musicspring.app.music_app.model.dto.ArtistResponse;
+import com.musicspring.app.music_app.model.dto.response.ArtistResponse;
 import com.musicspring.app.music_app.model.entity.ArtistEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

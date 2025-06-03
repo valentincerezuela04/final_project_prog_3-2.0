@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.model.mapper;
 
-import com.musicspring.app.music_app.model.dto.SongReviewRequest;
-import com.musicspring.app.music_app.model.dto.SongRequest;
-import com.musicspring.app.music_app.model.dto.SongResponse;
+import com.musicspring.app.music_app.model.dto.request.SongReviewRequest;
+import com.musicspring.app.music_app.model.dto.request.SongRequest;
+import com.musicspring.app.music_app.model.dto.response.SongResponse;
 import com.musicspring.app.music_app.model.entity.SongEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -13,8 +13,6 @@ import java.util.Date;
 public class SongMapper {
 
     public SongResponse toResponse(SongEntity song) {
-        if (song == null) return null;
-
         return SongResponse.builder()
                 .songId(song.getSongId())
                 .spotifyId(song.getSpotifyId())
@@ -32,14 +30,10 @@ public class SongMapper {
 
 
     public Page<SongResponse> toResponsePage(Page<SongEntity> songEntityPage){
-        if(songEntityPage == null) return Page.empty();
-
         return songEntityPage.map(this::toResponse);
     }
 
     public SongEntity toEntity(SongRequest song){
-        if(song == null) return null;
-
         return SongEntity.builder()
                 .spotifyId(song.getSpotifyId())
                 .name(song.getName())
@@ -55,8 +49,6 @@ public class SongMapper {
     }
 
     public SongEntity toEntity(SongResponse song){
-        if(song == null) return null;
-
         return SongEntity.builder()
                 .spotifyId(song.getSpotifyId())
                 .name(song.getName())
@@ -71,13 +63,7 @@ public class SongMapper {
                 .build();
     }
 
-    public SongEntity toEntityFromReview (SongReviewRequest songReviewRequest) {
-        if(songReviewRequest == null) return null;
-        // Convert release date string to Date if provided
-        Date releaseDate = null;
-        if (songReviewRequest.getReleaseDate() != null) {
-            releaseDate = java.sql.Date.valueOf(songReviewRequest.getReleaseDate());
-        }
+    public SongEntity toEntityFromReview (SongReviewRequest songReviewRequest, Date releaseDate) {
         return SongEntity.builder()
                 .spotifyId(songReviewRequest.getSpotifyId())
                 .name(songReviewRequest.getSongName())

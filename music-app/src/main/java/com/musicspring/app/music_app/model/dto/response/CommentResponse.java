@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.model.dto;
+package com.musicspring.app.music_app.model.dto.response;
 
 import com.musicspring.app.music_app.model.enums.CommentType;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.model.mapper;
 
-import com.musicspring.app.music_app.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.model.dto.AlbumResponse;
+import com.musicspring.app.music_app.model.dto.request.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.response.AlbumResponse;
 import com.musicspring.app.music_app.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.model.entity.ArtistEntity;
 import org.springframework.data.domain.PageImpl;

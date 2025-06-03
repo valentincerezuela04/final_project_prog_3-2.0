@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.service;
 
-import com.musicspring.app.music_app.model.dto.SongRequest;
-import com.musicspring.app.music_app.model.dto.SongResponse;
+import com.musicspring.app.music_app.model.dto.request.SongRequest;
+import com.musicspring.app.music_app.model.dto.response.SongResponse;
 import com.musicspring.app.music_app.model.entity.SongEntity;
 import com.musicspring.app.music_app.model.mapper.SongMapper;
 import com.musicspring.app.music_app.repository.SongRepository;
@@ -28,12 +28,12 @@ public class SongService  {
 
     public SongResponse findById(Long id) {
         return songMapper.toResponse(songRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " not found.")));
     }
 
     public void deleteById(Long id) {
         SongEntity songEntity = songRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " was not found."));
+                        .orElseThrow(() -> new EntityNotFoundException("Song with ID: " + id + " not found."));
         songEntity.setActive(false);
         songRepository.save(songEntity);
     }
@@ -46,7 +46,7 @@ public class SongService  {
 
     public SongResponse findBySpotifyId(String spotifyId) {
         return songMapper.toResponse(songRepository.findBySpotifyId(spotifyId)
-                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " was not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("Song with Spotify ID: " + spotifyId + " not found.")));
     }
 
 

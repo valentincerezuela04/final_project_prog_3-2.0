@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.service;
 
-import com.musicspring.app.music_app.model.dto.CommentRequest;
-import com.musicspring.app.music_app.model.dto.CommentResponse;
+import com.musicspring.app.music_app.model.dto.request.CommentRequest;
+import com.musicspring.app.music_app.model.dto.response.CommentResponse;
 import com.musicspring.app.music_app.model.entity.CommentEntity;
 import com.musicspring.app.music_app.model.entity.ReviewEntity;
 import com.musicspring.app.music_app.model.entity.UserEntity;
@@ -44,13 +44,13 @@ public class CommentService {
 
     public CommentResponse findById(Long id){
         CommentEntity commentEntity = commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with ID:" + id + " was not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Comment with ID:" + id + " not found."));
         return commentMapper.toResponse(commentEntity);
     }
 
     public void deleteById(Long id){
         CommentEntity commentEntity = commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with ID:" + id + " was not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Comment with ID:" + id + " not found."));
         commentRepository.delete(commentEntity);
     }
 
@@ -63,7 +63,7 @@ public class CommentService {
         }
 
         UserEntity userEntity = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("User with ID:" + request.getUserId() + " was not found."));
+                .orElseThrow(() -> new EntityNotFoundException("User with ID:" + request.getUserId() + " not found."));
 
         ReviewEntity reviewEntity = switch (request.getCommentType()) {
             case SONG_REVIEW -> songReviewRepository.findById(reviewId)
@@ -77,7 +77,6 @@ public class CommentService {
         CommentEntity saved = commentRepository.save(commentEntity);
         return commentMapper.toResponse(saved);
     }
-
 
     public Page<CommentResponse> findByUserId(Long userId, Pageable pageable){
         return commentMapper.toResponsePage(commentRepository.findByUser_UserId(userId, pageable));

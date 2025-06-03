@@ -1,6 +1,7 @@
-package com.musicspring.app.music_app.model.dto;
+package com.musicspring.app.music_app.model.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Builder
@@ -9,10 +10,12 @@ import lombok.*;
 @Getter
 @Setter
 
-public class LoginRequest {
+public class SignupRequest {
     @NotBlank
+    @Size(min = 3, max = 50)
     private String username;
 
     @NotBlank
+    @Size(min = 8, max = 120)
     private String password;
 }
