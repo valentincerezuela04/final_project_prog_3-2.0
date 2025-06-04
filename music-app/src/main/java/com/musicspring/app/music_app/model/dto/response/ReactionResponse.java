@@ -17,6 +17,9 @@ public class ReactionResponse {
     @Schema(description = "Unique identifier of the reaction", example = "3")
     private Long reactionId;
 
+    @Schema(description = "User ID of the user who made the reaction", example = "6")
+    private Long userId;
+
     @Schema(description = "Username of the user who made the reaction", example = "music_lover_123")
     private String username;
 
