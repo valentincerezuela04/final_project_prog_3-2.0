@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.model.mapper;
 
+import com.musicspring.app.music_app.security.dto.AuthRequest;
 import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import com.musicspring.app.music_app.security.enums.AuthProvider;
-import com.musicspring.app.music_app.model.dto.SignupRequest;
 import com.musicspring.app.music_app.model.dto.SignupWithEmailRequest;
 import com.musicspring.app.music_app.model.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -18,10 +18,12 @@ public class CredentialMapper {
                 .roles(null)
                 .build();
     }
-    public CredentialEntity toCredentialEntity (SignupRequest signupRequest, UserEntity user) {
+
+    /// changed signuprequest for authrequest
+    public CredentialEntity toCredentialEntity (AuthRequest authRequest, UserEntity user) {
         return CredentialEntity.builder()
-                .email(signupRequest.getUsername())
-                .password(signupRequest.getPassword())
+                .email(authRequest.username())
+                .password(authRequest.password())
                 .provider(AuthProvider.LOCAL)
                 .user(user)
                 .roles(null)

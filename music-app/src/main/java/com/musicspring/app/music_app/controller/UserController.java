@@ -4,6 +4,7 @@ import com.musicspring.app.music_app.exception.ErrorDetails;
 import com.musicspring.app.music_app.model.dto.*;
 import com.musicspring.app.music_app.model.dto.AlbumReviewResponse;
 import com.musicspring.app.music_app.model.dto.SongReviewResponse;
+import com.musicspring.app.music_app.security.dto.AuthRequest;
 import com.musicspring.app.music_app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -28,7 +29,7 @@ import java.util.List;
 @Tag(name = "Users", description = "Endpoints related to user management and authentication")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -63,10 +64,11 @@ public class UserController {
             )
     })
     @PostMapping("/auth/signup")
+    /// changed signuprequest for authrequest
     public ResponseEntity<UserResponse> registerUser(
             @Parameter(description = "User registration data with username and password")
-            @Valid @RequestBody SignupRequest signupRequest) {
-        UserResponse userResponse = userService.registerUser(signupRequest);
+            @Valid @RequestBody AuthRequest authRequest) {
+        UserResponse userResponse = userService.registerUser(authRequest);
         return ResponseEntity.ok(userResponse);
     }
 

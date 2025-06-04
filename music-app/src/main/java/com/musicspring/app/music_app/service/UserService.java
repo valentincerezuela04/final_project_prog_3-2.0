@@ -9,6 +9,7 @@ import com.musicspring.app.music_app.model.dto.SongReviewResponse;
 import com.musicspring.app.music_app.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.repository.SongReviewRepository;
+import com.musicspring.app.music_app.security.dto.AuthRequest;
 import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import com.musicspring.app.music_app.security.enums.Role;
 import com.musicspring.app.music_app.security.repository.CredentialRepository;
@@ -71,11 +72,12 @@ public class UserService {
         this.songReviewRepository = songReviewRepository;
     }
 
+    /// changed signuprequest for authrequest
     @Transactional
-    public UserResponse registerUser(SignupRequest signupRequest) {
-        UserEntity user = userMapper.toUserEntity(signupRequest);
+    public UserResponse registerUser(AuthRequest authRequest) {
+        UserEntity user = userMapper.toUserEntity(authRequest);
 
-        CredentialEntity credential = credentialMapper.toCredentialEntity(signupRequest, user);
+        CredentialEntity credential = credentialMapper.toCredentialEntity(authRequest, user);
         credential.setRoles(Set.of(roleRepository
                 .findByRole(Role.ROLE_USER)
                 .orElseThrow(() -> new EntityNotFoundException("Default role ROLE_USER not found"))));

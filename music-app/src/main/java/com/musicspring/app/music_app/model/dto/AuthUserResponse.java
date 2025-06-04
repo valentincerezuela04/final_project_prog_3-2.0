@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+/// Change usages to AuthResponse
 public class AuthUserResponse {
     private Long id;
     private String username;
