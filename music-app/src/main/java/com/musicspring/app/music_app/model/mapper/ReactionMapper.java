@@ -16,6 +16,7 @@ public class ReactionMapper {
     public ReactionResponse toResponse(ReactionEntity reaction){
         return ReactionResponse.builder()
                 .reactionId(reaction.getId())
+                .userId(reaction.getUser().getUserId())
                 .username(reaction.getUser().getUsername())
                 .reactionType(reaction.getReactionType())
                 .reactedType(reaction.getReactedType())

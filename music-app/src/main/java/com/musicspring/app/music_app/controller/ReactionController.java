@@ -270,7 +270,7 @@ public class ReactionController {
             )
     })
     @PostMapping("/reviews/{reviewId}/reactions")
-    public ResponseEntity<?> createReactionToReview(
+    public ResponseEntity<ReactionResponse> createReactionToReview(
             @Parameter(description = "Review ID", example = "10")
             @PathVariable Long reviewId,
             @Parameter(description = "Reaction request data")
@@ -278,10 +278,31 @@ public class ReactionController {
 
         request.setReactedType(ReactedType.REVIEW);
         ReactionResponse response = reactionService.createReaction(request, reviewId);
-        // Help me Edu
-        return response != null 
-            ? ResponseEntity.ok(response)
-            : ResponseEntity.ok().build(); // Return 200 OK with empty body for deletions
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/reviews/{reviewId}/reactions/{reactionId}")
+    public ResponseEntity<ReactionResponse> updateReactionToReview(
+            @Parameter(description = "Review ID", example = "10")
+            @PathVariable Long reviewId,
+            @Parameter(description = "Reaction ID", example = "1")
+            @PathVariable Long reactionId,
+            @Parameter(description = "New reaction type", example = "LOVE")
+            @RequestParam ReactionType newReactionType) {
+
+        ReactionResponse response = reactionService.updateReaction(reactionId, newReactionType);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/reviews/{reviewId}/reactions/{reactionId}")
+    public ResponseEntity<Void> deleteReactionToReview(
+            @Parameter(description = "Review ID", example = "10")
+            @PathVariable Long reviewId,
+            @Parameter(description = "Reaction ID", example = "1")
+            @PathVariable Long reactionId) {
+
+        reactionService.deleteReaction(reactionId);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
@@ -311,143 +332,39 @@ public class ReactionController {
             )
     })
     @PostMapping("/comments/{commentId}/reactions")
-    public ResponseEntity<?> createReactionToComment(
+    public ResponseEntity<ReactionResponse> createReactionToComment(
             @Parameter(description = "Comment ID", example = "15")
             @PathVariable Long commentId,
             @Parameter(description = "Reaction request data")
             @RequestBody ReactionRequest request) {
-        // Help me Edu
+
         request.setReactedType(ReactedType.COMMENT);
         ReactionResponse response = reactionService.createReaction(request, commentId);
-        
-        return response != null 
-            ? ResponseEntity.ok(response)
-            : ResponseEntity.ok().build(); // Return 200 OK with empty body for deletions
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @Operation(
-            summary = "Update a reaction to a review",
-            description = "Updates the reaction type of a reaction by user on a specific review."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Reaction updated successfully",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ReactionResponse.class))
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Reaction not found",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            ),
-            @ApiResponse(responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            )
-    })
-    @PutMapping("/reviews/{reviewId}/reactions/users/{userId}")
-    public ResponseEntity<ReactionResponse> updateReactionToReview(
-            @Parameter(description = "Review ID", example = "10")
-            @PathVariable Long reviewId,
-            @Parameter(description = "User ID", example = "1")
-            @PathVariable Long userId,
-            @Parameter(description = "New reaction type", example = "LIKE")
-            @RequestParam ReactionType newReactionType) {
-
-        ReactionResponse updated = reactionService.updateReactionType(userId, reviewId, ReactedType.REVIEW, newReactionType);
-        return ResponseEntity.ok(updated);
-    }
-
-    @Operation(
-            summary = "Update a reaction to a comment",
-            description = "Updates the reaction type of a reaction by user on a specific comment."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    description = "Reaction updated successfully",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ReactionResponse.class))
-            ),
-            @ApiResponse(responseCode = "404",
-                    description = "Reaction not found",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            ),
-            @ApiResponse(responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            )
-    })
-    @PutMapping("/comments/{commentId}/reactions/users/{userId}")
+    @PutMapping("/comments/{commentId}/reactions/{reactionId}")
     public ResponseEntity<ReactionResponse> updateReactionToComment(
             @Parameter(description = "Comment ID", example = "15")
             @PathVariable Long commentId,
-            @Parameter(description = "User ID", example = "1")
-            @PathVariable Long userId,
-            @Parameter(description = "New reaction type", example = "DISLIKE")
+            @Parameter(description = "Reaction ID", example = "1")
+            @PathVariable Long reactionId,
+            @Parameter(description = "New reaction type", example = "LOVE")
             @RequestParam ReactionType newReactionType) {
 
-        ReactionResponse updated = reactionService.updateReactionType(userId, commentId, ReactedType.COMMENT, newReactionType);
-        return ResponseEntity.ok(updated);
+        ReactionResponse response = reactionService.updateReaction(reactionId, newReactionType);
+        return ResponseEntity.ok(response);
     }
 
-    @Operation(
-            summary = "Delete a reaction to a review",
-            description = "Deletes a reaction made by a user on a specific review."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204",
-                    description = "Reaction deleted successfully"),
-            @ApiResponse(responseCode = "404",
-                    description = "Reaction not found",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            ),
-            @ApiResponse(responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            )
-    })
-    @DeleteMapping("/reviews/{reviewId}/reactions/users/{userId}")
-    public ResponseEntity<Void> deleteReactionToReview(
-            @Parameter(description = "Review ID", example = "10")
-            @PathVariable Long reviewId,
-            @Parameter(description = "User ID", example = "1")
-            @PathVariable Long userId) {
-
-        reactionService.deleteReactionToReview(userId, reviewId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @Operation(
-            summary = "Delete a reaction to a comment",
-            description = "Deletes a reaction made by a user on a specific comment."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204",
-                    description = "Reaction deleted successfully"),
-            @ApiResponse(responseCode = "404",
-                    description = "Reaction not found",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            ),
-            @ApiResponse(responseCode = "500",
-                    description = "Internal server error",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorDetails.class))
-            )
-    })
-    @DeleteMapping("/comments/{commentId}/reactions/users/{userId}")
+    @DeleteMapping("/comments/{commentId}/reactions/{reactionId}")
     public ResponseEntity<Void> deleteReactionToComment(
             @Parameter(description = "Comment ID", example = "15")
             @PathVariable Long commentId,
-            @Parameter(description = "User ID", example = "1")
-            @PathVariable Long userId) {
+            @Parameter(description = "Reaction ID", example = "1")
+            @PathVariable Long reactionId) {
 
-        reactionService.deleteReactionToComment(userId, commentId);
+        reactionService.deleteReaction(reactionId);
         return ResponseEntity.noContent().build();
     }
+
 }
