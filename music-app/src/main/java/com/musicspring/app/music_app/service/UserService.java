@@ -8,6 +8,7 @@ import com.musicspring.app.music_app.repository.AlbumReviewRepository;
 import com.musicspring.app.music_app.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.repository.SongReviewRepository;
+import com.musicspring.app.music_app.security.dto.AuthRequest;
 import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import com.musicspring.app.music_app.security.enums.Role;
 import com.musicspring.app.music_app.security.repository.CredentialRepository;
@@ -70,14 +71,16 @@ public class UserService {
         this.songReviewRepository = songReviewRepository;
     }
 
-    @Transactional // throughourly recommended
-    public UserResponse registerUser(SignupRequest signupRequest) {
-        UserEntity user = userMapper.toUserEntity(signupRequest);
+    @Transactional
+    public UserResponse registerUser(AuthRequest authRequest) {
+        UserEntity user = userMapper.toUserEntity(authRequest);
 
-        CredentialEntity credential = credentialMapper.toCredentialEntity(signupRequest, user);
+        CredentialEntity credential = credentialMapper.toCredentialEntity(authRequest, user);
         credential.setRoles(Set.of(roleRepository
                 .findByRole(Role.ROLE_USER)
                 .orElseThrow(() -> new EntityNotFoundException("Default role ROLE_USER not found"))));
+
+        credential.setRefreshToken(jwtService.generateRefreshToken(credential));
 
         user.setCredential(credential);
         return userMapper.toResponse(user);
@@ -94,6 +97,7 @@ public class UserService {
 
         UserEntity user = userMapper.toUserEntity(signupRequest);
 
+
         user = userRepository.save(user);
 
         CredentialEntity credential = credentialMapper.toCredentialEntity(signupRequest, user);
@@ -102,6 +106,8 @@ public class UserService {
         credential.setRoles(Set.of(roleRepository
                 .findByRole(Role.ROLE_USER)
                 .orElseThrow(() -> new EntityNotFoundException("Default role ROLE_USER not found."))));
+
+        credential.setRefreshToken(jwtService.generateRefreshToken(credential));
 
         credential = credentialRepository.save(credential);
 
@@ -112,6 +118,7 @@ public class UserService {
                 .username(user.getUsername())
                 .email(credential.getEmail())
                 .token(token)
+                .refreshToken(credential.getRefreshToken())
                 .build();
     }
 
@@ -236,6 +243,7 @@ public class UserService {
         userProfile.setAverageRating(avgRating);
         return userProfile;
     }
+
     public Page<AlbumReviewResponse> getUserAlbumReviews(String username, Pageable pageable) {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User with username: " + username + " was not found."));
@@ -251,6 +259,7 @@ public class UserService {
         Page<SongReviewEntity> reviewPage = songReviewRepository.findByUser_UserId(user.getUserId(), pageable);
         return songReviewMapper.toResponsePage(reviewPage);
     }
+
     private Double calculateUserAverageRating(Long userId) {
         Double average = userRepository.calculateUserAverageRating(userId);
         return average != null ? average : 0.0;

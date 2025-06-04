@@ -9,6 +9,7 @@ import com.musicspring.app.music_app.security.repository.CredentialRepository;
 import com.musicspring.app.music_app.security.repository.RoleRepository;
 import com.musicspring.app.music_app.model.entity.UserEntity;
 import com.musicspring.app.music_app.repository.UserRepository;
+import com.musicspring.app.music_app.security.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -39,19 +40,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final CredentialRepository credentialRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final JwtService jwtService;
 
     /**
      * @param credentialRepository Repository for managing user credentials
      * @param userRepository       Repository for managing user entities
      * @param roleRepository       Repository for managing user roles
+     * @param jwtService           Repository for managing user tokens
      */
     @Autowired
     public CustomOAuth2UserService(CredentialRepository credentialRepository,
                                    UserRepository userRepository,
-                                   RoleRepository roleRepository) {
+                                   RoleRepository roleRepository, JwtService jwtService) {
         this.credentialRepository = credentialRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -98,6 +102,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             credential.setProvider(AuthProvider.GOOGLE);       // Ensure provider is set correctly
             credential.setProviderId(googleId);                // Update provider ID
             credential.setProfilePictureUrl(pictureUrl);       // Update profile picture
+            if (credential.getRefreshToken() == null) {
+                String refreshToken = jwtService.generateRefreshToken(credential);
+                credential.setRefreshToken(refreshToken);
+            }
         } else {
             // Create new user account from OAuth2 data
             credential = createNewOAuth2User(email, googleId, name, pictureUrl);
@@ -131,7 +139,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user = userRepository.save(user);
 
         // Create credential entity with OAuth2 provider information and proper roles
-        return CredentialEntity.builder()
+        CredentialEntity credential = CredentialEntity.builder()
                 .email(email)                        // Store email for identification
                 .provider(AuthProvider.GOOGLE)       // Set OAuth2 provider
                 .providerId(googleId)                // Store provider's unique user ID
@@ -139,6 +147,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .user(user)                          // Link to user entity
                 .roles(getDefaultRoles())
                 .build();
+
+        String refreshToken = jwtService.generateRefreshToken(credential);
+        credential.setRefreshToken(refreshToken);
+
+        return credential;
     }
 
     /**

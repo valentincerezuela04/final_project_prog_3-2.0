@@ -45,7 +45,7 @@ public class CredentialEntity implements UserDetails {
     private UserEntity user;
 
 
-    @ManyToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "credentials_roles",
             joinColumns = @JoinColumn(name = "credential_id"),
@@ -53,6 +53,8 @@ public class CredentialEntity implements UserDetails {
     )
     private Set<RoleEntity> roles = new HashSet<>();
 
+    @Column(name = "refresh_token", length = 248, unique = true, nullable = false)
+    private String refreshToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
