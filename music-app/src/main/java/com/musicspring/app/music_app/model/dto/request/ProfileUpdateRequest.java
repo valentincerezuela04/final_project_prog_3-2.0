@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.model.dto;
+package com.musicspring.app.music_app.model.dto.request;
 
 import lombok.*;
 

@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.spotify.model;
 
-import com.musicspring.app.music_app.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.model.dto.ArtistRequest;
-import com.musicspring.app.music_app.model.dto.SongRequest;
+import com.musicspring.app.music_app.model.dto.request.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.request.ArtistRequest;
+import com.musicspring.app.music_app.model.dto.request.SongRequest;
 import lombok.*;
 import org.springframework.data.domain.Page;
 

@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.controller;
 
 import com.musicspring.app.music_app.exception.ErrorDetails;
-import com.musicspring.app.music_app.model.dto.SongRequest;
-import com.musicspring.app.music_app.model.dto.SongResponse;
+import com.musicspring.app.music_app.model.dto.request.SongRequest;
+import com.musicspring.app.music_app.model.dto.response.SongResponse;
 import com.musicspring.app.music_app.service.SongService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

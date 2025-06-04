@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.model.dto;
+package com.musicspring.app.music_app.model.dto.request;
 
 
 import com.musicspring.app.music_app.model.enums.CommentType;
@@ -21,16 +21,12 @@ public class CommentRequest {
     @NotNull(message = "User ID is required")
     private Long userId;
 
-    @Schema(description = "Text content of the comment", example = "Great reviewEntity, thanks for sharing!")
+    @Schema(description = "Text content of the comment", example = "Great review, thanks for sharing!")
     @NotBlank(message = "Comment text cannot be blank")
     private String text;
 
-    @Schema(description = "Type of the comment (song or album reviewEntity)", example = "SONG_REVIEW")
+    @Schema(description = "Type of the comment (song or album review)", example = "SONG_REVIEW")
     @NotNull(message = "Comment type is required")
     private CommentType commentType;
-
-    @Schema(description = "Indicates whether the review is for a song or an album", example = "SONG")
-    @NotNull(message = "Review type is required")
-    private ReviewType reviewType;
 
 }

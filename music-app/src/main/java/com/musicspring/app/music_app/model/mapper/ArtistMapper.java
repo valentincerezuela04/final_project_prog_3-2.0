@@ -1,10 +1,10 @@
 package com.musicspring.app.music_app.model.mapper;
 
-import com.musicspring.app.music_app.model.dto.ArtistRequest;
-import com.musicspring.app.music_app.model.dto.ArtistResponse;
-import com.musicspring.app.music_app.model.dto.ArtistWithSongsResponse;
+import com.musicspring.app.music_app.model.dto.request.ArtistRequest;
+import com.musicspring.app.music_app.model.dto.response.ArtistResponse;
+import com.musicspring.app.music_app.model.dto.response.ArtistWithSongsResponse;
 import com.musicspring.app.music_app.model.entity.ArtistEntity;
-import com.musicspring.app.music_app.model.dto.SongResponse;
+import com.musicspring.app.music_app.model.dto.response.SongResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

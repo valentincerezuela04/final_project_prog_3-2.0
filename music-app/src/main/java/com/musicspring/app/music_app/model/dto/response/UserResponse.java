@@ -1,4 +1,4 @@
-package com.musicspring.app.music_app.model.dto;
+package com.musicspring.app.music_app.model.dto.response;
 
 import com.musicspring.app.music_app.security.entity.RoleEntity;
 import lombok.*;

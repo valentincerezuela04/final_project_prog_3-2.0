@@ -1,11 +1,10 @@
 package com.musicspring.app.music_app.service;
 
-import com.musicspring.app.music_app.model.dto.*;
-import com.musicspring.app.music_app.model.dto.AlbumReviewResponse;
+import com.musicspring.app.music_app.model.dto.response.*;
+import com.musicspring.app.music_app.model.dto.request.*;
 import com.musicspring.app.music_app.model.entity.AlbumReviewEntity;
 import com.musicspring.app.music_app.model.mapper.AlbumReviewMapper;
 import com.musicspring.app.music_app.repository.AlbumReviewRepository;
-import com.musicspring.app.music_app.model.dto.SongReviewResponse;
 import com.musicspring.app.music_app.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.repository.SongReviewRepository;

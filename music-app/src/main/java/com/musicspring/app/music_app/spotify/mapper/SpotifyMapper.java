@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.spotify.mapper;
 
-import com.musicspring.app.music_app.model.dto.AlbumRequest;
-import com.musicspring.app.music_app.model.dto.ArtistRequest;
-import com.musicspring.app.music_app.model.dto.SongRequest;
+import com.musicspring.app.music_app.model.dto.request.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.request.ArtistRequest;
+import com.musicspring.app.music_app.model.dto.request.SongRequest;
 
 import org.springframework.stereotype.Component;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;

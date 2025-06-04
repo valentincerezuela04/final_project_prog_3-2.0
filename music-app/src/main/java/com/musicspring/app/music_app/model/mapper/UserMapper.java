@@ -1,9 +1,9 @@
 package com.musicspring.app.music_app.model.mapper;
 
-import com.musicspring.app.music_app.model.dto.SignupRequest;
-import com.musicspring.app.music_app.model.dto.SignupWithEmailRequest;
-import com.musicspring.app.music_app.model.dto.UserProfileResponse;
-import com.musicspring.app.music_app.model.dto.UserResponse;
+import com.musicspring.app.music_app.model.dto.request.SignupRequest;
+import com.musicspring.app.music_app.model.dto.request.SignupWithEmailRequest;
+import com.musicspring.app.music_app.model.dto.response.UserProfileResponse;
+import com.musicspring.app.music_app.model.dto.response.UserResponse;
 import com.musicspring.app.music_app.model.entity.UserEntity;
 import org.springframework.stereotype.Component;
 

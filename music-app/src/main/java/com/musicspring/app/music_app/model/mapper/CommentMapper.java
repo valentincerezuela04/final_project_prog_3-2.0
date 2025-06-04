@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.model.mapper;
 
-import com.musicspring.app.music_app.model.dto.CommentRequest;
-import com.musicspring.app.music_app.model.dto.CommentResponse;
+import com.musicspring.app.music_app.model.dto.request.CommentRequest;
+import com.musicspring.app.music_app.model.dto.response.CommentResponse;
 import com.musicspring.app.music_app.model.entity.CommentEntity;
 import com.musicspring.app.music_app.model.entity.ReviewEntity;
 import com.musicspring.app.music_app.model.entity.UserEntity;

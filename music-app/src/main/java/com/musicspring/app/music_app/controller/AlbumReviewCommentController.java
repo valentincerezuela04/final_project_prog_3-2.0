@@ -1,8 +1,8 @@
 package com.musicspring.app.music_app.controller;
 
 import com.musicspring.app.music_app.exception.ErrorDetails;
-import com.musicspring.app.music_app.model.dto.CommentRequest;
-import com.musicspring.app.music_app.model.dto.CommentResponse;
+import com.musicspring.app.music_app.model.dto.request.CommentRequest;
+import com.musicspring.app.music_app.model.dto.response.CommentResponse;
 import com.musicspring.app.music_app.model.enums.CommentType;
 import com.musicspring.app.music_app.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -82,11 +82,9 @@ public class AlbumReviewCommentController {
             @RequestParam(defaultValue = "createdAt") String sort) {
 
         Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
-        // Usamos el método que filtra por reviewId y CommentType ALBUM_REVIEW
-        Page<CommentResponse> comments = commentService.getCommentsByReviewIdAndType(reviewId, CommentType.ALBUM_REVIEW, pageable);
+        Page<CommentResponse> comments = commentService.getCommentsByReviewId(reviewId, pageable);
         return ResponseEntity.ok(comments);
     }
-
     @Operation(
             summary = "Create a new comment for an album review",
             description = "Adds a new comment associated with the specified album review."

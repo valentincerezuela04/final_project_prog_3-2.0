@@ -1,7 +1,7 @@
 package com.musicspring.app.music_app.service;
 
-import com.musicspring.app.music_app.model.dto.SongReviewRequest;
-import com.musicspring.app.music_app.model.dto.SongReviewResponse;
+import com.musicspring.app.music_app.model.dto.request.SongReviewRequest;
+import com.musicspring.app.music_app.model.dto.response.SongReviewResponse;
 import com.musicspring.app.music_app.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.repository.SongReviewRepository;
@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 
 @Service
@@ -43,12 +45,12 @@ public class SongReviewService {
 
     public SongReviewResponse findById(Long id) {
         return songReviewMapper.toResponse(songReviewRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Song review with ID: " + id + " was not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("Song review with ID: " + id + " not found.")));
     }
 
     public void deleteById(Long id) {
         SongReviewEntity songReviewEntity = songReviewRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Song review with ID: " + id + " was not found."));
+                .orElseThrow(()-> new EntityNotFoundException("Song review with ID: " + id + " not found."));
         songReviewEntity.setActive(false);
         songReviewRepository.save(songReviewEntity);
     }
@@ -80,7 +82,7 @@ public class SongReviewService {
         if (songReviewRequest.getSongId() != null) {
             return songRepository.findById(songReviewRequest.getSongId())
                     .orElseThrow(() -> new EntityNotFoundException("Song with ID: " +
-                            songReviewRequest.getSongId() + " was not found."));
+                            songReviewRequest.getSongId() + " not found."));
         }
 
         if (songReviewRequest.getSpotifyId() != null) {
@@ -96,8 +98,13 @@ public class SongReviewService {
             throw new IllegalArgumentException("songName and artistName are required when creating new song from Spotify data");
         }
 
+        Date releaseDate = null;
 
-        SongEntity newSong = songMapper.toEntityFromReview(songReviewRequest);
+        if (songReviewRequest.getReleaseDate() != null) {
+            releaseDate = java.sql.Date.valueOf(songReviewRequest.getReleaseDate()); // puede lanzar IllegalArgumentException
+        }
+
+        SongEntity newSong = songMapper.toEntityFromReview(songReviewRequest, releaseDate);
         
         return songRepository.save(newSong);
     }
