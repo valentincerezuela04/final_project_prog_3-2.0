@@ -7,6 +7,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -24,8 +25,32 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
+    @Value("${refresh.token.expiration}")
+    private Long refreshTokenExpiration;
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public String generateRefreshToken (UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type","refresh");
+        return buildToken(claims, userDetails, refreshTokenExpiration);
+    }
+
+    public boolean validateRefreshToken(String refreshToken,UserDetails userDetails) {
+        try{
+            Jwts.parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(refreshToken);
+
+            final String username = extractUsername(refreshToken);
+            return (username.equals(userDetails.getUsername())
+                    && !isTokenExpired(refreshToken));
+        }catch (JwtException e){
+            return false; ///Invalid Token
+        }
     }
 
     public String generateToken(UserDetails userDetails) {

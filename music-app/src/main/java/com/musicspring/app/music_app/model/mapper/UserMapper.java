@@ -5,6 +5,7 @@ import com.musicspring.app.music_app.model.dto.request.SignupWithEmailRequest;
 import com.musicspring.app.music_app.model.dto.response.UserProfileResponse;
 import com.musicspring.app.music_app.model.dto.response.UserResponse;
 import com.musicspring.app.music_app.model.entity.UserEntity;
+import com.musicspring.app.music_app.security.dto.AuthRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -20,9 +21,9 @@ public class UserMapper {
                 .biography(user.getCredential() != null ? user.getCredential().getBiography() : null)
                 .build();
     }
-    public UserEntity toUserEntity(SignupRequest request) {
+    public UserEntity toUserEntity(AuthRequest authRequest) {
         return UserEntity.builder()
-                .username(request.getUsername())
+                .username(authRequest.username())
                 .active(true)
                 .build();
     }

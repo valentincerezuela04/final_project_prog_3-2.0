@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -138,8 +139,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      * @return CredentialEntity representing the user's authentication credentials
      */
     private CredentialEntity findOrCreateOAuth2User(String email, String name) {
-        return credentialRepository.findByEmail(email)
-                .orElseGet(() -> createOAuth2User(email, name));
+        Optional<CredentialEntity> existingCredential = credentialRepository.findByEmail(email);
+
+        if (existingCredential.isPresent()) {
+            CredentialEntity credential = existingCredential.get();
+
+            if (credential.getRefreshToken() == null) {
+                String refreshToken = jwtService.generateRefreshToken(credential);
+                credential.setRefreshToken(refreshToken);
+                credentialRepository.save(credential);
+            }
+
+            return credential;
+        } else {
+            return createOAuth2User(email, name);
+        }
     }
 
     /**
@@ -172,6 +186,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .roles(getDefaultRoles())        // Assign default user roles
                 .build();
 
+        String refreshToken = jwtService.generateRefreshToken(credential);
+        credential.setRefreshToken(refreshToken);
+
         // Save and return the credential entity
         return credentialRepository.save(credential);
     }
@@ -179,6 +196,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     /**
      * Retrieves default roles for new OAuth2 users.
      * This method assigns the standard USER role to new OAuth2 accounts.
+     *
      * @return Set of RoleEntity objects representing default user permissions
      */
     private Set<RoleEntity> getDefaultRoles() {
