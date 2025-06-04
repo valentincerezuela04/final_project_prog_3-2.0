@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "comments")
@@ -42,4 +43,7 @@ public class CommentEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "comment_type", nullable = false)
     private CommentType commentType;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReactionEntity> reactions;
 }
