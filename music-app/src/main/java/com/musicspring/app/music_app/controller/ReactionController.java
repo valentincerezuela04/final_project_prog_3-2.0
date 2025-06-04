@@ -15,7 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +52,13 @@ public class ReactionController {
     })
     @GetMapping("/reactions")
     public ResponseEntity<Page<ReactionResponse>> getAllReactions(
-            @Parameter(description = "Pagination information", hidden = true)
-            Pageable pageable) {
+            @Parameter(description = "Number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Page number to retrieve (0-based)", example = "0")
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @Parameter(description = "Field to sort by", example = "createdAt")
+            @RequestParam(defaultValue = "createdAt") String sort) {
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
         Page<ReactionResponse> reactions = reactionService.findAll(pageable);
         return ResponseEntity.ok(reactions);
     }
@@ -187,8 +194,14 @@ public class ReactionController {
             @RequestParam ReactionType reactionType,
             @Parameter(description = "Reacted type (REVIEW or COMMENT)", example = "REVIEW")
             @RequestParam ReactedType reactedType,
-            Pageable pageable
+            @Parameter(description = "Number of items per page", example = "10")
+            @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Page number to retrieve (0-based)", example = "0")
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @Parameter(description = "Field to sort by", example = "createdAt")
+            @RequestParam(defaultValue = "createdAt") String sort
     ) {
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
         Page<ReactionResponse> reactions = reactionService.findReactionsByTypeAndTarget(reactionType, reactedType, pageable);
         return ResponseEntity.ok(reactions);
     }
@@ -235,8 +248,8 @@ public class ReactionController {
             description = "Creates a new reaction associated to the specified review."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "Reaction created successfully",
+            @ApiResponse(responseCode = "200",
+                    description = "Reaction processed successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ReactionResponse.class))
             ),
@@ -257,7 +270,7 @@ public class ReactionController {
             )
     })
     @PostMapping("/reviews/{reviewId}/reactions")
-    public ResponseEntity<ReactionResponse> createReactionToReview(
+    public ResponseEntity<?> createReactionToReview(
             @Parameter(description = "Review ID", example = "10")
             @PathVariable Long reviewId,
             @Parameter(description = "Reaction request data")
@@ -265,7 +278,10 @@ public class ReactionController {
 
         request.setReactedType(ReactedType.REVIEW);
         ReactionResponse response = reactionService.createReaction(request, reviewId);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        // Help me Edu
+        return response != null 
+            ? ResponseEntity.ok(response)
+            : ResponseEntity.ok().build(); // Return 200 OK with empty body for deletions
     }
 
     @Operation(
@@ -273,8 +289,8 @@ public class ReactionController {
             description = "Creates a new reaction associated to the specified comment."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "Reaction created successfully",
+            @ApiResponse(responseCode = "200",
+                    description = "Reaction processed successfully",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ReactionResponse.class))
             ),
@@ -295,15 +311,18 @@ public class ReactionController {
             )
     })
     @PostMapping("/comments/{commentId}/reactions")
-    public ResponseEntity<ReactionResponse> createReactionToComment(
+    public ResponseEntity<?> createReactionToComment(
             @Parameter(description = "Comment ID", example = "15")
             @PathVariable Long commentId,
             @Parameter(description = "Reaction request data")
             @RequestBody ReactionRequest request) {
-
+        // Help me Edu
         request.setReactedType(ReactedType.COMMENT);
         ReactionResponse response = reactionService.createReaction(request, commentId);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        
+        return response != null 
+            ? ResponseEntity.ok(response)
+            : ResponseEntity.ok().build(); // Return 200 OK with empty body for deletions
     }
 
     @Operation(

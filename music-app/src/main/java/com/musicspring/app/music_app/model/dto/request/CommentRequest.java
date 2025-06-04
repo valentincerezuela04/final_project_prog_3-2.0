@@ -29,8 +29,4 @@ public class CommentRequest {
     @NotNull(message = "Comment type is required")
     private CommentType commentType;
 
-    @Schema(description = "Indicates whether the review is for a song or an album", example = "SONG")
-    @NotNull(message = "Review type is required")
-    private ReviewType reviewType;
-
 }

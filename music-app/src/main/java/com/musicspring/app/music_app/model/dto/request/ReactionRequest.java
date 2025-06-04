@@ -28,11 +28,5 @@ public class ReactionRequest {
     @NotNull(message = "Reacted type is required")
     private ReactedType reactedType;
 
-    @Schema(description = "ID of the object being reacted to (Review or Comment)", example = "10")
-    @NotNull(message = "Reacted ID is required")
-    private Long reactedId;
-
-    @Schema(description = "Type of the review if reactedType is REVIEW (SONG_REVIEW or ALBUM_REVIEW)", example = "SONG_REVIEW")
-    private CommentType commentType;
 
 }

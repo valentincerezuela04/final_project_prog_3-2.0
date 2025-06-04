@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class ReactionService {
     private final ReactionRepository reactionRepository;
@@ -70,36 +72,53 @@ public class ReactionService {
 
     @Transactional
     public void deleteReactionToReview(Long userId, Long reviewId) {
-        ReactionEntity reaction = reactionRepository
-                .findByUser_UserIdAndReview_ReviewIdAndReactedType(userId, reviewId, ReactedType.REVIEW)
-                .orElseThrow(() -> new EntityNotFoundException("Reaction by user " + userId + " on review " + reviewId + " not found."));
-        reactionRepository.delete(reaction);
+        Optional<ReactionEntity> reaction = reactionRepository
+                .findByUser_UserIdAndReview_ReviewIdAndReactedType(userId, reviewId, ReactedType.REVIEW);
+        
+        if (reaction.isPresent()) {
+            reactionRepository.delete(reaction.get());
+        }
+        // If reaction doesn't exist, do nothing (idempotent operation)
     }
 
     @Transactional
     public void deleteReactionToComment(Long userId, Long commentId) {
-        ReactionEntity reaction = reactionRepository
-                .findByUser_UserIdAndComment_CommentIdAndReactedType(userId, commentId, ReactedType.COMMENT)
-                .orElseThrow(() -> new EntityNotFoundException("Reaction by user " + userId + " on comment " + commentId + " not found."));
-        reactionRepository.delete(reaction);
+        Optional<ReactionEntity> reaction = reactionRepository
+                .findByUser_UserIdAndComment_CommentIdAndReactedType(userId, commentId, ReactedType.COMMENT);
+        
+        if (reaction.isPresent()) {
+            reactionRepository.delete(reaction.get());
+        }
+        // If reaction doesn't exist, do nothing (idempotent operation)
     }
 
     @Transactional
     public ReactionResponse createReaction(ReactionRequest request, Long reactedId) {
-
         UserEntity userEntity = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + request.getUserId() + " not found."));
 
         if (request.getReactedType() == ReactedType.REVIEW) {
-
             ReviewEntity reviewEntity = reviewRepository.findById(reactedId)
                     .orElseThrow(() -> new EntityNotFoundException("Review with ID " + reactedId + " not found."));
 
-            boolean exists = reactionRepository.existsByUserAndReviewAndReactionType(userEntity, reviewEntity, request.getReactionType());
-            if (exists) {
-                throw new IllegalStateException("User has already reacted with " + request.getReactionType() + " to this review.");
+            Optional<ReactionEntity> existingReaction = reactionRepository.findByUserAndReview(userEntity, reviewEntity);
+
+            if (existingReaction.isPresent()) {
+                ReactionEntity existing = existingReaction.get();
+                
+                // If user is trying to react with the same type, delete the reaction (toggle off)
+                if (existing.getReactionType() == request.getReactionType()) {
+                    reactionRepository.delete(existing);
+                    return null; // Return null to indicate deletion
+                }
+                
+                // Different reaction type - update it
+                existing.setReactionType(request.getReactionType());
+                ReactionEntity updated = reactionRepository.save(existing);
+                return reactionMapper.toResponse(updated);
             }
 
+            // No existing reaction - create new one
             ReactionEntity reactionEntity = reactionMapper.toEntity(request, userEntity, reviewEntity);
             reactionRepository.save(reactionEntity);
             return reactionMapper.toResponse(reactionEntity);
@@ -108,11 +127,24 @@ public class ReactionService {
             CommentEntity commentEntity = commentRepository.findById(reactedId)
                     .orElseThrow(() -> new EntityNotFoundException("Comment with ID " + reactedId + " not found."));
 
-            boolean exists = reactionRepository.existsByUserAndCommentAndReactionType(userEntity, commentEntity, request.getReactionType());
-            if (exists) {
-                throw new IllegalStateException("User has already reacted with " + request.getReactionType() + " to this comment.");
-            }
+            Optional<ReactionEntity> existingReaction = reactionRepository.findByUserAndComment(userEntity, commentEntity);
 
+            if (existingReaction.isPresent()) {
+                ReactionEntity existing = existingReaction.get();
+                
+                // If user is trying to react with the same type, delete the reaction (toggle off)
+                if (existing.getReactionType() == request.getReactionType()) {
+                    reactionRepository.delete(existing);
+                    return null; // Return null to indicate deletion
+                }
+                
+                // Different reaction type - update it
+                existing.setReactionType(request.getReactionType());
+                ReactionEntity updated = reactionRepository.save(existing);
+                return reactionMapper.toResponse(updated);
+            }
+            
+            // No existing reaction - create new one
             ReactionEntity reactionEntity = reactionMapper.toEntity(request, userEntity, commentEntity);
             reactionRepository.save(reactionEntity);
             return reactionMapper.toResponse(reactionEntity);
@@ -121,7 +153,6 @@ public class ReactionService {
             throw new IllegalArgumentException("Invalid ReactedType: " + request.getReactedType());
         }
     }
-
     @Transactional
     public ReactionResponse updateReactionType(Long userId, Long reactedId, ReactedType reactedType, ReactionType newReactionType) {
         ReactionEntity existingReaction;

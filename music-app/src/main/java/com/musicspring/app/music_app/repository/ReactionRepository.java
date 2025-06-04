@@ -38,4 +38,7 @@ public interface ReactionRepository extends JpaRepository<ReactionEntity, Long> 
     boolean existsByUserAndReviewAndReactionType(UserEntity user, ReviewEntity review, ReactionType reactionType);
 
     boolean existsByUserAndCommentAndReactionType(UserEntity user, CommentEntity comment, ReactionType reactionType);
+
+    Optional<ReactionEntity> findByUserAndReview(UserEntity user, ReviewEntity review);
+    Optional<ReactionEntity> findByUserAndComment(UserEntity user, CommentEntity comment);
 }
