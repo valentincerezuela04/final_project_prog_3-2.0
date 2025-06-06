@@ -3,6 +3,7 @@ package com.musicspring.app.music_app.model.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -38,7 +39,7 @@ public class SongRequest {
     private String spotifyLink;
 
     @Schema(description = "Release date of the song", example = "2017-01-06")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     @Schema(description = "Maximum number of results to return", example = "10")
     private Integer limit;

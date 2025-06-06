@@ -25,9 +25,6 @@ public class SongReviewMapper {
     }
 
     public SongReviewResponse toResponse(SongReviewEntity songReview) {
-        if (songReview == null) {
-            return null;
-        }
         return SongReviewResponse.builder()
                 .songReviewId(songReview.getReviewId())
                 .rating(songReview.getRating())
@@ -40,18 +37,12 @@ public class SongReviewMapper {
     }
 
     public List<SongReviewResponse> toResponseList(List<SongReviewEntity> songReviews) {
-        if (songReviews == null) {
-            return null;
-        }
         return songReviews.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
     public Page<SongReviewResponse> toResponsePage(Page<SongReviewEntity> songReviewPage) {
-        if (songReviewPage == null) {
-            return Page.empty();
-        }
         return songReviewPage.map(this::toResponse);
     }
 

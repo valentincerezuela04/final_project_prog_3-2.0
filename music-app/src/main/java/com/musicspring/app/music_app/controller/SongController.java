@@ -25,8 +25,12 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Songs", description = "Endpoints related to song management")
 public class SongController {
 
-    @Autowired
     private SongService songService;
+
+    @Autowired
+    public SongController(SongService songService) {
+        this.songService = songService;
+    }
 
     @Operation(
             summary = "Get all songs (paginated)",

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -54,7 +55,6 @@ public class SongReviewService {
         songReviewEntity.setActive(false);
         songReviewRepository.save(songReviewEntity);
     }
-
 
     public SongReviewResponse createSongReview(SongReviewRequest songReviewRequest) {
         if (songReviewRequest.getUserId() == null) {
@@ -98,10 +98,10 @@ public class SongReviewService {
             throw new IllegalArgumentException("songName and artistName are required when creating new song from Spotify data");
         }
 
-        Date releaseDate = null;
+        LocalDate releaseDate = null;
 
         if (songReviewRequest.getReleaseDate() != null) {
-            releaseDate = java.sql.Date.valueOf(songReviewRequest.getReleaseDate()); // puede lanzar IllegalArgumentException
+            releaseDate = java.sql.Date.valueOf(songReviewRequest.getReleaseDate()).toLocalDate(); // puede lanzar IllegalArgumentException
         }
 
         SongEntity newSong = songMapper.toEntityFromReview(songReviewRequest, releaseDate);

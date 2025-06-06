@@ -1,49 +1,44 @@
 package com.musicspring.app.music_app.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "albums")
+
 @Getter
 @Setter
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class AlbumEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotBlank(message = "Album ID can not be empty.")
-    @Positive
+    @Column(name = "album_id")
     private Long albumId;
 
     @Column(name = "spotify_id")
-    @NotBlank(message = "Spotify ID can not be empty.")
     private String spotifyId;
 
-    @Column(name = "title")
-    @NotBlank(message = "Title can not be empty.")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "release_date")
-    @NotNull(message = "Release date can not be empty.")
-    private LocalDate releaseDate;
-
+    @Column(name = "artist_name", nullable = false)
+    private String artistName;
 
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "spotify_link")
+    private String spotifyLink;
+
+    @Column(name = "release_date")
+    private LocalDate releaseDate;
+
     @Column(name = "active", nullable = false)
-    @NotNull(message = "Active can not be empty.")
     private Boolean active;
 
-    @ManyToOne
-    @JoinColumn(name = "artist_id", nullable = false)
-    private ArtistEntity artist;
 }

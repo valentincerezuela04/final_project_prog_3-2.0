@@ -1,39 +1,34 @@
 package com.musicspring.app.music_app.model.mapper;
 
 import com.musicspring.app.music_app.model.dto.request.AlbumRequest;
+import com.musicspring.app.music_app.model.dto.request.AlbumReviewRequest;
 import com.musicspring.app.music_app.model.dto.response.AlbumResponse;
 import com.musicspring.app.music_app.model.entity.AlbumEntity;
-import com.musicspring.app.music_app.model.entity.ArtistEntity;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.data.domain.Page;
 
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class AlbumMapper {
     public AlbumResponse toResponse(AlbumEntity album){
-        if(album==null){
-            return null;
-        }else{
-            return AlbumResponse.builder()
-                    .albumId(album.getAlbumId())
-                    .spotifyId(album.getSpotifyId())
-                    .title(album.getTitle())
-                    .artistId(album.getArtist().getArtistId())
-                    .releaseDate(album.getReleaseDate())
-                    .imageUrl(album.getImageUrl())
-                    .build();
-        }
+        return AlbumResponse.builder()
+                .albumId(album.getAlbumId())
+                .spotifyId(album.getSpotifyId())
+                .title(album.getTitle())
+                .artistName(album.getArtistName())
+                .imageUrl(album.getImageUrl())
+                .spotifyLink(album.getSpotifyLink())
+                .releaseDate(album.getReleaseDate())
+                .build();
     }
 
     public List<AlbumResponse> toResponseList (List<AlbumEntity> albums){
-        if(albums == null){
-            return  null;
-        }
         return albums.stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
@@ -49,31 +44,42 @@ public class AlbumMapper {
 
 
     public Page<AlbumResponse> toResponsePage (Page<AlbumEntity> albumEntityPage){
-        if(albumEntityPage == null){
-            return  Page.empty();
-        }
         return albumEntityPage.map(this::toResponse);
     }
 
-    public AlbumEntity responseToEntity (AlbumResponse albumResponse, ArtistEntity artistEntity){
+    public AlbumEntity responseToEntity (AlbumResponse albumResponse){
         return AlbumEntity.builder()
                 .albumId(albumResponse.getAlbumId())
                 .spotifyId(albumResponse.getSpotifyId())
                 .title(albumResponse.getTitle())
-                .releaseDate(albumResponse.getReleaseDate())
+                .artistName(albumResponse.getArtistName())
                 .imageUrl(albumResponse.getImageUrl())
+                .spotifyLink(albumResponse.getSpotifyLink())
+                .releaseDate(albumResponse.getReleaseDate())
                 .active(true)
-                .artist(artistEntity)
                 .build();
     }
 
-    public AlbumEntity requestToEntity (AlbumRequest albumRequest, ArtistEntity artistEntity){
+    public AlbumEntity requestToEntity (AlbumRequest albumRequest){
         return AlbumEntity.builder()
                 .spotifyId(albumRequest.getSpotifyId())
                 .title(albumRequest.getTitle())
-                .releaseDate(albumRequest.getReleaseDate())
+                .artistName(albumRequest.getArtistName())
                 .imageUrl(albumRequest.getImageUrl())
-                .artist(artistEntity)
+                .spotifyLink(albumRequest.getSpotifyLink())
+                .releaseDate(albumRequest.getReleaseDate())
+                .active(true)
+                .build();
+    }
+
+    public AlbumEntity toEntityFromReview (AlbumReviewRequest albumReviewRequest, LocalDate releaseDate) {
+        return AlbumEntity.builder()
+                .spotifyId(albumReviewRequest.getSpotifyId())
+                .title(albumReviewRequest.getAlbumName())
+                .artistName(albumReviewRequest.getArtistName())
+                .imageUrl(albumReviewRequest.getImageUrl())
+                .spotifyLink(albumReviewRequest.getSpotifyLink())
+                .releaseDate(releaseDate)
                 .active(true)
                 .build();
     }

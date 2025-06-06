@@ -23,11 +23,15 @@ public class AlbumResponse {
     @NotBlank(message = "Title can not be empty.")
     private String title;
 
-    @NotNull(message = "Artist ID can not be empty")
-    private Long artistId;
+    @NotNull(message = "Artist name can not be empty")
+    private String artistName;
+
+    private String imageUrl;
+
+    @NotBlank(message = "Spotify link can not be empty.")
+    private String spotifyLink;
 
     @NotNull(message = "Release date can not be null.")
     private LocalDate releaseDate;
 
-    private String imageUrl;
 }

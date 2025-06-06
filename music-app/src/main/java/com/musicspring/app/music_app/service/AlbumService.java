@@ -5,7 +5,6 @@ import com.musicspring.app.music_app.model.dto.response.AlbumResponse;
 import com.musicspring.app.music_app.model.entity.AlbumEntity;
 import com.musicspring.app.music_app.model.mapper.AlbumMapper;
 import com.musicspring.app.music_app.repository.AlbumRepository;
-import com.musicspring.app.music_app.model.entity.ArtistEntity;
 import com.musicspring.app.music_app.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -53,10 +52,8 @@ public class AlbumService  {
         }
     }
 
-    public AlbumResponse save(AlbumRequest albumRequest) {
-        ArtistEntity artistEntity = artistRepository.findById(albumRequest.getArtistId()).orElseThrow(()
-                -> new EntityNotFoundException("Artist with ID " + albumRequest.getArtistId() + " not found."));
-        AlbumEntity albumEntity = albumMapper.requestToEntity(albumRequest,artistEntity);
+    public AlbumResponse saveAlbum(AlbumRequest albumRequest) {
+        AlbumEntity albumEntity = albumMapper.requestToEntity(albumRequest);
         return albumMapper.toResponse(albumRepository.save(albumEntity));
     }
 
@@ -65,7 +62,7 @@ public class AlbumService  {
                 -> new EntityNotFoundException("Album with Spotify ID " + spotifyId + " not found.")));
     }
 
-    public Page<AlbumResponse> search (String query, Pageable pageable){
+    public Page<AlbumResponse> searchAlbums(String query, Pageable pageable){
         List<AlbumEntity> albumEntityList =  albumRepository.findByTitleContainingIgnoreCase
                 (query, pageable);
         Page<AlbumEntity> albumEntityPage = albumMapper.toEntityPage(albumEntityList,pageable);

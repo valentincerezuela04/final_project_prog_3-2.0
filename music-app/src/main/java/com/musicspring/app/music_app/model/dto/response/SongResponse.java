@@ -2,6 +2,7 @@ package com.musicspring.app.music_app.model.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -29,7 +30,7 @@ public class SongResponse {
 
     private String spotifyLink;
 
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     public String getDurationFormatted() {
         if (durationMs == null) return "0:00";

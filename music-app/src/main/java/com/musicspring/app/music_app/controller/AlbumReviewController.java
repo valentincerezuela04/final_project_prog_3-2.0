@@ -252,5 +252,58 @@ public class AlbumReviewController {
         Page<AlbumReviewResponse> albumReviewResponsePage = albumReviewService.findByAlbumId(albumId, pageable);
         return ResponseEntity.ok(albumReviewResponsePage);
     }
+
+    @Operation(
+            summary = "Get album reviews by Spotify ID",
+            description = "Retrieves a paginated list of reviews for the specified album using its Spotify ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Album reviews retrieved successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = Page.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Album not found",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request parameters",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Internal server error",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetails.class)
+                    )
+            )
+    })
+    @GetMapping("/spotify/{spotifyId}")
+    public ResponseEntity<Page<AlbumReviewResponse>> getAlbumReviewsBySpotifyId(
+            @Parameter(description = "Spotify ID of the album whose reviews are requested", example = "4iV5W9uYEdYUVa79Axb7Rh")
+            @PathVariable String spotifyId,
+            @Parameter(description = "Number of items per page", example = "10")
+            @RequestParam int size,
+            @Parameter(description = "Page number to retrieve (0-based)", example = "0")
+            @RequestParam int pageNumber,
+            @Parameter(description = "Field to sort by", example = "date")
+            @RequestParam String sort){
+        Pageable pageable = PageRequest.of(pageNumber, size, Sort.by(sort));
+        Page<AlbumReviewResponse> albumReviewResponsePage = albumReviewService.findBySpotifyId(spotifyId, pageable);
+        return ResponseEntity.ok(albumReviewResponsePage);
+    }
 }
 
