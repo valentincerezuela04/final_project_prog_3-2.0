@@ -7,6 +7,7 @@ import com.musicspring.app.music_app.model.entity.SongEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Component
@@ -63,7 +64,7 @@ public class SongMapper {
                 .build();
     }
 
-    public SongEntity toEntityFromReview (SongReviewRequest songReviewRequest, Date releaseDate) {
+    public SongEntity toEntityFromReview (SongReviewRequest songReviewRequest, LocalDate releaseDate) {
         return SongEntity.builder()
                 .spotifyId(songReviewRequest.getSpotifyId())
                 .name(songReviewRequest.getSongName())

@@ -3,6 +3,7 @@ package com.musicspring.app.music_app.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -46,7 +47,7 @@ public class SongEntity {
     private String spotifyLink;
 
     @Column(name = "release_date")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     @Column(nullable = false)
     private boolean active;

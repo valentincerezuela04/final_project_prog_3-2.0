@@ -113,7 +113,7 @@ public class SpotifyMapper {
             
             LocalDate releaseDate = parseReleaseDate(album.getReleaseDate());
             if (releaseDate != null) {
-                songRequest.setReleaseDate(Date.valueOf(releaseDate));
+                songRequest.setReleaseDate(releaseDate);
             }
         }
         
