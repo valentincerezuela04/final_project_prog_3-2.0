@@ -9,6 +9,7 @@ import com.musicspring.app.music_app.model.entity.SongReviewEntity;
 import com.musicspring.app.music_app.model.mapper.SongReviewMapper;
 import com.musicspring.app.music_app.repository.SongReviewRepository;
 import com.musicspring.app.music_app.security.dto.AuthRequest;
+import com.musicspring.app.music_app.security.dto.AuthResponse;
 import com.musicspring.app.music_app.security.entity.CredentialEntity;
 import com.musicspring.app.music_app.security.enums.Role;
 import com.musicspring.app.music_app.security.repository.CredentialRepository;
@@ -87,7 +88,7 @@ public class UserService {
     }
 
     @Transactional
-    public AuthUserResponse registerUserWithEmail(SignupWithEmailRequest signupRequest) {
+    public AuthResponse registerUserWithEmail(SignupWithEmailRequest signupRequest) {
 
         if (credentialRepository.findByEmail(signupRequest.getEmail()).isPresent())
             throw new IllegalArgumentException("User already exists with email: " + signupRequest.getEmail());
@@ -113,7 +114,7 @@ public class UserService {
 
         String token = jwtService.generateToken(credential);
 
-        return AuthUserResponse.builder()
+        return AuthResponse.builder()
                 .id(user.getUserId())
                 .username(user.getUsername())
                 .email(credential.getEmail())
