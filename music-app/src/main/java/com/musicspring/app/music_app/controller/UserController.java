@@ -4,6 +4,7 @@ import com.musicspring.app.music_app.exception.ErrorDetails;
 import com.musicspring.app.music_app.model.dto.response.*;
 import com.musicspring.app.music_app.model.dto.request.*;
 import com.musicspring.app.music_app.security.dto.AuthRequest;
+import com.musicspring.app.music_app.security.dto.AuthResponse;
 import com.musicspring.app.music_app.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -79,7 +80,7 @@ public class UserController {
                     description = "User registered successfully with authentication token",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = AuthUserResponse.class)
+                            schema = @Schema(implementation = AuthResponse.class)
                     )
             ),
             @ApiResponse(responseCode = "400",
@@ -98,10 +99,10 @@ public class UserController {
             )
     })
     @PostMapping("/auth/register")
-    public ResponseEntity<AuthUserResponse> registerUserWithEmail(
+    public ResponseEntity<AuthResponse> registerUserWithEmail(
             @Parameter(description = "User registration data with username, email, and password")
             @Valid @RequestBody SignupWithEmailRequest signupRequest) {
-        AuthUserResponse authResponse = userService.registerUserWithEmail(signupRequest);
+        AuthResponse authResponse = userService.registerUserWithEmail(signupRequest);
         return ResponseEntity.ok(authResponse);
     }
 
